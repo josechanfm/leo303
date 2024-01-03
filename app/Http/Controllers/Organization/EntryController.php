@@ -99,7 +99,7 @@ class EntryController extends Controller
         Entry::where('id', $id)->delete();
         EntryRecord::where('entry_id', $id)->delete();
 
-        return Redirect()->back();
+        return redirect()->route('manage.forms.index');
         //
     }
 
