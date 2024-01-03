@@ -24,7 +24,16 @@
       <template #bodyCell="{ column, text, record, index }">
         <template v-if="column.dataIndex == 'operation'">
           <a-button @click="viewRecord(record)">{{ $t("view") }}</a-button>
+          <a-popconfirm
+            :title="$t('confirm_delete_record')"
+            :ok-text="$t('yes')"
+            :cancel-text="$t('no')"
+            @confirm="deleteRecord(record)"
+          >
+            <a-button>{{ $t("delete") }}</a-button>
+          </a-popconfirm>
         </template>
+
         <template v-else-if="column.dataIndex == 'created_at'">
           {{ record[column.dataIndex] }}
         </template>
@@ -37,10 +46,29 @@
     <!-- Modal Start-->
     <a-modal v-model:visible="modal.isOpen" title="View Only" width="60%">
       <ol>
-        <li v-for="(field, idx) in form.fields">
+        <li v-for="(field, idx) in form.fields" :key="idx">
           {{ field.field_name ? field.field_name : "Field_" + (idx + 1) }}:
           <template v-if="field.type == 'photo'">
             <img :src="getFieldValue(field)" />
+          </template>
+          <template v-else-if="field.type == 'radio' && field.options">
+            {{
+              getFieldValue(field)
+                ? JSON.parse(field.options).find((x) => x.value == getFieldValue(field))
+                    .label
+                : ""
+            }}
+          </template>
+          <template v-else-if="field.type == 'checkbox'">
+            {{
+              getFieldValue(field)
+                ? JSON.parse(getFieldValue(field))
+                    .map((x) => {
+                      return JSON.parse(field.options).find((y) => y.value == x).label;
+                    })
+                    .join(",")
+                : ""
+            }}
           </template>
           <template v-else>
             {{ getFieldValue(field) }}
@@ -100,6 +128,19 @@ export default {
     viewRecord(record) {
       this.modal.data = record;
       this.modal.isOpen = true;
+    },
+    deleteRecord(record) {
+      this.$inertia.delete(
+        route("manage.form.entries.destroy", { form: this.form, entry: record }),
+        {
+          onSuccess: (page) => {
+            message.success($t("delete_success"));
+          },
+          onError: (err) => {
+            console.log(err);
+          },
+        }
+      );
     },
     getFieldValue(field) {
       const fv = this.modal.data.records.find((r) => r.form_field_id == field.id);

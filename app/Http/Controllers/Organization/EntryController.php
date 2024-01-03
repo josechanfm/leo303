@@ -8,6 +8,9 @@ use App\Models\Organization;
 use App\Models\Form;
 use Inertia\Inertia;
 use App\Exports\EntryExport;
+use App\Models\Entry;
+use App\Models\EntryRecord;
+use Illuminate\Support\Facades\Redirect;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -21,15 +24,14 @@ class EntryController extends Controller
     public function index(Form $form)
     {
         //$form=Form::with('fields')->find($form->id);
-        $entries=$form->tableEntries();
-        $form->fields;
-        return Inertia::render('Organization/FormEntries',[
-            'organization'=>session('organization'),
-            'form'=>$form,
-            'entries'=>$entries,
-            'entryColumns'=>$form->entry_columns()
+        $entries = $form->tableEntries();
+        return Inertia::render('Organization/FormEntries', [
+            'organization' => session('organization'),
+            'form' => $form,
+            'entries' => $entries,
+            'fields' => $form->fields,
+            'entryColumns' => $form->entry_columns()
         ]);
-        
     }
     /**
      * Show the form for creating a new resource.
@@ -82,7 +84,7 @@ class EntryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {   
+    {
         //
     }
 
@@ -92,12 +94,17 @@ class EntryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Form $form, $id)
     {
+        Entry::where('id', $id)->delete();
+        EntryRecord::where('entry_id', $id)->delete();
+
+        return Redirect()->back();
         //
     }
 
-    public function export(Form $form){
+    public function export(Form $form)
+    {
         return Excel::download(new EntryExport($form), 'member.xlsx');
     }
 }

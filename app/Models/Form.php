@@ -14,7 +14,7 @@ class Form extends Model implements HasMedia
 {
     use HasFactory;
     use InteractsWithMedia;
-    protected $fillable=['organization_id','name','title','welcome','description','thankyou','require_login','for_member','published','with_attendance'];
+    protected $fillable = ['organization_id', 'name', 'title', 'welcome', 'description', 'thankyou', 'require_login', 'for_member', 'published', 'with_attendance'];
 
     public function registerMediaConversions(Media $media = null): void
     {
@@ -29,64 +29,93 @@ class Form extends Model implements HasMedia
         $this->addMediaCollection('form_content');
     }
 
-    public function organization(){
+    public function organization()
+    {
         return $this->belongsTo(Organization::class);
     }
 
-    public function fields(){
+    public function fields()
+    {
         return $this->hasMany(FormField::class)->orderBy('sequence');
     }
     //extra fields show in entry table
-    public function in_column_fields(){
-        return $this->hasMany(FormField::class)->where('in_column',1);
+    public function in_column_fields()
+    {
+        return $this->hasMany(FormField::class)->where('in_column', 1);
     }
     //entry table column headers, for frontend table view and export to excel
-    public function entry_columns(){
-        $columns[]=(object)['title'=>'#','dataIndex'=>'uid'];
-        foreach($this->in_column_fields as $column){
-            $columns[]=(object)['title'=>$column->field_name,'dataIndex'=>'extra_'.$column->id];
+    public function entry_columns()
+    {
+        $columns[] = (object)['title' => '#', 'dataIndex' => 'uid'];
+        foreach ($this->in_column_fields as $column) {
+            $columns[] = (object)['title' => $column->field_name, 'dataIndex' => 'extra_' . $column->id];
         }
-        $columns[]=(object)['title'=>'Submit at','dataIndex'=>'submitted_at'];
-        $columns[]=(object)['title'=>'Action','dataIndex'=>'operation'];
+        $columns[] = (object)['title' => 'Submit at', 'dataIndex' => 'submitted_at'];
+        $columns[] = (object)['title' => 'Action', 'dataIndex' => 'operation'];
         return $columns;
     }
 
-    public function entries(){
+    public function entries()
+    {
         return $this->hasMany(Entry::class)->with('records');
     }
     //entries for frontend table view and export to excel
-    public function tableEntries(){
-        $entries=$this->entries;
-        $fields=$this->in_column_fields;
-        foreach($entries as $entry){
-            foreach($fields as $field){
-                $f=$entry->records->where('form_field_id',$field->id)->first();
-                if($f){
-                    $entry['extra_'.$field->id]=$f->field_value;
+    public function tableEntries()
+    {
+        $entries = $this->entries;
+        $fields = $this->in_column_fields;
+        foreach ($entries as $entry) {
+            foreach ($fields as $field) {
+                $f = $entry->records->where('form_field_id', $field->id)->first();
+                if ($f) {
+                    if ($field->type == 'radio') {
+                        $fieldOptions = json_decode($field->options);
+                        $value = array_filter($fieldOptions, function ($item) use ($f) {
+                            return $item->value == $f->field_value;
+                        });
+                        $valueItem = reset($value);
+                        $entry['extra_' . $field->id] = $valueItem->label ?? '';
+                        // dd($entry);
+                    } else if ($field->type == 'checkbox') {
+                        $fieldOptions = json_decode($field->options);
+                        $fieldValue = json_decode($f->field_value);
+                        $value = array_filter($fieldOptions, function ($item) use ($fieldValue) {
+                            return in_array($item->value, $fieldValue);
+                        });
+                        $labels = [];
+                        foreach ($value as $item) {
+                            $labels[] = $item->label;
+                        }            
+                        $result = implode(',', $labels);
+                        $entry['extra_' . $field->id] = $result;
+                    } else {
+                        $entry['extra_' . $field->id] = $f->field_value;
+                    }
                 }
             }
         }
         return $entries;
     }
-    public function records(){
-        $fields=$this->fields;
-        $entries=$this->entries;
-        $list=[];
-        foreach($entries as $e=>$entry){
-            $tmp=[];
-            foreach($fields as $f=>$field){
-                $tmp['entry_id']=$entry->id;
-                $tmp[$field->id]='';
+    public function records()
+    {
+        $fields = $this->fields;
+        $entries = $this->entries;
+        $list = [];
+        foreach ($entries as $e => $entry) {
+            $tmp = [];
+            foreach ($fields as $f => $field) {
+                $tmp['entry_id'] = $entry->id;
+                $tmp[$field->id] = '';
             }
-            foreach($entry->records as $r=>$record){
-                $tmp[$record->form_field_id]=$record->field_value;
+            foreach ($entry->records as $r => $record) {
+                $tmp[$record->form_field_id] = $record->field_value;
             }
             array_push($list, $tmp);
         }
         return collect($list);
-        
     }
-    public function hasChild(){
+    public function hasChild()
+    {
         return $this->fields()->exists();
     }
     // public function members(): MorphToMany{
@@ -94,4 +123,3 @@ class Form extends Model implements HasMedia
     // }
 
 }
-    
