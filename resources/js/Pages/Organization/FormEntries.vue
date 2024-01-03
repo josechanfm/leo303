@@ -45,36 +45,186 @@
 
     <!-- Modal Start-->
     <a-modal v-model:visible="modal.isOpen" title="View Only" width="60%">
-      <ol>
-        <li v-for="(field, idx) in form.fields" :key="idx">
-          {{ field.field_name ? field.field_name : "Field_" + (idx + 1) }}:
-          <template v-if="field.type == 'photo'">
-            <img :src="getFieldValue(field)" />
-          </template>
-          <template v-else-if="field.type == 'radio' && field.options">
-            {{
-              getFieldValue(field)
-                ? JSON.parse(field.options).find((x) => x.value == getFieldValue(field))
-                    .label
-                : ""
-            }}
-          </template>
-          <template v-else-if="field.type == 'checkbox'">
-            {{
-              getFieldValue(field)
-                ? JSON.parse(getFieldValue(field))
-                    .map((x) => {
-                      return JSON.parse(field.options).find((y) => y.value == x).label;
-                    })
-                    .join(",")
-                : ""
-            }}
-          </template>
-          <template v-else>
-            {{ getFieldValue(field) }}
-          </template>
-        </li>
-      </ol>
+      <a-form
+        :model="modal.data"
+        ref="formRef"
+        name="default"
+        layout="vertical"
+        :validate-messages="validateMessages"
+      >
+        {{ formData }}
+        <template v-for="field in form.fields" :key="field.id">
+          <div v-if="form.require_member">
+            <a-form-item
+              label="Member Id"
+              :name="field.id"
+              :rules="[{ required: field.required }]"
+            >
+              <a-input v-model:value="$page.props.user.id" />
+            </a-form-item>
+          </div>
+
+          <div v-if="field.type == 'input'">
+            <a-form-item
+              :label="field.field_label"
+              :name="field.id"
+              :rules="[{ required: field.required }]"
+            >
+              <a-input v-model:value="formData[field.id]" />
+            </a-form-item>
+          </div>
+          <div v-else-if="field.type == 'textarea'">
+            <a-form-item
+              :label="field.field_label"
+              :name="field.id"
+              :rules="[{ required: field.required }]"
+            >
+              <a-textarea v-model:value="formData[field.id]" />
+            </a-form-item>
+          </div>
+          <div v-else-if="field.type == 'richtext'">
+            <a-form-item
+              :label="field.field_label"
+              :name="field.id"
+              :rules="[{ required: field.required }]"
+            >
+              <quill-editor
+                v-model:value="formData[field.id]"
+                style="min-height: 200px"
+              />
+            </a-form-item>
+          </div>
+          <div v-else-if="field.type == 'radio'">
+            <a-form-item
+              :label="field.field_label"
+              :name="field.id"
+              :rules="[{ required: field.required }]"
+            >
+              <a-radio-group v-model:value="formData[field.id]">
+                <a-radio
+                  v-for="option in JSON.parse(field.options)"
+                  :key="option.id"
+                  :style="field.direction == 'H' ? '' : verticalStyle"
+                  :value="option.value"
+                  >{{ option.label }}</a-radio
+                >
+              </a-radio-group>
+            </a-form-item>
+          </div>
+          <div v-else-if="field.type == 'checkbox'">
+            <a-form-item
+              :label="field.field_label"
+              :name="field.id"
+              :rules="[{ required: field.required }]"
+            >
+              <a-checkbox-group v-model:value="formData[field.id]">
+                <a-checkbox
+                  v-for="option in JSON.parse(field.options)"
+                  :key="option.id"
+                  :style="field.direction == 'H' ? '' : verticalStyle"
+                  :value="option.value"
+                  >{{ option.label }}</a-checkbox
+                >
+              </a-checkbox-group>
+            </a-form-item>
+          </div>
+          <div v-else-if="field.type == 'dropdown'">
+            <a-form-item
+              :label="field.field_label"
+              :name="field.id"
+              :rules="[{ required: field.required }]"
+            >
+              <a-select
+                v-model:value="formData[field.id]"
+                :options="JSON.parse(field.options)"
+              ></a-select>
+            </a-form-item>
+          </div>
+          <div v-else-if="field.type == 'true_false'">
+            <a-form-item
+              :label="field.field_label"
+              :name="field.id"
+              :rules="[{ required: field.required }]"
+            >
+              <a-switch v-model:checked="formData[field.id]" />
+            </a-form-item>
+          </div>
+          <div v-else-if="field.type == 'date'">
+            <a-form-item
+              :label="field.field_label"
+              :name="field.id"
+              :rules="[{ required: field.required }]"
+            >
+              <a-date-picker
+                v-model:value="formData[field.id]"
+                :format="dateFormat"
+                :valueFormat="dateFormat"
+              />
+            </a-form-item>
+          </div>
+          <div v-else-if="field.type == 'datetime'">
+            <a-form-item
+              :label="field.field_label"
+              :name="field.id"
+              :rules="[{ required: field.required }]"
+            >
+              <a-date-picker
+                v-model:value="formData[field.id]"
+                show-time
+                :format="dateTimeFormat"
+                :valueFormat="dateTimeFormat"
+              />
+            </a-form-item>
+          </div>
+          <div v-else-if="field.type == 'email'">
+            <a-form-item
+              :label="field.field_label"
+              :name="field.id"
+              :rules="[{ required: field.required }, { type: 'email' }]"
+            >
+              <a-input v-model:value="formData[field.id]" />
+            </a-form-item>
+          </div>
+          <div v-else-if="field.type == 'photo'">
+            <a-button @click="showCropModal = true">{{
+              $t("upload_profile_image")
+            }}</a-button>
+            <a-button @click="deletePhoto(field.id)">{{ $t("delete_photo") }}</a-button>
+            <CropperModal
+              v-if="showCropModal"
+              :minAspectRatioProp="{ width: 8, height: 8 }"
+              :maxAspectRatioProp="{ width: 8, height: 8 }"
+              @croppedImageData="setCroppedImageData"
+              @showModal="showCropModal = false"
+            />
+            <div class="flex flex-wrap mt-4 mb-6">
+              <div class="w-full md:w-1/2 px-3">
+                <div v-if="avatarPreview !== null">
+                  <img :src="avatarPreview" />
+                </div>
+                <div v-else>
+                  <img :src="formData[field.id]" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else>
+            <a-form-item
+              :label="field.field_label"
+              :name="field.id"
+              :rules="[{ required: field.required }, { type: 'email' }]"
+            >
+              <p>Data type undefined</p>
+            </a-form-item>
+          </div>
+        </template>
+      </a-form>
+      <template #footer>
+        <a-button key="back" @click="modal.isOpen = false">{{$t('cancel')}}</a-button>
+        <a-button key="submit" type="primary" @click="updateRecord"
+          >{{ $t('update') }}</a-button
+        >
+      </template>
     </a-modal>
     <!-- Modal End-->
   </OrganizationLayout>
@@ -82,22 +232,44 @@
 
 <script>
 import OrganizationLayout from "@/Layouts/OrganizationLayout.vue";
+import CropperModal from "@/Components/Member/CropperModal.vue";
 
 export default {
   components: {
     OrganizationLayout,
+    CropperModal,
   },
   props: ["form", "entries", "entryColumns"],
   data() {
     return {
       selectedDisplayName: null,
+      avatarPreview: null,
+      formData: {},
       rowSelection: {},
       selectedItems: [],
+      showCropModal: false,
       modal: {
         isOpen: false,
         data: {},
         title: "Modal",
         mode: "",
+      },
+      validateMessages: {
+        required: "必填欄位 ",
+        types: {
+          email: "不是有效電郵",
+          number: "不是數字格式",
+        },
+        number: {
+          range: "必須介於 ${min} 至 ${max}",
+        },
+      },
+      verticalStyle: {
+        display: "flex",
+        height: "30px",
+        lineHeight: "30px",
+        width: "100%",
+        marginLeft: "20px",
       },
     };
   },
@@ -125,9 +297,33 @@ export default {
         },
       });
     },
+    setCroppedImageData(data) {
+      this.avatarPreview = data.imageUrl;
+      this.formData[this.form.fields.find((x) => x.type == "photo").id] = data;
+      //console.log(data);
+    },
+    deletePhoto(id) {
+      this.formData["delete_photo"] = true;
+      this.formData[id] = "";
+    },
+    updateRecord(){
+
+    },
     viewRecord(record) {
+      this.formData = {};
       this.modal.data = record;
       this.modal.isOpen = true;
+      this.modal.data.records.forEach((element) => {
+        if (this.form.fields.find((x) => x.id == element.form_field_id).type == "radio") {
+          this.formData[element.form_field_id] = parseInt(element.field_value);
+        } else if (
+          this.form.fields.find((x) => x.id == element.form_field_id).type == "checkbox"
+        ) {
+          this.formData[element.form_field_id] = JSON.parse(element.field_value);
+        } else {
+          this.formData[element.form_field_id] = element.field_value;
+        }
+      });
     },
     deleteRecord(record) {
       this.$inertia.delete(

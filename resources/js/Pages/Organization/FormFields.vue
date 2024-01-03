@@ -233,12 +233,12 @@ export default {
           value: "agree",
           label: "Level of Agreement",
           template: [
-            { value: 5, label: "Strongly Agree" },
-            { value: 4, label: "Argree" },
-            { value: 3, label: "Neutual" },
-            { value: 2, label: "Disagree" },
-            { value: 1, label: "Strongly Disagree" },
-            { value: 0, label: "Not Applicable" },
+            { value: "5", label: "Strongly Agree" },
+            { value: "4", label: "Argree" },
+            { value: "3", label: "Neutual" },
+            { value: "2", label: "Disagree" },
+            { value: "1", label: "Strongly Disagree" },
+            { value: "0", label: "Not Applicable" },
           ],
         },
         {
