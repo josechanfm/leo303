@@ -96,10 +96,10 @@ class EntryController extends Controller
      */
     public function destroy(Form $form, $id)
     {
-        Entry::where('id', $id)->delete();
         EntryRecord::where('entry_id', $id)->delete();
+        Entry::where('id', $id)->delete();
 
-        return redirect()->route('manage.forms.index');
+        return Redirect()->back();
         //
     }
 
