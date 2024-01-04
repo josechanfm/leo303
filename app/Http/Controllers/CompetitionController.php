@@ -22,8 +22,8 @@ class CompetitionController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Competition/Competitions',[
-            'competitions'=>Competition::where('scope','<>','ORG')->get()
+        return Inertia::render('Competition/Competitions', [
+            'competitions' => Competition::where('scope', '<>', 'ORG')->get()
         ]);
     }
 
@@ -45,55 +45,54 @@ class CompetitionController extends Controller
      */
     public function store(Request $request)
     {
-        $data=$request->all();
-        $competition=Competition::find($data['competition_id']);
-        if($competition->scope!='PUB'){
-            if($data['role']=='athlete'){
+        $data = $request->all();
+        $competition = Competition::find($data['competition_id']);
+        if ($competition->scope != 'PUB') {
+            if ($data['role'] == 'athlete') {
                 //max 2 applicatition same competition, in defferent category and/or weight
-                $applicationCount=CompetitionApplication::where('competition_id',$data['competition_id'])
-                                ->where('member_id',$data['member_id'])
-                                ->count();
-                if($applicationCount>=2){
-                    return redirect()->back()->withErrors(['message'=>'You have 2 applications']);
+                $applicationCount = CompetitionApplication::where('competition_id', $data['competition_id'])
+                    ->where('member_id', $data['member_id'])
+                    ->count();
+                if ($applicationCount >= 2) {
+                    return redirect()->back()->withErrors(['message' => 'You have 2 applications']);
                 }
                 //max 1 in same category same weight
-                $applicationCount=CompetitionApplication::where('competition_id',$data['competition_id'])
-                                ->where('member_id',$data['member_id'])
-                                ->where('category',$data['category'])
-                                ->where('weight',$data['weight'])
-                                ->count();
-                if($applicationCount>=1){
-                    return redirect()->back()->withErrors(['message'=>'Duplicate in same category and/or weight']);
+                $applicationCount = CompetitionApplication::where('competition_id', $data['competition_id'])
+                    ->where('member_id', $data['member_id'])
+                    ->where('category', $data['category'])
+                    ->where('weight', $data['weight'])
+                    ->count();
+                if ($applicationCount >= 1) {
+                    return redirect()->back()->withErrors(['message' => 'Duplicate in same category and/or weight']);
                 }
-                $applicationCount=CompetitionApplication::where('competition_id',$data['competition_id'])
-                                ->where('member_id',$data['member_id'])
-                                ->where('role','!=','athlete')
-                                ->count();
-                if($applicationCount>=1){
-                    return redirect()->back()->withErrors(['message'=>'Applied multiple roles']);
+                $applicationCount = CompetitionApplication::where('competition_id', $data['competition_id'])
+                    ->where('member_id', $data['member_id'])
+                    ->where('role', '!=', 'athlete')
+                    ->count();
+                if ($applicationCount >= 1) {
+                    return redirect()->back()->withErrors(['message' => 'Applied multiple roles']);
                 }
-            }else{
+            } else {
                 //max 1 in same category same weight
-                $applicationCount=CompetitionApplication::where('competition_id',$data['competition_id'])
-                                ->where('member_id',$data['member_id'])
-                                ->count();
-                if($applicationCount>=1){
-                    return redirect()->back()->withErrors(['message'=>'Duplicate application']);
+                $applicationCount = CompetitionApplication::where('competition_id', $data['competition_id'])
+                    ->where('member_id', $data['member_id'])
+                    ->count();
+                if ($applicationCount >= 1) {
+                    return redirect()->back()->withErrors(['message' => 'Duplicate application']);
                 }
-                
             }
         }
 
-        if($request->file('avatar')){
+        if ($request->file('avatar')) {
             $file = $request->file('avatar');
             $path = Storage::putFile('public/images/competitions/avatar', $file);
             $data['avatar'] = $path;
         }
-        $application=CompetitionApplication::create($data);
+        $application = CompetitionApplication::create($data);
 
         //return redirect()->route('competitions.index');
-        Session::flash('competitionApplication', $application->id); 
-        return redirect()->route('competition.application.success',$application->id);
+        Session::flash('competitionApplication', $application->id);
+        return redirect()->route('competition.application.success', $application->id);
     }
 
     /**
@@ -105,13 +104,12 @@ class CompetitionController extends Controller
     public function show(Competition $competition)
     {
         $competition->getMedia();
-        return Inertia::render('Competition/ApplicationForm',[
-            'organizations'=>Organization::all(),
-            'belt_ranks'=>Config::item("belt_ranks"),
-            'competition'=>$competition,
-            'member'=>auth()->user()?auth()->user()->member:null
+        return Inertia::render('Competition/ApplicationForm', [
+            'organizations' => Organization::all(),
+            'belt_ranks' => Config::item("belt_ranks"),
+            'competition' => $competition,
+            'member' => auth()->user() ? auth()->user()->member : null
         ]);
-
     }
 
     /**
@@ -122,9 +120,9 @@ class CompetitionController extends Controller
      */
     public function edit($id)
     {
-        Session::flash('competitionApplication', $id); 
+        Session::flash('competitionApplication', $id);
 
-        return redirect()->route('competition.application.success',$id);
+        return redirect()->route('competition.application.success', $id);
     }
 
     /**
@@ -149,38 +147,36 @@ class CompetitionController extends Controller
     {
         //
     }
-    public function applicationSuccess($id, Request $request){
+    public function applicationSuccess($id, Request $request)
+    {
         //$application=CompetitionApplication::with('competition')->find($id);
         //dd($application);
 
-        if(strtoupper($request->format)=='PDF'){
-            if(!session('competitionApplicationPdf') || session('competitionApplicationPdf')!=$id){
+        if (strtoupper($request->format) == 'PDF') {
+            if (!session('competitionApplicationPdf') || session('competitionApplicationPdf') != $id) {
                 return redirect()->route('/');
             }
             // return view('Competition/ApplicationSuccess',[
             //     'belt_ranks'=>Config::item("belt_ranks"),
             //     'application'=>CompetitionApplication::with('competition')->find($id)
             // ]);
-            $pdf=PDF::loadView('Competition.ApplicationSuccess',[
-                'organizations'=>Organization::all()->toArray(),
-                'belt_ranks'=>Config::item("belt_ranks"),
-                'application'=>CompetitionApplication::with('competition')->find($id)
+            $pdf = PDF::loadView('Competition.ApplicationSuccess', [
+                'organizations' => Organization::all()->toArray(),
+                'belt_ranks' => Config::item("belt_ranks"),
+                'application' => CompetitionApplication::with('competition')->find($id)
             ]);
             $pdf->render();
-            return $pdf->stream('receipt.pdf',array('Attachment'=>false));
-
-        }else{
-            if(!session('competitionApplication') || session('competitionApplication')!=$id){
+            return $pdf->stream('receipt.pdf', array('Attachment' => false));
+        } else {
+            if (!session('competitionApplication') || session('competitionApplication') != $id) {
                 return redirect()->route('/');
             }
-            Session::flash('competitionApplicationPdf', $id); 
-            return Inertia::render('Competition/Success',[
-                'organizations'=>Organization::all(),
-                'belt_ranks'=>Config::item("belt_ranks"),
-                'application'=>CompetitionApplication::with('competition')->find($id)
+            Session::flash('competitionApplicationPdf', $id);
+            return Inertia::render('Competition/Success', [
+                'organizations' => Organization::all(),
+                'belt_ranks' => Config::item("belt_ranks"),
+                'application' => CompetitionApplication::with('competition')->find($id)
             ]);
         }
-
     }
-    
 }

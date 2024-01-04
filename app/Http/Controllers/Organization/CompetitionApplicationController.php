@@ -23,9 +23,9 @@ class CompetitionApplicationController extends Controller
     public function index(Competition $competition)
     {
         $competition->applications;
-        Session::put('competitionId', $competition->id); 
-        return Inertia::render('Organization/CompetitionApplications',[
-            'competition'=>$competition
+        Session::put('competitionId', $competition->id);
+        return Inertia::render('Organization/CompetitionApplications', [
+            'competition' => $competition
         ]);
     }
 
@@ -81,7 +81,7 @@ class CompetitionApplicationController extends Controller
      */
     public function update(Request $request, Competition $competition, $id)
     {
-        $competitionApplication=CompetitionApplication::find($id);
+        $competitionApplication = CompetitionApplication::find($id);
         // return response()->json($competitionApplication);
         // return response()->json($request->all());
         $competitionApplication->update($request->all());
@@ -95,48 +95,48 @@ class CompetitionApplicationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Competition $competition, $id)
-    {   
-        $competitionApplication=CompetitionApplication::find($id);
-        if($competitionApplication->avatar){
+    {
+        $competitionApplication = CompetitionApplication::find($id);
+        if ($competitionApplication->avatar) {
             Storage::delete($competitionApplication->avatar);
         }
-        
+
         $competitionApplication->delete();
 
         return redirect()->back();
     }
 
-    public function receipts(Competition $competition, Request $request){
-        if(!session('competitionId') || session('competitionId')!=$competition->id){
+    public function receipts(Competition $competition, Request $request)
+    {
+        if (!session('competitionId') || session('competitionId') != $competition->id) {
             return redirect()->route('/');
         }
-        $applications=CompetitionApplication::whereIn('id',explode(',',$request->applicationIds))->get();
+        $applications = CompetitionApplication::whereIn('id', explode(',', $request->applicationIds))->get();
         $pdf = app('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
         // return view('Competition.ApplicationReceipt',[
         //     'competition'=>$competition,
         //     'applications'=>$applications
         // ]);
-        $pdf=PDF::loadView('Competition.ApplicationReceipt',[
-            'competition'=>$competition,
-            'applications'=>$applications
+        $pdf = PDF::loadView('Competition.ApplicationReceipt', [
+            // 'competition'=>$competition,
+            // 'applications'=>$applications
         ]);
         $pdf->render();
-        return $pdf->stream('receipts.pdf',array('Attachment'=>false));
-
+        return $pdf->stream('receipts.pdf', array('Attachment' => false));
     }
-    public function export(Competition $competition){
-        
+    public function export(Competition $competition)
+    {
+
         //echo $applications;
         //dd('aa');
         //dd($competition);
         return Excel::download(new CompetitionApplicationExport($competition), 'applications.xlsx');
     }
 
-    public function success(CompetitionApplication $competitionApplication){
-        Session::flash('competitionApplication', $competitionApplication->id); 
-        return redirect()->route('competition.application.success',$competitionApplication->id);
-
+    public function success(CompetitionApplication $competitionApplication)
+    {
+        Session::flash('competitionApplication', $competitionApplication->id);
+        return redirect()->route('competition.application.success', $competitionApplication->id);
     }
-    
 }

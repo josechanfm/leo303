@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Organization;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Organization;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Form;
 use Inertia\Inertia;
 use App\Exports\EntryExport;
@@ -12,6 +14,7 @@ use App\Models\Entry;
 use App\Models\EntryRecord;
 use Illuminate\Support\Facades\Redirect;
 use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 
 class EntryController extends Controller
@@ -83,9 +86,30 @@ class EntryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Form $form, Entry $entry)
     {
         //
+        collect($request->fields)->map(function ($entryField, $key) use ($entry) {
+            if (is_array($entryField)) {
+                if (isset($entryField['file'])) {
+                    $file = $entryField['blob'];
+                    $path = Storage::putFile('public/images/forms/photos', $file);
+                    $entryField = Storage::url($path);
+                }
+            }
+            $entry->records()->updateOrCreate(
+                [
+                    'form_field_id' => $key,
+                ],
+                [
+                    'entry_id' => $entry->id,
+                    //                'name_en' => $category['name_en'],
+                    'form_field_id' => $key,
+                    'field_value' => $entryField,
+                ]
+            );
+        });
+        return redirect()->back();
     }
 
     /**
@@ -106,5 +130,43 @@ class EntryController extends Controller
     public function export(Form $form)
     {
         return Excel::download(new EntryExport($form), 'member.xlsx');
+    }
+
+    public function success(Form $form, Entry $entry)
+    {
+        Session::flash('entry', $entry->id);
+        // dd($form, $entry);
+        return redirect()->route('form.entry.success', ['form' => $form->id, 'entry' => $entry->id]);
+    }
+    public function entrySuccess(Form $form, Entry $entry, Request $request)
+    {
+        $entry_records = EntryRecord::where('entry_id', $entry->id)->with('form_field')->get();
+        if (strtoupper($request->format) == 'PDF') {
+            // if (!session('entryPdf') || session('entryPdf') != $entry->id) {
+            //     return redirect()->route('/');
+            // }
+            // return view('Entry/EntrySuccess', [
+            //     'form' => $form,
+            //     'entry' => $entry,
+            //     'entry_records' => $entry_records,
+            // ]);
+            $pdf = PDF::loadView('Entry/EntrySuccess', [
+                'form' => $form,
+                'entry' => $entry,
+                'entry_records' => $entry_records,
+            ]);
+            $pdf->render();
+            return $pdf->stream('receipt.pdf', array('Attachment' => false));
+        } else {
+            if (!session('entry') || session('entry') != $entry->id) {
+                return redirect()->route('/');
+            }
+            Session::flash('entryPdf', $entry->id);
+            return Inertia::render('Form/Success', [
+                'form' => $form,
+                'entry' => $entry,
+                'entry_records' => $entry_records,
+            ]);
+        }
     }
 }

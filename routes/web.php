@@ -86,7 +86,7 @@ Route::group([
 Route::resource('forms', App\Http\Controllers\FormController::class)->names('forms');
 Route::resource('competitions', App\Http\Controllers\CompetitionController::class)->names('competitions');
 Route::get('competition/application/{competitionApplication}/success', [App\Http\Controllers\CompetitionController::class, 'applicationSuccess'])->name('competition.application.success');
-
+Route::get('form/{form}/entry/{entry}/success', [App\Http\Controllers\Organization\EntryController::class, 'entrySuccess'])->name('form.entry.success');
 Route::group([
     'prefix' => '/manage',
     'middleware' => [
@@ -107,6 +107,7 @@ Route::group([
     Route::resource('form/{form}/fields', App\Http\Controllers\Organization\FormFieldController::class)->names('manage.form.fields');
     Route::post('form/{form}/fields_sequence', [App\Http\Controllers\Organization\FormFieldController::class, 'fieldsSequence'])->name('manage.form.fieldsSequence');
     Route::resource('form/{form}/entries', App\Http\Controllers\Organization\EntryController::class)->names('manage.form.entries');
+    Route::get('form/{form}/entry/{entry}/success', [App\Http\Controllers\Organization\EntryController::class, 'success'])->name('manage.form.entry.success');
     Route::post('form/{form}/createEventAttendees', [App\Http\Controllers\Organization\FormController::class, 'createEventAttendees'])->name('manage.form.createEventAttendees');
     Route::get('member/export', [App\Http\Controllers\Organization\MemberController::class, 'export'])->name('member.member.export');
     Route::get('entry/{form}/export', [App\Http\Controllers\Organization\EntryController::class, 'export'])->name('manage.entry.export');

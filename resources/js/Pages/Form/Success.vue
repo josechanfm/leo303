@@ -56,6 +56,11 @@
             <a :href="route('/')">返回主頁</a>
           </div>
           <div>
+            <a :href="'/form/' + form.id + '/entry/' + entry.id + '/success?format=pdf'"
+              >打印表格</a
+            >
+          </div>
+          <div>
             <a :href="route('forms.index')">活動列表</a>
           </div>
         </div>
@@ -71,7 +76,7 @@ export default {
   components: {
     WebLayout,
   },
-  props: ["form", "entry_records"],
+  props: ["form", "entry_records", "entry"],
   data() {
     return {};
   },

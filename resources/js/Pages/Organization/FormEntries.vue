@@ -23,7 +23,13 @@
     >
       <template #bodyCell="{ column, text, record, index }">
         <template v-if="column.dataIndex == 'operation'">
-          <a-button @click="viewRecord(record)">{{ $t("view") }}</a-button>
+          <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
+          <a
+            :href="route('manage.form.entry.success', { form: form, entry: record.id })"
+            target="_blank"
+            class="ant-btn"
+            >{{ $t("receipt") }}</a
+          >
           <a-popconfirm
             :title="$t('confirm_delete_record')"
             :ok-text="$t('yes')"
@@ -52,7 +58,6 @@
         layout="vertical"
         :validate-messages="validateMessages"
       >
-        {{ formData }}
         <template v-for="field in form.fields" :key="field.id">
           <div v-if="form.require_member">
             <a-form-item
@@ -186,10 +191,12 @@
             </a-form-item>
           </div>
           <div v-else-if="field.type == 'photo'">
-            <a-button @click="showCropModal = true">{{
+            <a-button v-if="!formData[field.id]" @click="showCropModal = true">{{
               $t("upload_profile_image")
             }}</a-button>
-            <a-button @click="deletePhoto(field.id)">{{ $t("delete_photo") }}</a-button>
+            <a-button v-else @click="deletePhoto(field.id)">{{
+              $t("delete_photo")
+            }}</a-button>
             <CropperModal
               v-if="showCropModal"
               :minAspectRatioProp="{ width: 8, height: 8 }"
@@ -220,10 +227,10 @@
         </template>
       </a-form>
       <template #footer>
-        <a-button key="back" @click="modal.isOpen = false">{{$t('cancel')}}</a-button>
-        <a-button key="submit" type="primary" @click="updateRecord"
-          >{{ $t('update') }}</a-button
-        >
+        <a-button key="back" @click="modal.isOpen = false">{{ $t("cancel") }}</a-button>
+        <a-button key="submit" type="primary" @click="updateRecord">{{
+          $t("update")
+        }}</a-button>
       </template>
     </a-modal>
     <!-- Modal End-->
@@ -232,6 +239,7 @@
 
 <script>
 import OrganizationLayout from "@/Layouts/OrganizationLayout.vue";
+import { message } from "ant-design-vue";
 import CropperModal from "@/Components/Member/CropperModal.vue";
 
 export default {
@@ -306,17 +314,28 @@ export default {
       this.formData["delete_photo"] = true;
       this.formData[id] = "";
     },
-    updateRecord(){
-
+    updateRecord() {
+      console.log(this.formData);
+      this.$inertia.patch(
+        route("manage.form.entries.update", { form: this.form, entry: this.modal.data }),
+        { fields: this.formData },
+        {
+          onSuccess: (page) => {
+            message.success(this.$t("update_success"));
+            this.modal.isOpen = false;
+          },
+          onError: (err) => {
+            console.log(err);
+          },
+        }
+      );
     },
-    viewRecord(record) {
+    editRecord(record) {
       this.formData = {};
       this.modal.data = record;
       this.modal.isOpen = true;
       this.modal.data.records.forEach((element) => {
-        if (this.form.fields.find((x) => x.id == element.form_field_id).type == "radio") {
-          this.formData[element.form_field_id] = parseInt(element.field_value);
-        } else if (
+        if (
           this.form.fields.find((x) => x.id == element.form_field_id).type == "checkbox"
         ) {
           this.formData[element.form_field_id] = JSON.parse(element.field_value);
@@ -330,7 +349,7 @@ export default {
         route("manage.form.entries.destroy", { form: this.form, entry: record }),
         {
           onSuccess: (page) => {
-            message.success($t("delete_success"));
+            message.success(this.$t("delete_success"));
           },
           onError: (err) => {
             console.log(err);

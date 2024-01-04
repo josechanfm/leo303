@@ -10,6 +10,11 @@ class EntryRecord extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'entry_id',
+        'form_field_id',
+        'field_value'
+    ];
     protected $casts = [
         'options' => 'array',
     ];
