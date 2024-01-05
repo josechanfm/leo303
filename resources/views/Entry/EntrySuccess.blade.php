@@ -54,7 +54,7 @@
                         <td rowspan="4">
                         @php
                             if($table_data['相片']!=null){
-                            echo '<img src="'.public_path($bannerImage=$table_data['相片']) .'" width="100px/>"'; 
+                            echo '<img src="'.public_path($bannerImage=$table_data['相片']) .'" width="120px/>"'; 
                             }else{
                             echo '相<br>片';
                             }
