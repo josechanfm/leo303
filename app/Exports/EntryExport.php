@@ -20,7 +20,6 @@ class EntryExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         $columnHeaders = $this->form->fields->pluck('field_label')->toArray();
-        array_unshift($columnHeaders, 'Record #');
         return $columnHeaders;
     }
     public function collection()

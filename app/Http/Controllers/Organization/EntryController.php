@@ -155,7 +155,7 @@ class EntryController extends Controller
                 })->first();
                 if ($field->type == 'radio') {
                     $value = array_filter(json_decode($field->options), function ($item) use ($entry_record) {
-                        return $item->value == $entry_record->field_value;
+                        return $item->value == $entry_record?->field_value;
                     });
                     $table_data[$field->field_label] = reset($value)->label;
                     // 
@@ -168,7 +168,7 @@ class EntryController extends Controller
                         $labels[] = $item->label;
                     }
                     $result = implode(',', $labels);
-                    $table_data[$field->field_label] = $result;
+                    $table_data[$field->field_label] = $result??'';
                 } else {
                     $table_data[$field->field_label] = $entry_record?->field_value;
                 };
