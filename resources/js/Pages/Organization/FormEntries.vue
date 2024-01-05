@@ -251,6 +251,7 @@ export default {
   props: ["form", "entries", "entryColumns"],
   data() {
     return {
+      dateFormat: "YYYY-MM-DD",
       selectedDisplayName: null,
       avatarPreview: null,
       formData: {},
