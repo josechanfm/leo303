@@ -157,7 +157,7 @@ class EntryController extends Controller
                     $value = array_filter(json_decode($field->options), function ($item) use ($entry_record) {
                         return $item->value == $entry_record?->field_value;
                     });
-                    $table_data[$field->field_label] = reset($value)?->label;
+                    $table_data[$field->field_label] = reset($value)->label;
                     // 
                 } else if ($field->type == 'checkbox') {
                     $value = array_filter(json_decode($field->options), function ($item) use ($entry_record) {
@@ -168,9 +168,9 @@ class EntryController extends Controller
                         $labels[] = $item->label;
                     }
                     $result = implode(',', $labels);
-                    $table_data[$field->field_label] = $result ?? '';
+                    $table_data[$field->field_label] = $result;
                 } else {
-                    $table_data[$field->field_label] = $entry_record?->field_value;
+                    $table_data[$field->field_label] = $entry_record->field_value;
                 };
             });
             // dd($table_data);

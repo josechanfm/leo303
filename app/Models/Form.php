@@ -128,13 +128,13 @@ class Form extends Model implements HasMedia
                 })->first();
                 if ($field->type == 'radio') {
                     $value = array_filter(json_decode($field->options), function ($item) use ($entry_record) {
-                        return $item->value == $entry_record?->field_value;
+                        return $item->value == $entry_record->field_value;
                     });
-                    $table_data[$field->field_label] = reset($value)?->label;
+                    $table_data[$field->field_label] = reset($value)->label;
                     // 
                 } else if ($field->type == 'checkbox') {
                     $value = array_filter(json_decode($field->options), function ($item) use ($entry_record) {
-                        return in_array($item->value, json_decode($entry_record?->field_value));
+                        return in_array($item->value, json_decode($entry_record->field_value));
                     });
                     $labels = [];
                     foreach ($value as $item) {
@@ -143,7 +143,7 @@ class Form extends Model implements HasMedia
                     $result = implode(',', $labels);
                     $table_data[$field->field_label] = $result;
                 } else {
-                    $table_data[$field->field_label] = $entry_record?->field_value;
+                    $table_data[$field->field_label] = $entry_record->field_value;
                 };
             });
             array_push($list, $table_data);
