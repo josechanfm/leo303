@@ -12,6 +12,7 @@ use Inertia\Inertia;
 use App\Exports\EntryExport;
 use App\Models\Entry;
 use App\Models\EntryRecord;
+use App\Models\FormField;
 use Illuminate\Support\Facades\Redirect;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
@@ -141,6 +142,8 @@ class EntryController extends Controller
     public function entrySuccess(Form $form, Entry $entry, Request $request)
     {
         $entry_records = EntryRecord::where('entry_id', $entry->id)->with('form_field')->get();
+        $form_fields = FormField::where('form_id', $form->id)->get();
+        $table_data = [];
         if (strtoupper($request->format) == 'PDF') {
             // if (!session('entryPdf') || session('entryPdf') != $entry->id) {
             //     return redirect()->route('/');
@@ -150,11 +153,37 @@ class EntryController extends Controller
             //     'entry' => $entry,
             //     'entry_records' => $entry_records,
             // ]);
+            collect($form_fields)->map(function ($field, $key) use ($entry_records, &$table_data) {
+                $entry_record = collect($entry_records)->filter(function ($item) use ($field) {
+                    return $item->form_field_id == $field->id;
+                })->first();
+                if ($field->type == 'radio') {
+                    $value = array_filter(json_decode($field->options), function ($item) use ($entry_record) {
+                        return $item->value == $entry_record->field_value;
+                    });
+                    $table_data[$field->field_label] = reset($value)->label;
+                    // 
+                } else if ($field->type == 'checkbox') {
+                    $value = array_filter(json_decode($field->options), function ($item) use ($entry_record) {
+                        return in_array($item->value, json_decode($entry_record->field_value));
+                    });
+                    $labels = [];
+                    foreach ($value as $item) {
+                        $labels[] = $item->label;
+                    }
+                    $result = implode(',', $labels);
+                    $table_data[$field->field_label] = $result;
+                } else {
+                    $table_data[$field->field_label] = $entry_record?->field_value;
+                };
+            });
+            // dd($table_data);
             $pdf = PDF::loadView('Entry/EntrySuccess', [
-                'form' => $form,
-                'entry' => $entry,
-                'entry_records' => $entry_records,
+                'table_data' => $table_data,
             ]);
+            // return view('Entry/EntrySuccess', [
+            //     'table_data' => $table_data,
+            // ]);
             $pdf->render();
             return $pdf->stream('receipt.pdf', array('Attachment' => false));
         } else {

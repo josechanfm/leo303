@@ -48,14 +48,17 @@
                     </tr>
                     <tr>
                         <td style="width:80px">姓名</td>
-                        <td colspan="2"></td>
+                        <td colspan="2">{{$table_data['姓名(中文)']??''}}</td>
                         <td>性别</td>
-                        <td colspan="2"></td>
-                        <td rowspan="4">照<br>片</td>
+                        <td colspan="2">{{$table_data['性別']??''}}</td>
+                        <td rowspan="4">@php
+                            echo '<img src="'.public_path($bannerImage=$table_data['相片']) .'" width="100px/>"'; 
+                        @endphp
+                    </td>
                     </tr>
                     <tr>
                         <td>出生年月</td>
-                        <td colspan="2"></td>
+                        <td colspan=" 2">{{$table_data['出生日期']??''}}</td>
                         <td>出生地點</td>
                         <td colspan="2"></td>
                     </tr>
@@ -63,7 +66,7 @@
                         <td>身份證號</td>
                         <td colspan="2"></td>
                         <td>國籍</td>
-                        <td colspan="2"></td>
+                        <td colspan="2">{{$table_data['國籍']??''}}</td>
                     </tr>
                     <tr>
                         <td>學歷</td>
@@ -77,19 +80,19 @@
                         <td>英語水平</td>
                         <td colspan="3"></td>
                         <td colspan="2" style="text-align: left;">執教 &#10004; /裁判&#x2610; 年期</td>
-                        <td><span>☑</span></td>
-                    </tr>
-                    <tr>
-                        <td>屬會</td>
-                        <td colspan="3"></td>
-                        <td colspan="2">柔道等級</td>
                         <td></td>
                     </tr>
                     <tr>
+                        <td>屬會</td>
+                        <td colspan="3">{{$table_data['屬會']??''}}</td>
+                        <td colspan="2">柔道等級</td>
+                        <td>{{$table_data['帶別']??''}}</td>
+                    </tr>
+                    <tr>
                         <td>聯繫電話</td>
-                        <td colspan="2"></td>
+                        <td colspan="2">{{$table_data['連絡電話']??''}}</td>
                         <td>E-mail</td>
-                        <td colspan="3"></td>
+                        <td colspan="3">{{$table_data['E-mail']??''}}</td>
                     </tr>
                     <tr>
                         <td>通訊地址</td>
@@ -132,17 +135,23 @@
                         <td width="25%"></td>
                     </tr>
                 </table>
-                <div style="padding:12px 0px 12px 0px;border: 1px solid;margin-top: 24px;">
+                <div style="padding:20px 0px 20px 0px;border: 1px solid;margin-top: 24px;">
                     申請人簽名：
                 </div>
                 <div style="font-size:20px;text-align: center;margin-top: 24px;">以下由澳門柔道協會及申請人所屬協會/道場/俱樂部/學校填寫：</div>
                 <div>
-                    <div style="float:left;width: 50%;border: 1px solid;">
-                        <div>提名屬會：</div>
-                    </div>
-                    <div style="float:right;width: 50%;border: 1px solid;">
-                        <div>澳門柔道協會批覆：</div>
-                    </div>
+                    <table>
+                        <tr style="font-size:18px;">
+                            <td width="50%" style="padding:10px">提名屬會：<br><br><br><br>
+                                <div style="text-align: right;padding-right: 22px;">（蓋章）</div>
+                                <div style="text-align: right;letter-spacing:6px">年 月 日</div>
+                            </td>
+                            <td width="50%" style="padding:10px">澳門柔道協會批覆：<br><br><br><br>
+                                <div style="text-align: right;padding-right: 22px;">（蓋章）</div>
+                                <div style="text-align: right;letter-spacing:6px">年 月 日</div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
