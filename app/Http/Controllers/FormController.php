@@ -87,6 +87,7 @@ class FormController extends Controller
         $entry_records = EntryRecord::where('entry_id', $entry->id)->with('form_field')->get();
         return Inertia::render('Form/Success', [
             'form' => $form,
+            'entry' => $entry,
             'entry_records' => $entry_records,
         ]);
     }
