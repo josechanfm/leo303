@@ -170,7 +170,7 @@ class EntryController extends Controller
                     $result = implode(',', $labels);
                     $table_data[$field->field_label] = $result;
                 } else {
-                    $table_data[$field->field_label] = $entry_record->field_value;
+                    $table_data[$field->field_label] = $entry_record?->field_value;
                 };
             });
             // dd($table_data);
