@@ -9,20 +9,22 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 class EntryExport implements FromCollection, WithHeadings
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     protected $form;
 
-    function __construct($form){
-        $this->form=$form;
-    }
-    public function headings():array
+    function __construct($form)
     {
-        $columnHeaders=$this->form->fields->pluck('field_name')->toArray();
-        array_unshift($columnHeaders,'Record #');
+        $this->form = $form;
+    }
+    public function headings(): array
+    {
+        $columnHeaders = $this->form->fields->pluck('field_label')->toArray();
+        array_unshift($columnHeaders, 'Record #');
         return $columnHeaders;
     }
-    public function collection(){
-        return $this->form->records();
+    public function collection()
+    {
+        return $this->form->excelRecords();
     }
 }

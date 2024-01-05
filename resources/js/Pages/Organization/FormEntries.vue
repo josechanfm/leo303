@@ -6,7 +6,7 @@
       </h2>
     </template>
     {{ selectedDisplayName }}
-    <a-select
+    <!-- <a-select
       v-model:value="selectedDisplayName"
       style="width: 120px"
       :options="entryColumns.filter((c) => c.dataIndex.substring(0, 6) == 'extra_')"
@@ -14,7 +14,8 @@
     />
     <a-button @click="createEventAttendees" :disabled="!selectedDisplayName"
       >Event Attendees</a-button
-    >
+    > -->
+    <a :href="route('manage.entry.export', form.id)" class="ant-btn">滙出Excel</a>
     <a-table
       :dataSource="entries"
       :columns="entryColumns"

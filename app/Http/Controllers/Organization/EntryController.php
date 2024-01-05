@@ -130,6 +130,7 @@ class EntryController extends Controller
 
     public function export(Form $form)
     {
+        // dd($form->excelRecords());
         return Excel::download(new EntryExport($form), 'member.xlsx');
     }
 
@@ -145,14 +146,9 @@ class EntryController extends Controller
         $form_fields = FormField::where('form_id', $form->id)->get();
         $table_data = [];
         if (strtoupper($request->format) == 'PDF') {
-            // if (!session('entryPdf') || session('entryPdf') != $entry->id) {
-            //     return redirect()->route('/');
-            // }
-            // return view('Entry/EntrySuccess', [
-            //     'form' => $form,
-            //     'entry' => $entry,
-            //     'entry_records' => $entry_records,
-            // ]);
+            if (!session('entryPdf') || session('entryPdf') != $entry->id) {
+                return redirect()->route('/');
+            }
             collect($form_fields)->map(function ($field, $key) use ($entry_records, &$table_data) {
                 $entry_record = collect($entry_records)->filter(function ($item) use ($field) {
                     return $item->form_field_id == $field->id;

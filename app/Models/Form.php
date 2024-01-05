@@ -85,7 +85,7 @@ class Form extends Model implements HasMedia
                         $labels = [];
                         foreach ($value as $item) {
                             $labels[] = $item->label;
-                        }            
+                        }
                         $result = implode(',', $labels);
                         $entry['extra_' . $field->id] = $result;
                     } else {
@@ -111,6 +111,42 @@ class Form extends Model implements HasMedia
                 $tmp[$record->form_field_id] = $record->field_value;
             }
             array_push($list, $tmp);
+        }
+        return collect($list);
+    }
+
+    public function excelRecords()
+    {
+        $form_fields = $this->fields;
+        $list = [];
+        // $this->form->fields->pluck('field_label')->toArray();
+        foreach ($this->entries as $entry) {
+            $entry_records = $entry->records;
+            collect($form_fields)->map(function ($field, $key) use ($entry_records, &$table_data) {
+                $entry_record = collect($entry_records)->filter(function ($item) use ($field) {
+                    return $item->form_field_id == $field->id;
+                })->first();
+                if ($field->type == 'radio') {
+                    $value = array_filter(json_decode($field->options), function ($item) use ($entry_record) {
+                        return $item->value == $entry_record->field_value;
+                    });
+                    $table_data[$field->field_label] = reset($value)->label;
+                    // 
+                } else if ($field->type == 'checkbox') {
+                    $value = array_filter(json_decode($field->options), function ($item) use ($entry_record) {
+                        return in_array($item->value, json_decode($entry_record->field_value));
+                    });
+                    $labels = [];
+                    foreach ($value as $item) {
+                        $labels[] = $item->label;
+                    }
+                    $result = implode(',', $labels);
+                    $table_data[$field->field_label] = $result;
+                } else {
+                    $table_data[$field->field_label] = $entry_record?->field_value;
+                };
+            });
+            array_push($list, $table_data);
         }
         return collect($list);
     }

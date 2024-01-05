@@ -15,7 +15,7 @@
                   <template v-for="record in entry_records" :key="record.id">
                     <tr v-if="record.form_field.type == 'photo'">
                       <td>{{ record.form_field.field_label }}</td>
-                      <td><img :src="record.field_value" /></td>
+                      <td><img :src="record.field_value" width="120px"/></td>
                     </tr>
                     <tr v-else-if="record.form_field.type == 'radio'">
                       <td>{{ record.form_field.field_label }}</td>
