@@ -51,11 +51,13 @@
                         <td colspan="2">{{$table_data['姓名(中文)']??''}}</td>
                         <td>性别</td>
                         <td colspan="2">{{$table_data['性別']??''}}</td>
-                        <td rowspan="4">@php
+                        <td rowspan="4">
+                        @php
                             if($table_data['相片']!=null){
                             echo '<img src="'.public_path($bannerImage=$table_data['相片']) .'" width="100px/>"'; 
+                            }else{
+                            echo '相<br>片';
                             }
-                            echo '相<br>片'
                         @endphp
                     </td>
                     </tr>
