@@ -82,7 +82,7 @@
 				</tr>
 				<tr>
 					<td>性別：{{ $application->gender=='M'?'男':'女' }}</td>
-					<td>帶別：{{ $belt_ranks[array_search($application->belt,array_column($belt_ranks,'rankCode'))]->name_zh }}</td>
+					<td>帶別：{{ $belt_ranks[array_search($application->belt_rank,array_column($belt_ranks,'rankCode'))]->name_zh }}</td>
 				</tr>
 				<tr>
 					<td>年齡：{{ $age}}
