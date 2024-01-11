@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('attendances', function (Blueprint $table) {
+        Schema::create('papers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id');
+            $table->foreignId('user_id');
+            $table->string('category');
             $table->string('title');
-            $table->date('date')->nullable();
-            $table->foreignId('user_id')->nullable();
-            $table->boolean('with_attendance'); 
+            $table->text('description')->nullable();
+            $table->boolean('submited')->default(FALSE);
+            $table->date('valid_at')->nullable();
+            $table->date('expire_at')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attendances');
+        Schema::dropIfExists('papers');
     }
 };

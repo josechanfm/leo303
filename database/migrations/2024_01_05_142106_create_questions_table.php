@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('attendances', function (Blueprint $table) {
+        Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('organization_id');
+            $table->foreignId('exam_id');
             $table->string('title');
-            $table->date('date')->nullable();
-            $table->foreignId('user_id')->nullable();
-            $table->boolean('with_attendance'); 
+            $table->text('description');
+            $table->text('type');
+            $table->text('options');
+            $table->text('correct');
+            $table->integer('score');
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attendances');
+        Schema::dropIfExists('questions');
     }
 };

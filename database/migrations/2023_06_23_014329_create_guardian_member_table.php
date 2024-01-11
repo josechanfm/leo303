@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('guardian_member', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('guardian_id');
-            $table->bigInteger('member_id');
+            $table->foreignId('guardian_id');
+            $table->foreignId('member_id');
             $table->timestamps();
         });
     }

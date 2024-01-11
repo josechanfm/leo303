@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('entries', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('form_id');
-            $table->bigInteger('member_id')->nullable();
+            $table->foreignId('form_id');
+            $table->foreignId('member_id')->nullable();
             $table->timestamps();
         });
     }

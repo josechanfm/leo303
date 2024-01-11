@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('bulletin_images', function (Blueprint $table) {
             $table->id();
-            $table->integer('bulletin_id');
+            $table->foreignId('bulletin_id');
             $table->text('image_path')->nullable();
             $table->string('facebook_id')->nullable();
             $table->timestamps();
