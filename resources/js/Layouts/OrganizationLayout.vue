@@ -19,7 +19,6 @@
 
       <OrganizationMenu :menuKeys="menuKeys" />
     </a-layout-sider>
-
     <a-layout>
       <a-layout-header
         class="shadow-md border-b-2 border-red-600 flex"
@@ -59,15 +58,16 @@
               </button>
             </span>
           </template>
+
           <template #content>
             <div class="w-20">
               <template v-if="$page.props.jetstream.hasTeamFeatures">
-                <DropdownLink :href="route('language', 'zh')">
+                <DropdownLink :href="route('language', 'zh-TW')">
                   {{ $t("chinese") }}
                 </DropdownLink>
-                <DropdownLink :href="route('language', 'en')">{{
-                  $t("english")
-                }}</DropdownLink>
+                <DropdownLink :href="route('language', 'en')">
+                  {{ $t("english") }}
+                </DropdownLink>
               </template>
             </div>
           </template>
@@ -100,7 +100,7 @@
           </template>
         </a-dropdown>
       </a-layout-header>
-
+      <!-- {{ $page.props }} -->
       <a-layout-content>
         <PageHeader v-if="$slots.header" :menuKeys="menuKeys">
           <template #header>
@@ -123,12 +123,14 @@
 <script>
 import { ref, reactive } from "vue";
 import { Inertia } from "@inertiajs/inertia";
+import { usePage } from "@inertiajs/inertia-vue3";
 import PageHeader from "@/Components/Organization/PageHeader.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons-vue";
 import OrganizationMenu from "@/Components/Organization/OrganizationMenu.vue";
 import { loadLanguageAsync } from "laravel-vue-i18n";
+import { getActiveLanguage } from "laravel-vue-i18n";
 
 export default {
   components: {
@@ -139,6 +141,7 @@ export default {
     loadLanguageAsync,
     MenuUnfoldOutlined,
     MenuFoldOutlined,
+    getActiveLanguage,
   },
   props: ["title"],
   setup(props) {
@@ -162,10 +165,12 @@ export default {
         }
       );
     };
-
+    const page = usePage();
+    loadLanguageAsync(page.props.value.lang);
     const logout = () => {
       Inertia.post(route("logout"));
     };
+
     return {
       showingNavigationDropdown,
       selectedKeys,
@@ -175,9 +180,6 @@ export default {
       logout,
       loadLanguageAsync,
     };
-  },
-  mounted() {
-    //this.loadLanguageAsync(this.$page.props.lang);
   },
 };
 // defineProps({

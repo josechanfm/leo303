@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('forms', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('organization_id');
+            $table->foreignId('organization_id');
             $table->string('name');
             $table->string('title')->nullable();
             $table->text('description')->nullable();

@@ -487,7 +487,7 @@ class ConfigSeeder extends Seeder
                     {"rankCode":"green","name_zh":"綠帶","name_en":"Green Belt"},
                     {"rankCode":"blue","name_zh":"藍帶","name_en":"Blue Belt"},
                     {"rankCode":"brown","name_zh":"啡帶","name_en":"Brown Belt"},
-                    {"rankCode":"dan_1","name_zh":"黑帶1段","name_en":"Blank Belt (Dan 1)"},
+                    {"rankCode":"dan_1","name_zh":"黑帶初段","name_en":"Blank Belt (Dan 1)"},
                     {"rankCode":"dan_2","name_zh":"黑帶2段","name_en":"Blank Belt (Dan 2)"},
                     {"rankCode":"dan_3","name_zh":"黑帶3段","name_en":"Blank Belt (Dan 3)"},
                     {"rankCode":"dan_4","name_zh":"黑帶4段","name_en":"Blank Belt (Dan 4)"},
