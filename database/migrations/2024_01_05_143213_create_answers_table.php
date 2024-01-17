@@ -16,12 +16,8 @@ return new class extends Migration
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('paper_id');
-            $table->string('title');
-            $table->text('description');
-            $table->text('type');
-            $table->text('options');
-            $table->text('correct');
-            $table->text('answers');
+            $table->foreignId('question_id');
+            $table->text('answer');
             $table->integer('score');
             $table->timestamps();
         });

@@ -34,7 +34,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             GuardianSeeder::class,
             ConfigSeeder::class,
-            PositionSeeder::class
+            PositionSeeder::class,
+            ExamSeeder::class
         ]);
 
 

@@ -15,10 +15,11 @@ return new class extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
-            $table->string('category');
+            $table->foreignId('organization_id');
+            $table->string('category_code');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->boolean('publish')->default(FALSE);
+            $table->boolean('published')->default(FALSE);
             $table->timestamps();
         });
     }

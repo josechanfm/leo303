@@ -130,6 +130,11 @@ Route::group([
     Route::resource('event/{event}/attendees', App\Http\Controllers\Organization\AttendeeController::class)->names('manage.event.attendees');
     Route::resource('configs', App\Http\Controllers\Organization\ConfigController::class)->names('manage.configs');
     Route::get('image_upload', [App\Http\Controllers\Organization\UploaderController::class, 'image'])->name('manage.image_upload');
+
+    Route::resource('exams', App\Http\Controllers\Organization\Exam\ExamController::class)->names('manage.exams');
+    Route::resource('exam/{exam}/questions', App\Http\Controllers\Organization\Exam\QuestionController::class)->names('manage.exam.questions');
+    Route::resource('papers', App\Http\Controllers\Organization\Exam\PaperController::class)->names('manage.papers');
+    Route::resource('paper/{paper}/answers', App\Http\Controllers\Organization\Exam\AnswerController::class)->names('manage.paper.answers');
 });
 
 Route::group([

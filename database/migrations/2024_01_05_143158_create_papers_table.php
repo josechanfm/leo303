@@ -15,11 +15,10 @@ return new class extends Migration
     {
         Schema::create('papers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('exam_id');
             $table->foreignId('user_id');
-            $table->string('category');
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->boolean('submited')->default(FALSE);
+            $table->boolean('submitted')->default(FALSE);
+            $table->integer('score');
             $table->date('valid_at')->nullable();
             $table->date('expire_at')->nullable();
             $table->timestamps();

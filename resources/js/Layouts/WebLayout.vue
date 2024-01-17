@@ -80,17 +80,8 @@ const showingNavigationDropdown = ref(false);
                 >
               </li>
               <li>
-<<<<<<< HEAD
                 <a href="https://ijf.org" target="_blank"
                   class="text-bold text-white hover:text-yellow-300 text-md">IJF</a>
-=======
-                <a
-                  href="https://ijf.org"
-                  target="_blank"
-                  class="text-bold text-white hover:text-yellow-300 text-md"
-                  >IJF</a
-                >
->>>>>>> f6b9c17b370f5336242eda5b4354db886ba7b4a4
               </li>
               <template v-if="$page.props.user.id">
                 <li>
@@ -107,27 +98,12 @@ const showingNavigationDropdown = ref(false);
               </template>
               <template v-else>
                 <li>
-<<<<<<< HEAD
                   <inertia-link :href="route('login')" class="text-bold text-white hover:text-yellow-300 text-md">{{
                     $t("login") }}</inertia-link>
                 </li>
                 <li>
                   <inertia-link :href="route('register')"
                     class="text-bold text-white hover:text-yellow-300 text-md">{{ $t("register") }}</inertia-link>
-=======
-                  <inertia-link
-                    :href="route('login')"
-                    class="text-bold text-white hover:text-yellow-300 text-md"
-                    >{{ $t("login") }}</inertia-link
-                  >
-                </li>
-                <li>
-                  <inertia-link
-                    :href="route('register')"
-                    class="text-bold text-white hover:text-yellow-300 text-md"
-                    >{{ $t("register") }}</inertia-link
-                  >
->>>>>>> f6b9c17b370f5336242eda5b4354db886ba7b4a4
                 </li>
               </template>
             </ul>
@@ -148,16 +124,8 @@ const showingNavigationDropdown = ref(false);
         class="sm:hidden bg-white"
       >
         <div class="pt-2 pb-3 space-y-1">
-<<<<<<< HEAD
           <ResponsiveNavLink :href="route('member.dashboard')" :active="route().current('dashboard')">
             {{ $t('dashboard') }}
-=======
-          <ResponsiveNavLink
-            :href="route('member.dashboard')"
-            :active="route().current('dashboard')"
-          >
-            {{ $t("dashboard") }}
->>>>>>> f6b9c17b370f5336242eda5b4354db886ba7b4a4
           </ResponsiveNavLink>
         </div>
 
@@ -178,11 +146,7 @@ const showingNavigationDropdown = ref(false);
             </template>
             <template v-else>
               <a :href="route('login')">
-<<<<<<< HEAD
                 <ResponsiveNavLink as="button"> {{ $t('login') }}</ResponsiveNavLink>
-=======
-                <ResponsiveNavLink as="button"> {{ $t("login") }}</ResponsiveNavLink>
->>>>>>> f6b9c17b370f5336242eda5b4354db886ba7b4a4
               </a>
               <a :href="route('register')">
                 <ResponsiveNavLink as="button"> {{ $t("register") }} </ResponsiveNavLink>

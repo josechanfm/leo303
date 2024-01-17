@@ -51,8 +51,7 @@
                       <td>{{ $t("belt_rank") }}</td>
                       <td>
                         {{
-                          belt_ranks.find((b) => b.rankCode == application.belt_rank)
-                            .name_zh
+                          belt_ranks.find((b) => b.rankCode == application.belt_rank).name_zh
                         }}
                       </td>
                       <td>{{ $t("role") }}</td>

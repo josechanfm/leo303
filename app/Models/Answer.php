@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Answer extends Model
 {
     use HasFactory;
+    protected $fillable=['paper_id','question_id','answer'];
+
+    public function question(){
+        return $this->belongsTo(Question::class)->latest();
+    }
 }
