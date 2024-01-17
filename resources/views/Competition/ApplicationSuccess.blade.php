@@ -43,7 +43,7 @@
 				}
 				if($bannerImage=$application->avatar_url){
 					echo '<div style="height:120px">';
-					echo '<img src="'.public_path($bannerImage=$application->avatar_url) .'" style="float:right" width="100px/>"';
+					echo '<img src="'.public_path($bannerImage=$application->avatar_url) .'" style="float:right" width="100px"/>';
 					echo '</div>';
 				}
 			*/
@@ -82,7 +82,7 @@
 				</tr>
 				<tr>
 					<td>性別：{{ $application->gender=='M'?'男':'女' }}</td>
-					<td>帶別：{{ $belt_ranks[array_search($application->belt,array_column($belt_ranks,'rankCode'))]->name_zh }}</td>
+					<td>帶別：{{ $belt_ranks[array_search($application->belt_rank,array_column($belt_ranks,'rankCode'))]->name_zh }}</td>
 				</tr>
 				<tr>
 					<td>年齡：{{ $age}}
@@ -96,7 +96,7 @@
 					<td colspan="2" width="50%">身份証號碼：{{$application->id_num}}</td>
 				</tr>
 				<tr>
-					<td width="50%">是否已完成年度體檢：沒有 {{ $application->organization_id }}</td>
+					<td width="50%">是否已完成年度體檢：沒有 </td>
 					<td colspan="2" width="50%">手機號碼：{{ $application->mobile}}</td>
 				</tr>
 				<tr>
