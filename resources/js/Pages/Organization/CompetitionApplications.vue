@@ -141,11 +141,6 @@
     </a-modal>
     <!-- Modal End-->
 
-    <form method="post" action="applications/receipts">
-      <input name="selectedRowKeyIds[]" value="10"/>
-      <input name="selectedRowKeyIds[]" value="11"/>
-      <input type="submit" value="Submit">
-    </form>
   </OrganizationLayout>
 </template>
 

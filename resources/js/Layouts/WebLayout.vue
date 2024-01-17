@@ -62,7 +62,7 @@ const showingNavigationDropdown = ref(false);
                   class="text-bold text-white hover:text-yellow-300 text-md">JUA</a>
               </li>
               <li>
-                <a href="https://ijf.org" target="_blank" 
+                <a href="https://ijf.org" target="_blank"
                   class="text-bold text-white hover:text-yellow-300 text-md">IJF</a>
               </li>
               <template v-if="$page.props.user.id">
@@ -76,10 +76,12 @@ const showingNavigationDropdown = ref(false);
               </template>
               <template v-else>
                 <li>
-                  <inertia-link :href="route('login')" class="text-bold text-white hover:text-yellow-300 text-md">{{ $t("login") }}</inertia-link>
+                  <inertia-link :href="route('login')" class="text-bold text-white hover:text-yellow-300 text-md">{{
+                    $t("login") }}</inertia-link>
                 </li>
                 <li>
-                  <inertia-link :href="route('register')" class="text-bold text-white hover:text-yellow-300 text-md">{{$t("register")}}</inertia-link>
+                  <inertia-link :href="route('register')"
+                    class="text-bold text-white hover:text-yellow-300 text-md">{{ $t("register") }}</inertia-link>
                 </li>
               </template>
             </ul>
@@ -98,7 +100,7 @@ const showingNavigationDropdown = ref(false);
       <div :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }" class="sm:hidden bg-white">
         <div class="pt-2 pb-3 space-y-1">
           <ResponsiveNavLink :href="route('member.dashboard')" :active="route().current('dashboard')">
-            {{$t('dashboard') }}
+            {{ $t('dashboard') }}
           </ResponsiveNavLink>
         </div>
 
@@ -116,7 +118,7 @@ const showingNavigationDropdown = ref(false);
             </template>
             <template v-else>
               <a :href="route('login')">
-                <ResponsiveNavLink as="button">  {{ $t('login') }}</ResponsiveNavLink>
+                <ResponsiveNavLink as="button"> {{ $t('login') }}</ResponsiveNavLink>
               </a>
               <a :href="route('register')">
                 <ResponsiveNavLink as="button"> {{ $t('register') }} </ResponsiveNavLink>
