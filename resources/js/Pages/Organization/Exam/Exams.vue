@@ -19,6 +19,7 @@
               <a-button @click="editRecord(record)">Edit</a-button>
               <a-button :disabled="record.published" @click="deleteRecord(record)">{{ $t("delete") }}</a-button>
               <inertia-link :href="route('manage.exam.questions.index',record.id)" class="ant-btn">Questions</inertia-link>
+              <inertia-link :href="route('manage.exam.papers.index',record.id)" class="ant-btn">Papers</inertia-link>
             </template>
             <template v-else>
               {{ record[column.dataIndex] }}

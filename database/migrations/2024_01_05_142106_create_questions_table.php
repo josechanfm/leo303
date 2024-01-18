@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('exam_id');
             $table->string('title');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->text('type');
             $table->text('options');
             $table->text('correct');

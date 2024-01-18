@@ -5,19 +5,25 @@ namespace App\Http\Controllers\Organization\Exam;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Paper;
+use App\Models\Exam;
+use App\Models\User;
 
 class PaperController extends Controller
 {
+    public function list(){
+        dd('list papers');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Exam $exam)
     {
+        $exam->papers;
         return Inertia::render('Organization/Exam/Papers',[
-            'papers'=>Paper::with('exam')->get()
+            'exam'=>$exam,
+            'users'=>User::all()
         ]);
     }
 

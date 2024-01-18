@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Organization\Exam;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\models\Exam;
+use App\Models\Exam;
 
 class ExamController extends Controller
 {

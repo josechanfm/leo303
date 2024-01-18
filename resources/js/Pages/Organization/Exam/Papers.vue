@@ -5,12 +5,14 @@
         {{ $t("paper") }}
       </h2>
     </template>
+    <p>Exam Title: {{ exam.title }}</p>
+    <p>Exam Category: {{ exam.category }}</p>
     <div class="flex-auto pb-3 text-right">
         <a-button @click="createRecord()">Create</a-button>
     </div>
     <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-        <a-table :dataSource="papers" :columns="columns">
+        <a-table :dataSource="exam.papers" :columns="columns">
           <template #headerCell="{ column }">
             {{ column.i18n ? $t(column.i18n) : column.title }}
           </template>
@@ -20,11 +22,8 @@
               <a-button :disabled="record.published" @click="deleteRecord(record)">{{ $t("delete") }}</a-button>
               <inertia-link :href="route('manage.paper.answers.index',record.id)" class="ant-btn">Answers</inertia-link>
             </template>
-            <template v-if="column.dataIndex=='title'">
-                {{record.exam.title}}
-            </template>
-            <template v-if="column.dataIndex=='category_code'">
-                {{record.exam.category_code}}
+            <template v-if="column.dataIndex=='user'">
+                {{record.user.name}}
             </template>
             <template v-else>
               {{ record[column.dataIndex] }}
@@ -46,7 +45,10 @@
         :validate-messages="validateMessages"
       >
         <a-form-item :label="$t('user_id')" name="user_id">
-          <a-input v-model:value="modal.data.user_id" />
+          <span v-if="modal.data.user">{{ modal.data.user.name }}</span>
+          <span v-else>
+            <a-select v-model:value="modal.data.user_id" :options="users" :fieldNames="{value:'id',label:'name'}"/>
+          </span>
         </a-form-item>
         <a-form-item :label="$t('valid_at')" name="valid_at">
           <a-date-picker v-model:value="modal.data.valid_at" :format="dateFormat" :valueFormat="dateFormat"/>
@@ -97,7 +99,7 @@ export default {
     UploadAdapter,
     //UploadAdapter
   },
-  props: ["papers"],
+  props: ["exam","users"],
   data() {
     return {
       dateFormat: "YYYY-MM-DD",
@@ -109,13 +111,25 @@ export default {
       },
       columns: [
         {
-          title: "Title",
-          i18n: "title",
-          dataIndex: "title",
+          title: "User",
+          i18n: "user",
+          dataIndex: "user",
         },{
-          title: "Category Code",
-          i18n: "category_code",
-          dataIndex: "category_code",
+          title: "Score",
+          i18n: "score",
+          dataIndex: "score",
+        },{
+          title: "Submitted",
+          i18n: "submitted",
+          dataIndex: "submitted",
+        },{
+          title: "Valid At",
+          i18n: "valid_at",
+          dataIndex: "valid_at",
+        },{
+          title: "Expire At",
+          i18n: "expire_at",
+          dataIndex: "expire_at",
         },{
           title: "Operation",
           i18n: "operation",
@@ -158,7 +172,7 @@ export default {
     editRecord(record) {
       this.modal.data = { ...record };
       this.modal.mode = "EDIT";
-      //this.modal.title = "Edit";
+      this.modal.title = "Edit";
       this.modal.isOpen = true;
     },
     storeRecord() {
