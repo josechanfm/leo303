@@ -33,14 +33,13 @@ Route::get('/', function () {
 Route::get('article', [\App\Http\Controllers\ArticleController::class, 'item'])->name('article.item');
 Route::get('registration', [\App\Http\Controllers\RegistrationController::class, 'create'])->name('registration');
 Route::post('registration', [\App\Http\Controllers\RegistrationController::class, 'store'])->name('registration.store');
-
 Route::get('/language/{language}', function ($language) {
 
     Session::put('applocale', $language);
 
     return Redirect::back();
 })->name('language');
-
+Route::get('test/sms', [\App\Http\Controllers\Organization\EntryController::class, 'send'])->name('test.sms');
 Route::group([
     'prefix' => 'member',
     'middleware' => [

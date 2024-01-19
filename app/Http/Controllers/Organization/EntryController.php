@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Organization;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
+use GuzzleHttp\Client;
 use App\Models\Organization;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -194,5 +196,46 @@ class EntryController extends Controller
                 'entry_records' => $entry_records,
             ]);
         }
+    }
+    function send()
+    {
+        $sms_company = env('SMS_COMPANY');
+        $sms_username = env('SMS_UID');
+        $sms_password = env('SMS_PWD');
+        $recipient_xml = "<recipient>63965818</recipient>";
+        $content = '測試,test';
+        $xml = <<<DATA
+        <?xml version='1.0' encoding='UTF-8'?>
+        <!DOCTYPE jds SYSTEM '/home/httpd/html/dtd/jds2.dtd'>
+        <jds>
+        <account acid='{$sms_company}' loginid='{$sms_username}' passwd='{$sms_password}'>
+        <msg_send>
+        <ref>Reference ID</ref> 
+        {$recipient_xml}
+        <content>{$content}</content>
+        <language>C</language>
+        </msg_send>
+        </account>
+        </jds>
+        DATA;
+
+        $url = "https://mlpsmsapi.three.com.mo/v1/externalApi/message";
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $headers = array(
+            "Content-Type: application/xml",
+            "Accept: application/xml",
+        );
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $xml);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        $resp = curl_exec($curl);
+        curl_close($curl);
+        $xml = simplexml_load_string($resp);
+
+        return redirect()->back();
     }
 }
