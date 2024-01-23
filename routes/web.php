@@ -41,6 +41,13 @@ Route::get('/language/{language}', function ($language) {
     return Redirect::back();
 })->name('language');
 
+Route::resource('forms', App\Http\Controllers\FormController::class)->names('forms');
+Route::resource('competitions', App\Http\Controllers\CompetitionController::class)->names('competitions');
+Route::get('competition/application/{competitionApplication}/success', [App\Http\Controllers\CompetitionController::class, 'applicationSuccess'])->name('competition.application.success');
+Route::get('form/{form}/entry/{entry}/success', [App\Http\Controllers\Organization\EntryController::class, 'entrySuccess'])->name('form.entry.success');
+Route::resource('exam',App\Http\Controllers\ExamController::class)->names('exam');
+
+//Member
 Route::group([
     'prefix' => 'member',
     'middleware' => [
@@ -83,10 +90,7 @@ Route::group([
     Route::get('attendance/get_member', [App\Http\Controllers\Member\AttendanceController::class, 'getMember'])->name('member.attendance.getMember');
 });
 
-Route::resource('forms', App\Http\Controllers\FormController::class)->names('forms');
-Route::resource('competitions', App\Http\Controllers\CompetitionController::class)->names('competitions');
-Route::get('competition/application/{competitionApplication}/success', [App\Http\Controllers\CompetitionController::class, 'applicationSuccess'])->name('competition.application.success');
-Route::get('form/{form}/entry/{entry}/success', [App\Http\Controllers\Organization\EntryController::class, 'entrySuccess'])->name('form.entry.success');
+//Manage
 Route::group([
     'prefix' => '/manage',
     'middleware' => [
@@ -137,6 +141,7 @@ Route::group([
     Route::resource('paper/{paper}/answers', App\Http\Controllers\Organization\Exam\AnswerController::class)->names('manage.paper.answers');
 });
 
+//admin
 Route::group([
     'prefix' => '/admin',
     'middleware' => [

@@ -1,25 +1,32 @@
 <?php
 
-namespace App\Http\Controllers\Organization\Exam;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Exam;
-use App\Models\Question;
 
-class QuestionController extends Controller
+class ExamController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Exam $exam)
+    public function index()
     {
-        $exam->questions;
-        return Inertia::render('Organization/Exam/Questions',[
-            'exam'=>$exam
+        // $numbers=range(100,999);
+        // shuffle($numbers);
+        // dd($numbers);
+        //$exam=Exam::find(1)->questions;
+        //$exam->questions;
+        $exam=Exam::find(1);
+        // dd($exam->questionsWithoutCorrect);
+        // $exam=Exam::with('questionsWithoutCorrect')->find(1);
+        // dd($exam->questionsWithoutCorrect);
+        return Inertia::render('Exam',[
+            'exam'=>$exam,
+            'questions'=>$exam->questionsWithoutCorrect
         ]);
     }
 
@@ -73,10 +80,9 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Exam $exam, Question $question, Request $request)
+    public function update(Request $request, $id)
     {
-        $question->update($request->all());
-        return redirect()->back();
+        //
     }
 
     /**

@@ -13,6 +13,9 @@ class Exam extends Model
     public function questions(){
         return $this->hasMany(Question::class);
     }
+    public function questionsWithoutCorrect(){
+        return $this->hasMany(Question::class)->addSelect(['id','title','options']);
+    }
     public function papers(){
         return $this->hasMany(Paper::class)->with('user');
     }

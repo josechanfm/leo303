@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
     use HasFactory;
-    protected $fillable=['exam_id','title','description','type','options','type','score'];
+    protected $fillable=['exam_id','title','description','type','options','answer','score'];
     protected $casts=['options'=>'array'];
 
     public function exam(){
