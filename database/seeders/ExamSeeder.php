@@ -26,8 +26,29 @@ class ExamSeeder extends Seeder
             'exam_id'=>1,
             'type'=>'REFEREE',
             'title'=>'成為IJF裁判的最低年齡要求是多少？',
-            'options'=>'["18歲","20歲","25歲","30歲","35歲"]',
-            'correct'=>1,
+            'options'=>'[
+                {
+                    "value": "123",
+                    "label": "18歲"
+                },
+                {
+                    "value": "234",
+                    "label": "20歲"
+                },
+                {
+                    "value": "567",
+                    "label": "25歲"
+                },
+                {
+                    "value": "578",
+                    "label": "30歲"
+                },
+                {
+                    "value": "789",
+                    "label": "35歲"
+                }
+            ]',
+            'answer'=>1,
             'score'=>1
         ]);
         DB::table('papers')->insert([

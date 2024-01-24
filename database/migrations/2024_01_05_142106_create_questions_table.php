@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('type');
             $table->text('options');
-            $table->text('correct');
+            $table->text('answer');
             $table->integer('score');
             $table->timestamps();
         });

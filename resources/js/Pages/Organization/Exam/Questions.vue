@@ -46,9 +46,25 @@
         <a-form-item :label="$t('question_type')" name="question_type">
             <a-input v-model:value="modal.data.type" />
         </a-form-item>
-
-        <a-form-item :label="$t('question_correct')" name="question_correct">
-            <a-input v-model:value="modal.data.correct" />
+        <a-form-item :label="$t('question_options')" name="answer">
+          <a-radio-group v-model:value="modal.data.answer" style="width:100%">
+              <template v-for="option in modal.data.options">
+                  <a-radio :style="virticalStyle" :value="option.value">
+                    {{ option.label }}
+                    <span class="float-right" type="delete" @click="removeOptionItem(option)">X</span>
+                  </a-radio>
+              </template>
+          </a-radio-group>
+        </a-form-item>
+        <a-form-item :label="$t('question_new_option')" name="question_new_option">
+            <a-input-search v-model:value="modal.data.newOption" @search="onBlurNewOption">
+              <template #enterButton>
+                <a-button>Add</a-button>
+              </template>
+            </a-input-search>
+        </a-form-item>
+        <a-form-item :label="$t('question_answer')" name="question_answer">
+            <a-input v-model:value="modal.data.answer" />
         </a-form-item>
         <a-form-item :label="$t('question_score')" name="question_score">
             <a-input v-model:value="modal.data.score" />
@@ -82,6 +98,9 @@ import { defineComponent, reactive } from "vue";
 import CKEditor from "@ckeditor/ckeditor5-vue";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import UploadAdapter from "@/Components/ImageUploadAdapter.vue";
+import { createVNode } from 'vue';
+import { Modal } from 'ant-design-vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 
 export default {
   components: {
@@ -89,16 +108,25 @@ export default {
     ckeditor: CKEditor.component,
     UploadAdapter,
     //UploadAdapter
+    createVNode,
+    Modal,
+    ExclamationCircleOutlined,
   },
   props: ["exam"],
   data() {
     return {
       dateFormat: "YYYY-MM-DD",
+      randomList:[],
       modal: {
         isOpen: false,
         data: {},
         title: "Modal",
         mode: "",
+      },
+      virticalStyle:{
+          display:'flex',
+          height: '30px',
+          lineHeight: '30px'
       },
       teacherStateLabels: {},
       editor: ClassicEditor,
@@ -124,10 +152,10 @@ export default {
           dataIndex: "options",
           key: "options",
         },{
-          title: "Correct",
-          i18n: "question_correct",
-          dataIndex: "correct",
-          key: "correct",
+          title: "Answer",
+          i18n: "question_answer",
+          dataIndex: "answer",
+          key: "answer",
         },{
           title: "Score",
           i18n: "question_score",
@@ -141,9 +169,9 @@ export default {
         },
       ],
       rules: {
-        category_code: { required: true },
-        classify_id: { required: true },
-        title_en: { required: true },
+        title: { required: true },
+        options: { required: true },
+        answer: { required: true },
       },
       validateMessages: {
         required: "${label} is required!",
@@ -163,8 +191,20 @@ export default {
     };
   },
   created() {},
-  mounted() {},
+  mounted() {
+  },
   methods: {
+    generateRandomList(question){
+      this.randomList=[]
+      for(var i=0; i<10; i++){
+        var randomNumber=Math.floor(Math.random()*900)+100;
+        this.randomList.push(randomNumber);
+      }
+      question.options.map((option,idx)=>{
+        option.value=this.randomList[idx]
+      })
+      question.answer=null
+    },
     createRecord() {
       this.modal.data = {};
       this.modal.data.published = 0;
@@ -173,9 +213,9 @@ export default {
       this.modal.isOpen = true;
     },
     editRecord(record) {
-      this.modal.data = { ...record };
+      console.log(record);
+      this.modal.data = _.cloneDeep(record);
       this.modal.mode = "EDIT";
-      //this.modal.title = "Edit";
       this.modal.isOpen = true;
     },
     storeRecord() {
@@ -202,7 +242,7 @@ export default {
         .validateFields()
         .then(() => {
           this.$inertia.put(
-            route("manage.exams.update", this.modal.data.id),
+            route("manage.exam.questions.update", {exam:this.modal.data.exam_id,question:this.modal.data.id}),
             this.modal.data,
             {
               onSuccess: (page) => {
@@ -241,14 +281,41 @@ export default {
         }
     });
     },
-    createLogin(recordId) {
-      console.log("create login" + recordId);
-    },
     uploader(editor) {
       editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
         return new UploadAdapter(loader);
       };
     },
+    onBlurNewOption(value){
+      if(this.randomList.length==0){
+        this.generateRandomList(this.modal.data)
+      }
+      if(value){
+        this.modal.data.options.push({value:this.randomList[this.modal.data.options.length],label:value})
+        console.log(this.modal.data.options)
+        console.log(this.exam.questions);
+        this.modal.data.newOption=null
+      }
+    },
+    removeOptionItem(option){
+      Modal.confirm({
+                title: '是否確定',
+                icon: createVNode(ExclamationCircleOutlined),
+                content: '刪除報名記錄?'+option.label,
+                okText: '確定',
+                cancelText: '取消',
+                onOk: () => {
+                  this.modal.data.options=this.modal.data.options.reduce((acc, curr) =>{
+                    if(curr.value!==option.value){
+                      acc.push(curr)
+                    }
+                    return acc
+                  },[])
+
+                }
+            })
+
+    }
   },
 };
 </script>
