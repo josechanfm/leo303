@@ -112,7 +112,7 @@
               <a-checkbox
                 v-for="option in referee_options"
                 :style="virticalStyle"
-                :value="option"
+                :value="option.value"
                 >{{ option.label }}</a-checkbox
               >
             </a-checkbox-group>
@@ -129,7 +129,7 @@
               <a-checkbox
                 v-for="option in staff_options"
                 :style="virticalStyle"
-                :value="option"
+                :value="option.value"
                 >{{ option.label }}</a-checkbox
               >
             </a-checkbox-group>

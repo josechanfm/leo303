@@ -51,7 +51,9 @@
               <template v-for="option in modal.data.options">
                   <a-radio :style="virticalStyle" :value="option.value">
                     {{ option.label }}
-                    <span class="float-right" type="delete" @click="removeOptionItem(option)">X</span>
+                    <span class="float-right" type="delete" @click="removeOptionItem(option)">
+                      <delete-outlined style="color:#eb2f96"/>
+                    </span>
                   </a-radio>
               </template>
           </a-radio-group>
@@ -101,6 +103,8 @@ import UploadAdapter from "@/Components/ImageUploadAdapter.vue";
 import { createVNode } from 'vue';
 import { Modal } from 'ant-design-vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { DeleteOutlined } from '@ant-design/icons-vue';
+
 
 export default {
   components: {
@@ -111,6 +115,7 @@ export default {
     createVNode,
     Modal,
     ExclamationCircleOutlined,
+    DeleteOutlined
   },
   props: ["exam"],
   data() {
@@ -124,9 +129,10 @@ export default {
         mode: "",
       },
       virticalStyle:{
-          display:'flex',
+          display: 'block',
           height: '30px',
-          lineHeight: '30px'
+          lineHeight: '30px',
+          width: '100%'
       },
       teacherStateLabels: {},
       editor: ClassicEditor,

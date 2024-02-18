@@ -509,6 +509,21 @@ class ConfigSeeder extends Seeder
                 'key'=>'referee_options',
                 'value'=>'[{"value": "International_A","label": "已持有國際A級裁判資格"},{"value": "International_B","label": "已持有國際B級裁判資格"},{"value": "Local_A","label": "已持有本地裁判A級資格"},{"value": "Local_B","label": "已持有本地裁判B級資格"},{"value": "Other_Country","label": "其他地區裁判資格"},{"value": "Trainee","label": "實習裁判"}]'
             ]);
+            DB::table('configs')->insert([
+                'organization_id'=>0,
+                'key'=>'competition_scores',
+                'value'=>'[
+                    {"value":"WORLD","label":"世界賽"},
+                    {"value":"ASIA","label":"亞洲賽"},
+                    {"value":"INTLP","label":"國際公開賽"},
+                    {"value":"ACUP","label":"亞洲盃"},
+                    {"value":"CHINA","label":"中國"},
+                    {"value":"IINVT","label":"國際邀請賽"},
+                    {"value":"EASIA","label":"東亞"},
+                    {"value":"INTPT","label":"埠際賽"},
+                    {"value":"LOCAL","label":"本地"}
+                ]'
+            ]);
 
     
     }
