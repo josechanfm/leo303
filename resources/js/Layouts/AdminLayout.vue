@@ -117,7 +117,7 @@
   </a-layout>
 </template>
 
-<script setup>
+<script>
 import { ref, reactive } from "vue";
 import { usePage } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
@@ -127,39 +127,59 @@ import PageHeader from "@/Components/Organization/PageHeader.vue";
 
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons-vue";
 import { loadLanguageAsync } from "laravel-vue-i18n";
+import { getActiveLanguage } from "laravel-vue-i18n";
 
 import AdminMenu from "@/Components/Admin/AdminMenu.vue";
 
-defineProps({
-  title: String,
-});
+export default {
+  components: {
+    PageHeader,
+    Dropdown,
+    DropdownLink,
+    AdminMenu,
+    loadLanguageAsync,
+    MenuUnfoldOutlined,
+    MenuFoldOutlined,
+    getActiveLanguage,
+  },
+  props: ["title"],
+  setup(props) {
+    const menuKeys = reactive({
+      menuOpenKey: "",
+      menuSelectKey: "",
+    });
 
-const menuKeys = reactive({
-  menuOpenKey: "",
-  menuSelectKey: "",
-});
+    const showingNavigationDropdown = ref(false);
+    const selectedKeys = ref(["1"]);
+    const collapsed = ref(false);
 
-const showingNavigationDropdown = ref(false);
-const selectedKeys = ref(["1"]);
-const collapsed = ref(false);
+    const switchToTeam = (team) => {
+      Inertia.put(
+        route("current-team.update"),
+        {
+          team_id: team.id,
+        },
+        {
+          preserveState: false,
+        }
+      );
+    };
+    const page = usePage();
+    loadLanguageAsync(page.props.value.lang);
+    const logout = () => {
+      Inertia.post(route("logout"));
+    };
 
-const switchToTeam = (team) => {
-  Inertia.put(
-    route("current-team.update"),
-    {
-      team_id: team.id,
-    },
-    {
-      preserveState: false,
-    }
-  );
-};
-const page = usePage();
-
-loadLanguageAsync(page.props.value.lang);
-
-const logout = () => {
-  Inertia.post(route("logout"));
+    return {
+      showingNavigationDropdown,
+      selectedKeys,
+      menuKeys,
+      collapsed,
+      switchToTeam,
+      logout,
+      loadLanguageAsync,
+    };
+  },
 };
 </script>
 

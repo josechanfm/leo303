@@ -156,4 +156,5 @@ Route::group([
     Route::resource('members', App\Http\Controllers\Admin\MemberController::class)->names('admin.members');
     Route::resource('users', App\Http\Controllers\Admin\UserController::class)->names('admin.users');
     Route::resource('configs', App\Http\Controllers\Admin\ConfigController::class)->names('admin.configs');
+    Route::resource('competition_scores', App\Http\Controllers\Admin\CompetitionScoreController::class)->names('admin.competitionScores');
 });

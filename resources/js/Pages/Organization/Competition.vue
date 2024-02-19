@@ -21,6 +21,9 @@
           :rules="rules"
           @finish="onFinish"
         >
+          <a-form-item :label="$t('competition_score_category')" name="score_category">
+            <a-select v-model:value="competitionData.score_category" :options="scoreCategories"/>
+          </a-form-item>
           <a-form-item :label="$t('competition_title_zh')" name="title_zh">
             <a-input v-model:value="competitionData.title_zh" />
           </a-form-item>
@@ -110,7 +113,7 @@
           >
             <a-checkbox-group v-model:value="competitionData.referee_options">
               <a-checkbox
-                v-for="option in referee_options"
+                v-for="option in refereeOptions"
                 :style="virticalStyle"
                 :value="option.value"
                 >{{ option.label }}</a-checkbox
@@ -127,7 +130,7 @@
           >
             <a-checkbox-group v-model:value="competitionData.staff_options">
               <a-checkbox
-                v-for="option in staff_options"
+                v-for="option in staffOptions"
                 :style="virticalStyle"
                 :value="option.value"
                 >{{ option.label }}</a-checkbox
@@ -301,11 +304,12 @@ export default {
   },
   props: [
     "competition",
+    "scoreCategories",
+    "staffOptions",
+    "refereeOptions",
     "medias",
     "categories_weights",
     "roles",
-    "staff_options",
-    "referee_options",
   ],
   data() {
     return {
@@ -337,6 +341,7 @@ export default {
         },
       },
       rules: {
+        score_category: { required: true },
         title_zh: { required: true },
         period: { required: true },
         match_date: { required: true },
@@ -371,6 +376,7 @@ export default {
   },
   mounted() {},
   created() {
+    this.scoreCategories.unshift({value:"NONE",label:"無積分"});
     if (this.competition == null) {
       this.mode = "CREATE";
       this.competitionData.roleSelected = [];

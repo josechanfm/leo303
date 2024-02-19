@@ -249,5 +249,14 @@
     "forgot_your_password": "忘記了您的密碼?",
     "remember_me": "記住我",
     "english": "英文",
-    "chinese": "中文"
+    "chinese": "中文",
+    "competition_score_categories":"賽事積分表",
+    "competition_score_category":"賽事積分",
+    "competition_score_first":"第一名",
+    "competition_score_second":"第二名",
+    "competition_score_third":"第三名",
+    "competition_score_fifth":"第五名",
+    "competition_score_seventh":"第七名",
+    "competition_score_advance":"晉級",
+    "competition_score_participate":"參與"
 }

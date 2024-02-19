@@ -511,7 +511,7 @@ class ConfigSeeder extends Seeder
             ]);
             DB::table('configs')->insert([
                 'organization_id'=>0,
-                'key'=>'competition_scores',
+                'key'=>'competition_score_categories',
                 'value'=>'[
                     {"value":"WORLD","label":"世界賽"},
                     {"value":"ASIA","label":"亞洲賽"},
