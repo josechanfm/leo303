@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Organization;
 
 class Member extends Model
 {
@@ -45,8 +44,15 @@ class Member extends Model
     ];
     protected $casts=['positions'=>'json','federation_officials'=>'json','organization_officials'=>'json'];
 
-    protected $appends=['avatar_url','member_number'];
+    protected $appends=['avatar_url','member_number','current_tier'];
 
+    public function getCurrentTierAttribute(){
+        $tier=$this->hasOne(MemberTier::class)->ofMany('valid_at','max')->first();
+        if(empty($tier)){
+            
+        }
+        return $tier??MemberTier::make();
+    }
     public function getAvatarUrlAttribute(){
         return $this->avatar?Storage::url($this->avatar):'';
     }
@@ -114,5 +120,8 @@ class Member extends Model
 
     public function events(){
         return $this->morphToMany(Event::class,'attendee');
+    }
+    public function tiers(){
+        return $this->hasMany(MemberTier::class);
     }
 }

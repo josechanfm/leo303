@@ -22,7 +22,7 @@
           @finish="onFinish"
         >
           <a-form-item :label="$t('competition_score_category')" name="score_category">
-            <a-select v-model:value="competitionData.score_category" :options="scoreCategories"/>
+            <a-select v-model:value="competitionData.competition_score_id" :options="competitionScores" :fieldNames="{value:'id',label:'title'}"/>
           </a-form-item>
           <a-form-item :label="$t('competition_title_zh')" name="title_zh">
             <a-input v-model:value="competitionData.title_zh" />
@@ -56,7 +56,7 @@
             <a-checkbox-group v-model:value="competitionData.cwSelected" class="w-full">
               <a-row :span="24">
                 <template v-for="cw in categories_weights">
-                  <a-col :span="24 / categories_weights.length">
+                  <a-col :span="6">
                     <a-checkbox :value="cw.code">{{ cw.name }}</a-checkbox
                     ><br />
                   </a-col>
@@ -303,6 +303,7 @@ export default {
     UploadOutlined,
   },
   props: [
+    "competitionScores",
     "competition",
     "scoreCategories",
     "staffOptions",
@@ -376,7 +377,7 @@ export default {
   },
   mounted() {},
   created() {
-    this.scoreCategories.unshift({value:"NONE",label:"無積分"});
+    this.competitionScores.unshift({id:0,title:"無積分"});
     if (this.competition == null) {
       this.mode = "CREATE";
       this.competitionData.roleSelected = [];

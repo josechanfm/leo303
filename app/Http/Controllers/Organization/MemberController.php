@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organization;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Config;
 use App\Models\Organization;
 use App\Models\Member;
 use App\Models\User;
@@ -27,12 +28,12 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $org=Organization::find(session('organization')->id)->members;
-
+        // $org=Organization::find(session('organization')->id)->members;
         // session('organization')->fresh;
         // dd(session('organization')->members);
         return Inertia::render('Organization/Members',[
             //'members'=>session('organization')->members
+            'memberTiers'=>Config::item('member_tiers'),
             'members'=>Organization::find(session('organization')->id)->members
         ]);
 
@@ -97,7 +98,8 @@ class MemberController extends Controller
      */
     public function update(Request $request, Member $member)
     {
-        $member->update($request->all());
+        //dd($request->all());
+        //$member->update($request->all());
         return redirect()->back();
     }
 

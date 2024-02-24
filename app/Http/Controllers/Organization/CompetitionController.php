@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Competition;
+use App\Models\CompetitionScore;
 use App\Models\Config;
 
 class CompetitionController extends Controller
@@ -90,6 +91,7 @@ class CompetitionController extends Controller
         $competition->getMedia();
         return Inertia::render('Organization/Competition',[
             'competition'=>$competition,
+            'competitionScores'=>CompetitionScore::where('organization_id',0)->get(),
             'scoreCategories'=>Config::item('competition_score_categories'),
             'categories_weights'=>Config::items('categories_weights',0),
             'staffOptions'=>Config::item('staff_options'),

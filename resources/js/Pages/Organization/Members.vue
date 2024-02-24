@@ -33,10 +33,12 @@
               >
                 <a-button>{{ $t("delete") }}</a-button>
               </a-popconfirm>
-
               <a-button @click="createLogin(record.id)" :disabled="record.user != null">{{
                 $t("create_login")
               }}</a-button>
+            </template>
+            <template v-else-if="column.dataIndex == 'tier' && record.current_tier">
+              {{ record.current_tier.tier_code }}
             </template>
             <template v-else-if="column.dataIndex == 'state'">
               {{ teacherStateLabels[text] }}
@@ -58,13 +60,35 @@
         ref="modalRef"
         :model="modal.data"
         name="Teacher"
-        :label-col="{ span: 6 }"
+        :label-col="{ span: 4 }"
         :wrapper-col="{ span: 16 }"
         autocomplete="off"
         :rules="rules"
         :validate-messages="validateMessages"
       >
-        <a-input type="hidden" v-model:value="modal.data.id" />
+        <a-form-item :label="$t('tier')" name="tier">
+          <a-select v-model:value="modal.data.current_tier.tier_code" :options="memberTiers" :fieldNames="{value:'label',label:'label'}"/>
+        </a-form-item>
+        <a-row :span="24" >
+          <a-col :span="12">
+            <a-form-item :label="$t('valid_at')" :label-col="{span:8}" name="valid_at">
+              <a-date-picker
+                v-model:value="modal.data.current_tier.valid_at"
+                :format="dateFormat"
+                :valueFormat="dateFormat"
+              />
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-item :label="$t('expired_at')" :label-col="{span:8}" name="expired_at">
+              <a-date-picker
+                v-model:value="modal.data.current_tier.expired_at"
+                :format="dateFormat"
+                :valueFormat="dateFormat"
+              />
+            </a-form-item>
+          </a-col>
+        </a-row>
         <a-form-item :label="$t('given_name')" name="given_name">
           <a-input v-model:value="modal.data.given_name" />
         </a-form-item>
@@ -77,33 +101,26 @@
         <a-form-item :label="$t('display_name')" name="display_name">
           <a-input v-model:value="modal.data.display_name" />
         </a-form-item>
-        <a-row :span="24" :gutter="16">
-          <a-col :span="18" >
-            <a-form-item :label="$t('gender')" :label-col="{span:8}" name="gender">
+            <a-form-item :label="$t('gender')" name="gender">
               <a-radio-group v-model:value="modal.data.gender" button-style="solid">
                 <a-radio-button value="M">{{ $t("male") }}</a-radio-button>
                 <a-radio-button value="F">{{ $t("female") }}</a-radio-button>
               </a-radio-group>
             </a-form-item>
-            <a-form-item :label="$t('dob')" :label-col="{span:8}" name="dob">
+            <a-form-item :label="$t('dob')" name="dob">
               <a-date-picker
                 v-model:value="modal.data.dob"
                 :format="dateFormat"
                 :valueFormat="dateFormat"
               />
             </a-form-item>
-            <a-form-item :label="$t('email')" :label-col="{span:8}" name="email">
+            <a-form-item :label="$t('email')"  name="email">
               <a-input v-model:value="modal.data.email" />
             </a-form-item>
-            <a-form-item :label="$t('mobile_number')" :label-col="{span:8}" name="mobile">
+            <a-form-item :label="$t('mobile_number')" name="mobile">
               <a-input v-model:value="modal.data.mobile" />
             </a-form-item>
-          </a-col>
-          <a-col>
             <img :src="modal.data.avatar_url" width="200"/>
-          </a-col>
-
-        </a-row>
 
       </a-form>
       <template #footer>
@@ -137,7 +154,7 @@ export default {
     OrganizationLayout,
     PopupModal,
   },
-  props: ["members"],
+  props: ["memberTiers","members"],
   data() {
     return {
       dateFormat: "YYYY-MM-DD",
@@ -166,6 +183,10 @@ export default {
           title: "Date of birth",
           dataIndex: "dob",
           i18n: "dob",
+        },{
+          title: "Tier",
+          dataIndex: "tier",
+          i18n: "tier",
         },{
           title: "State",
           dataIndex: "state",
