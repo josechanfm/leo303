@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Organization;
 
 use App\Http\Controllers\Controller;
@@ -21,7 +20,6 @@ class CompetitionController extends Controller
             'competitions'=>Competition::where('organization_id',session('organization')->id)->paginate()
         ]);        
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -99,7 +97,6 @@ class CompetitionController extends Controller
             'roles'=>Config::item('competition_roles')
         ]);
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -109,7 +106,6 @@ class CompetitionController extends Controller
      */
     public function update(Request $request, Competition $competition)
     {
-
         $competition->update($request->all());
         if($request->file('banner')){
             foreach($request->file('banner') as $file){
@@ -125,7 +121,6 @@ class CompetitionController extends Controller
         //return redirect()->route('manage.competitions.index');
         //return response($request->all());
     }
-
     /**
      * Remove the specified resource from storage.
      *

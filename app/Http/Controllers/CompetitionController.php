@@ -47,8 +47,8 @@ class CompetitionController extends Controller
     {
         $data = $request->all();
         $competition = Competition::find($data['competition_id']);
-        if ($competition->scope != 'PUB') {
-            if ($data['role'] == 'athlete') {
+        if ($competition->scope != 'PUB') { // for member only
+            if ($data['role'] == 'athlete') { //member, role as athelte
                 //max 2 applicatition same competition, in defferent category and/or weight
                 $applicationCount = CompetitionApplication::where('competition_id', $data['competition_id'])
                     ->where('member_id', $data['member_id'])
@@ -72,16 +72,23 @@ class CompetitionController extends Controller
                 if ($applicationCount >= 1) {
                     return redirect()->back()->withErrors(['message' => 'Applied multiple roles']);
                 }
-            } else {
+            } else { //member, role as not athelete
                 //max 1 in same category same weight
                 $applicationCount = CompetitionApplication::where('competition_id', $data['competition_id'])
-                    ->where('member_id', $data['member_id'])
+                    ->where('id_num', $data['id_num'])
                     ->count();
                 if ($applicationCount >= 1) {
                     return redirect()->back()->withErrors(['message' => 'Duplicate application']);
                 }
             }
+        }else{ // for non member
+            if($data['role']=='athlete'){ //none member, role as athelete
+                CompetitionApplication::unique($competition,'athlete','id_num',$data['id_num']);
+            }else{  // none member, role as not athelete
+                dd('none member, role as not athelete');
+            }
         }
+        return true;
 
         if ($request->file('avatar')) {
             $file = $request->file('avatar');

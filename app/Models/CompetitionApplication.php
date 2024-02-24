@@ -16,12 +16,39 @@ class CompetitionApplication extends Model
     public function getAvatarUrlAttribute(){
         return $this->avatar?Storage::url($this->avatar):'';
     }
-
     public function competition(){
         return $this->belongsTo(Competition::class)->with('media');
     }
     public function organization(){
         return $this->belongsTo(Organization::class);
+    }
+    public static function unique($competition, $role, $identifier, $value){
+        //$applications=$competition->applications->where($identifier, $value)->selectRaw('category, weight, count(*) as count')->groupBy('category,weight');
+        $asAthleteDuplicateCount=self::whereBelongsTo($competition)
+                            ->where($identifier, $value)
+                            ->selectRaw('category, weight, COUNT(*) as count')
+                            ->where('role',$role)
+                            ->groupBy('category','weight')
+                            ->having('count','>=',1)
+                            ->count();
+        $byRoleDuplicateCount=self::whereBelongsTo($competition)
+                            ->where($identifier, $value)
+                            ->selectRaw('role, COUNT(*) as count')
+                            ->groupBy('role')
+                            ->having('count','>',1)
+                            ->count();
+        
+        //dd($asAthleteDuplicateCount);
+        if($asAthleteDuplicateCount >=1 || $byRoleDuplicateCount >= 1){
+            dd('duplicated');
+        }else{
+            dd('yes yes');
+        }
+        if($competition->scope=='PUB'){
+        }else{
+
+        }
+        dd($applications);
     }
 
 }
