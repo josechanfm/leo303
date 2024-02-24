@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('competitions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('organization_id');
+            $table->char('organization_id',5);
             $table->string('title_zh');
             $table->string('title_fn')->nullable();
             $table->text('brief')->nullable();

@@ -13,15 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('questions', function (Blueprint $table) {
+        Schema::create('competition_scores', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('exam_id');
+            $table->foreignId('organization_id');
+            $table->char('category',5);
             $table->string('title');
-            $table->text('description')->nullable();
-            $table->text('type');
-            $table->text('options');
-            $table->text('answer');
-            $table->integer('score');
+            $table->integer('first');
+            $table->integer('second');
+            $table->integer('third');
+            $table->integer('fifth');
+            $table->integer('seventh');
+            $table->integer('advance');
+            $table->integer('participate');
             $table->timestamps();
         });
     }
@@ -33,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('questions');
+        Schema::dropIfExists('competition_scores');
     }
 };

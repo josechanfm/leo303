@@ -92,9 +92,10 @@ class CompetitionController extends Controller
         $competition->getMedia();
         return Inertia::render('Organization/Competition',[
             'competition'=>$competition,
+            'scoreCategories'=>Config::item('competition_score_categories'),
             'categories_weights'=>Config::items('categories_weights',0),
-            'staff_options'=>Config::item('staff_options'),
-            'referee_options'=>Config::item('referee_options'),
+            'staffOptions'=>Config::item('staff_options'),
+            'refereeOptions'=>Config::item('referee_options'),
             'roles'=>Config::item('competition_roles')
         ]);
     }

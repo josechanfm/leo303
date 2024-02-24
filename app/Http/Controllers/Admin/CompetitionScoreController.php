@@ -1,25 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Organization\Exam;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Exam;
-use App\Models\Question;
+use App\Models\CompetitionScore;
+use App\Models\Config;
 
-class QuestionController extends Controller
+class CompetitionScoreController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Exam $exam)
+    public function index()
     {
-        $exam->questions;
-        return Inertia::render('Organization/Exam/Questions',[
-            'exam'=>$exam
+        return Inertia::render('Admin/CompetitionScores',[
+            'competitionScoreCategories'=>Config::item('competition_score_categories'),
+            'competitionScores'=>CompetitionScore::where('organization_id',0)->get()
         ]);
     }
 
@@ -41,7 +41,9 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data=$request->all();
+        $data['organization_id']=0;
+        CompetitionScore::create($data);
     }
 
     /**
@@ -73,9 +75,9 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Exam $exam, Question $question, Request $request)
+    public function update(Request $request, CompetitionScore $competitionScore)
     {
-        $question->update($request->all());
+        $competitionScore->update($request->all());
         return redirect()->back();
     }
 
