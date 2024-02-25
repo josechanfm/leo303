@@ -39,9 +39,6 @@
             <template v-else-if="column.dataIndex == 'tier' && record.current_tier">
               {{ record.current_tier.tier_code }}
             </template>
-            <template v-else-if="column.dataIndex == 'state'">
-              {{ teacherStateLabels[text] }}
-            </template>
             <template v-else-if="column.dataIndex == 'avatar'">
               <img :src="record.avatar_url" width="60"/>
             </template>
@@ -58,7 +55,7 @@
       <a-form
         ref="modalRef"
         :model="modal.data"
-        name="Teacher"
+        name="tier"
         :label-col="{ span: 4 }"
         :wrapper-col="{ span: 16 }"
         autocomplete="off"
@@ -130,6 +127,26 @@
         </a-col>
       </a-row>
       <a-button @click="addTier">Add Tier</a-button>
+
+
+
+
+      <a-table :dataSource="modal.data.tiers" :columns="columns2">
+        <template #bodyCell="{ column, text, record, index }">
+        <template v-if="column.dataIndex=='tier_code'">
+          <a-form-item :name="['tier_code', index]" :rules="[{required:true, message:'rquired'}]">
+            <a-select v-model:value="record.tier_code" :options="memberTiers" />
+          </a-form-item>
+        </template>
+        <template v-else>
+            <a-form-item :name="['valid_at', index]" :rules="getValidationRules('valid_at', index)">
+              <a-date-picker v-model:value="record.valid_at" />
+            </a-form-item>
+      </template>
+      </template>
+    </a-table>
+
+
         <div class="ant-table">
           <div class="ant-table-container pl-10 pr-10">
             <table style="table-layout: auto;">
@@ -142,9 +159,31 @@
               </thead>
               <tbody>
                 <tr v-for="tier in modal.data.tiers">
-                  <td>{{ tier.tier_code }}</td>
-                  <td>{{ tier.valid_at }}</td>
-                  <td>{{ tier.expired_at }}</td>
+                  <td>
+                    <a-form-item  label=" " :rules="[{ required: true,message:'Required' }]" >
+                      <a-select 
+                        v-model:value="tier.tier_code" 
+                        :options="memberTiers"
+                        style="width: 200px"
+                        
+                      />
+                    </a-form-item>
+                  </td>
+                  <td>
+                    <a-date-picker 
+                      v-model:value="tier.valid_at"
+                      :format="dateFormat"
+                      :valueFormat="dateFormat"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <a-date-picker 
+                      v-model:value="tier.expired_at"
+                      :format="dateFormat"
+                      :valueFormat="dateFormat"
+                    />
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -193,7 +232,15 @@ export default {
         title: "Modal",
         mode: "",
       },
-      teacherStateLabels: {},
+      columns2:[
+        {
+          title:"Tier Code",
+          dataIndex: 'tier_code'
+        },{
+          title: "valid at",
+          dataIndex:"valid_at"
+        }
+      ],
       columns: [
         {
           title: "Given name",
@@ -237,8 +284,7 @@ export default {
         gender: { required: true },
         dob: { required: true },
         email: { required: true, type: "email" },
-        state: { required: true },
-        valid_at: {required:true}
+        state: { required: true }
       },
       validateMessages: {
         required: "${label} is required!",
@@ -335,7 +381,7 @@ export default {
     },
     addTier(){
       console.log(this.modal.data.tiers)
-      this.modal.data.tiers.unshif({tier_code:"",valid_at:null,expired_at:null })
+      this.modal.data.tiers.unshift({tier_code:null,valid_at:null,expired_at:null })
     }
   },
 };
