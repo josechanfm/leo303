@@ -47,10 +47,10 @@ class Member extends Model
     protected $appends=['avatar_url','member_number','current_tier'];
 
     public function getCurrentTierAttribute(){
-        $tier=$this->hasOne(MemberTier::class)->ofMany('valid_at','max')->first();
-        if(empty($tier)){
-            
-        }
+        $tier=$this->hasMany(MemberTier::class)->whereRaw('valid_at <= CURRENT_DATE() AND (expired_at >= CURRENT_DATE() OR expired_at IS NULL)')->orderBy('valid_at','DESC')->first();
+        // if(empty($tier)){
+        //     dd(MemberTier::make());
+        // }
         return $tier??MemberTier::make();
     }
     public function getAvatarUrlAttribute(){
@@ -122,6 +122,6 @@ class Member extends Model
         return $this->morphToMany(Event::class,'attendee');
     }
     public function tiers(){
-        return $this->hasMany(MemberTier::class);
+        return $this->hasMany(MemberTier::class)->orderBy('valid_at','DESC');
     }
 }

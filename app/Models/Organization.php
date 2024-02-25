@@ -38,7 +38,7 @@ class Organization extends Model implements HasMedia
     }
 
     public function members(){
-        return $this->belongsToMany(Member::class)->with('user');
+        return $this->belongsToMany(Member::class)->with('user')->with('tiers');
     }
 
     public function hasUser($user){

@@ -58,6 +58,7 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $member= Member::create($request->all());
+        $member->tiers()->create($request->update_tier);
         $member->organizations()->attach(session('organization')->id);
         return redirect()->back();
     }
@@ -98,8 +99,12 @@ class MemberController extends Controller
      */
     public function update(Request $request, Member $member)
     {
-        //dd($request->all());
-        //$member->update($request->all());
+        if($request->current_tier['tier_code'] == $request->update_tier['tier_code']){
+            $memberTier=$member->currentTier->update($request->update_tier);
+        }else{
+            $member->tiers()->create($request->update_tier);
+        }
+        $member->update($request->all());
         return redirect()->back();
     }
 
