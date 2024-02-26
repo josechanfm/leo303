@@ -249,6 +249,7 @@
     "attend": "出席",
     "be_late": "遲到",
     "leave_early": "早退",
+    "sure_confirmed":"是否確定",
     "confirm_delete_record": "是否確定刪這條記錄?",
     "add_members_as_attendees": "新增成員為參與者",
     "select_members_to_attendees_list": "選擇成員到參與者列表",

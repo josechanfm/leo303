@@ -28,7 +28,7 @@
           <a :href="route('manage.competition.application.success',record.id)" target="_blank" class="ant-btn">{{ $t('receipt') }}</a>
           <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
           <a-popconfirm
-            :title="'刪除報名記錄?'+record.name_zh +' / ' + record.name_fn"
+            :title="$t('confirm_delete_record') +record.name_zh+'/'+record.name_fn"
             :ok-text="$t('confirm')"
             :cancel-text="$t('aband')"
             @confirm="deleteRecord(record)"
@@ -47,7 +47,7 @@
         </template>
         <template v-else-if="column.dataIndex == 'accepted'">
           <a-popconfirm
-            :title="record.accepted?'是否確定'+$t('competition_unaccepted')+'?':'是否確定'+$t('competition_accepted')+'?'"
+            :title="$t('sure_confirmed')+(record.accepted?$t('competition_unaccepted')+'?':$t('competition_accepted')+'?')"
             :ok-text="$t('confirm')"
             :cancel-text="$t('aband')"
             @confirm="acceptedConfirmed(record)"
@@ -64,7 +64,7 @@
               @change="onChangeResult(record)"
             />
           </span>
-          <span v-else>
+          <span v-else-if="record.result_rank">
             {{ competitionResults.find(r=>r.value==record.result_rank).label }} /
             {{ competition.result_scores[record.result_rank] }}
           </span>
@@ -315,7 +315,7 @@ export default {
     };
   },
   created() {
-    this.competitionResults.unshift({value:null,label:'清空'})
+    this.competitionResults.unshift({value:null,label:'---'})
   },
   methods: {
     onChangeGender(gender) {
