@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organization;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Config;
 use App\Models\Competition;
 use App\Models\CompetitionApplication;
 use Illuminate\Support\Facades\Storage;
@@ -25,6 +26,7 @@ class CompetitionApplicationController extends Controller
         $competition->applications;
         Session::put('competitionId', $competition->id);
         return Inertia::render('Organization/CompetitionApplications', [
+            'competitionResults'=>Config::item('competition_results'),
             'competition' => $competition
         ]);
     }
@@ -84,7 +86,12 @@ class CompetitionApplicationController extends Controller
         $competitionApplication = CompetitionApplication::find($id);
         // return response()->json($competitionApplication);
         // return response()->json($request->all());
-        $competitionApplication->update($request->all());
+        $data=$request->all();
+        if(!empty($data['result_rank'])){
+            $score=$competition->score->toArray();
+            $data['result_score']=$competition->result_scores[$data['result_rank']];
+        }
+        $competitionApplication->update($data);
         return redirect()->back();
     }
 

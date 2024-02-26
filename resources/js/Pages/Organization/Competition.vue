@@ -5,10 +5,10 @@
         v-if="mode == 'CREATE'"
         class="font-semibold text-xl text-gray-800 leading-tight"
       >
-        {{ $t("create_competition") }}
+        {{ $t("competition_create") }}
       </h2>
       <h2 v-else class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("edit_competition") }}
+        {{ $t("competition_edit") }}
       </h2>
     </template>
     <div class="container mx-auto">
@@ -21,7 +21,7 @@
           :rules="rules"
           @finish="onFinish"
         >
-          <a-form-item :label="$t('competition_score_category')" name="score_category">
+          <a-form-item :label="$t('competition_score_category')" name="competition_score_id">
             <a-select v-model:value="competitionData.competition_score_id" :options="competitionScores" :fieldNames="{value:'id',label:'title'}"/>
           </a-form-item>
           <a-form-item :label="$t('competition_title_zh')" name="title_zh">
@@ -342,7 +342,7 @@ export default {
         },
       },
       rules: {
-        score_category: { required: true },
+        competition_score_id: { required: true },
         title_zh: { required: true },
         period: { required: true },
         match_date: { required: true },

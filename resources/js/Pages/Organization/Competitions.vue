@@ -9,7 +9,7 @@
       <inertia-link
         :href="route('manage.competitions.create')"
         class="ant-btn ant-btn-primary"
-        >{{ $t("create_competiton") }}</inertia-link
+        >{{ $t("competiton_create") }}</inertia-link
       >
     </div>
     <div class="container mx-auto pt-5">

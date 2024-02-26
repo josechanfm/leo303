@@ -10,4 +10,8 @@ class CompetitionScore extends Model
     use HasFactory;
 
     protected $fillable=['organization_id','category','title','first','second','third','fifth','seventh','advance','participate'];
+
+    public function competitions(){
+        return $this->hasMany(Competition::class);
+    }
 }

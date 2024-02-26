@@ -2,11 +2,20 @@
   <OrganizationLayout title="Dashboard">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("applications") }}
+        {{ $t("application_result") }}
       </h2>
     </template>
-    <a :href="route('manage.competition.applications.receipts',{competition:competition.id,applicationIds:selectedRowKeyIds.toString()})" target="_blank" class="ant-btn">打印收據</a>
-    <a :href="route('manage.competition.applications.export',competition.id)" class="ant-btn">滙出Excel</a>
+    <template v-for="result in competitionResults">
+        <a-card :title="result.label">
+            <template #extra><a href="#">Applications</a></template>
+            <a-select 
+                v-model:value="result.application_id" 
+                :options="competition.applications"
+                :fieldNames="{value:'id',label:'display_name'}"
+                style="width: 300px"
+            />
+        </a-card>
+    </template>
     <a-table 
       :dataSource="competition.applications" 
       :columns="columns"
@@ -19,9 +28,6 @@
     >
       <template #headerCell="{ column }">
         {{ column.i18n ? $t(column.i18n) : column.title }}
-        <template v-if="column.dataIndex=='accepted' || column.dataIndex=='competition_result'">
-          <a-switch v-model:checked="column.enabled"/>
-        </template>
       </template>
       <template #bodyCell="{ column, text, record, index }">
         <template v-if="column.dataIndex == 'operation'">
@@ -47,27 +53,18 @@
         </template>
         <template v-else-if="column.dataIndex == 'accepted'">
           <a-popconfirm
-            :title="record.accepted?'是否確定'+$t('competition_unaccepted')+'?':'是否確定'+$t('competition_accepted')+'?'"
+            :title="record.accepted?'是否確定'+$t('competition_accepted')+'?':'是否確定'+$t('competition_unaccepted')+'?'"
             :ok-text="$t('confirm')"
             :cancel-text="$t('aband')"
             @confirm="acceptedConfirmed(record)"
+            @cancel="record.accepted=!record.accepted"
           >
-          <a-checkbox v-model:checked="record.accepted" :disabled="!column.enabled"/>
-          </a-popconfirm>
-        </template>
-        <template v-else-if="column.dataIndex=='competition_result'">
-          <span v-if="column.enabled">
-            <a-select 
-              v-model:value="record.result_rank"
-              :options="competitionResults"
-              style="width:100px"
-              @change="onChangeResult(record)"
+            <a-switch v-model:checked="record.accepted" 
+              :checked-children="$t('competition_accepted')"
+              :un-checked-children="$t('competition_unaccepted')"
+              :disabled="acceptDisabled"
             />
-          </span>
-          <span v-else>
-            {{ competitionResults.find(r=>r.value==record.result_rank).label }} /
-            {{ competition.result_scores[record.result_rank] }}
-          </span>
+          </a-popconfirm>
         </template>
         <template v-else>
           {{ record[column.dataIndex] }}
@@ -159,14 +156,6 @@
               <a-switch v-model:checked="modal.data.accepted" 
                 :checked-children="$t('competition_accepted')"
                 :un-checked-children="$t('competition_unaccepted')"
-              />
-            </a-form-item>
-            <a-form-item :label="$t('competition_result')"  name="resule" :label-col="{span:8}">
-              <a-select 
-                v-model:value="modal.data.result_rank"
-                :options="competitionResults"
-                style="width:150px"
-                @change="onChangeResult(record)"
               />
             </a-form-item>
           </a-col>
@@ -271,14 +260,7 @@ export default {
           i18n:"competition_accepted",
           dataIndex: "accepted",
           key: "accepted",
-          enabled: false,
-          width: "150px"
-        },{
-          title: "Result",
-          i18n:"competition_result",
-          dataIndex: "competition_result",
-          key: "result",
-          width: "150px"
+          width: "100px"
         },{
           title: "Operation",
           i18n:"operation",
@@ -315,7 +297,6 @@ export default {
     };
   },
   created() {
-    this.competitionResults.unshift({value:null,label:'清空'})
   },
   methods: {
     onChangeGender(gender) {
@@ -437,40 +418,22 @@ export default {
       //console.log(selected, selectedRows, changeRows);
     },      
     acceptedConfirmed(record){
-      record.accepted=!record.accepted
-      console.log(record.accepted);
       this.$inertia.put(
-        route("manage.competition.applications.update", {
-          competition: this.competition.id,
-          application: record.id,
-        }),
-        record,
-        {
-          onSuccess: (page) => {
-            console.log(page);
-          },
-          onError: (error) => {
-            console.log(error);
-          },
-        }
-      );
-    },
-    onChangeResult(record){
-      this.$inertia.put(
-        route("manage.competition.applications.update", {
-          competition: this.competition.id,
-          application: record.id,
-        }),
-        record,
-        {
-          onSuccess: (page) => {
-            console.log(page);
-          },
-          onError: (error) => {
-            console.log(error);
-          },
-        }
-      );
+            route("manage.competition.applications.update", {
+              competition: this.competition.id,
+              application: record.id,
+            }),
+            record,
+            {
+              onSuccess: (page) => {
+                console.log(page);
+              },
+              onError: (error) => {
+                console.log(error);
+              },
+            }
+          );
+
     }
   },
 };

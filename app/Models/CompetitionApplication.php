@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 class CompetitionApplication extends Model
 {
     use HasFactory;
-    protected $fillable=['competition_id','organization_id','member_id','name_zh','name_fn','given_name','family_name','middle_name','display_name','id_num','gender','dob','belt_rank','email','mobile','category','weight','role','avatar','staff_options','referee_options','accepted'];
+    protected $fillable=['competition_id','organization_id','member_id','name_zh','name_fn','given_name','family_name','middle_name','display_name','id_num','gender','dob','belt_rank','email','mobile','category','weight','role','avatar','staff_options','referee_options','accepted','result_rank','result_score'];
     protected $casts=['staff_options'=>'json','referee_options'=>'json','accepted'=>'boolean'];
     protected $appends=['avatar_url'];
 

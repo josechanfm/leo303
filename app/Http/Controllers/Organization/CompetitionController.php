@@ -47,6 +47,8 @@ class CompetitionController extends Controller
         $data=$request->all();
         $data['organization_id']=session('organization')->id;
         $competition=Competition::create($data);
+        $competition->result_scores=$competition->score?$competition->score->toArray():null;
+        $competition->save();
 
         if($request->file('banner')){
             foreach($request->file('banner') as $file){
@@ -109,6 +111,8 @@ class CompetitionController extends Controller
     public function update(Request $request, Competition $competition)
     {
         $competition->update($request->all());
+        $competition->result_scores=$competition->score?$competition->score->toArray():null;
+        $competition->save();
         if($request->file('banner')){
             foreach($request->file('banner') as $file){
                 $competition->addMedia($file['originFileObj'])->toMediaCollection('competitionBanner');
@@ -119,6 +123,9 @@ class CompetitionController extends Controller
                 $competition->addMedia($file['originFileObj'])->toMediaCollection('competitionAttachment');
             }
         };
+        //dd(json_encode($competition->score));
+        //$competition->update(['result_scores'=>json_encode($competition->score)]);
+        dd($competition);
         return redirect()->back();
         //return redirect()->route('manage.competitions.index');
         //return response($request->all());
