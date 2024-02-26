@@ -258,5 +258,6 @@
     "competition_score_fifth":"第五名",
     "competition_score_seventh":"第七名",
     "competition_score_advance":"晉級",
-    "competition_score_participate":"參與"
+    "competition_score_participate":"參與",
+    "tier":"梯隊"
 }

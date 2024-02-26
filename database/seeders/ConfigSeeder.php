@@ -524,7 +524,14 @@ class ConfigSeeder extends Seeder
                     {"value":"LOCAL","label":"本地"}
                 ]'
             ]);
-
+            DB::table('configs')->insert([
+                'organization_id'=>0,
+                'key'=>'member_tiers',
+                'value'=>'[
+                    {"value":"TEAM_A","label":"代表隊A"},
+                    {"value":"TEAM_B","label":"代表隊B"}
+                ]'
+            ]);
     
     }
 }

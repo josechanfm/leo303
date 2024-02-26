@@ -253,7 +253,6 @@
     "competition_score_fifth":"Fifth",
     "competition_score_seventh":"Seventh",
     "competition_score_advance":"Advance",
-    "competition_score_participate":"Participate"
-    
-
+    "competition_score_participate":"Participate",
+    "tier":"Tier"
 }

@@ -55,7 +55,7 @@
       <a-form
         ref="modalRef"
         :model="modal.data"
-        name="tier"
+        name="memberTier"
         :label-col="{ span: 4 }"
         :wrapper-col="{ span: 16 }"
         autocomplete="off"
@@ -126,72 +126,74 @@
             </a-form-item>
         </a-col>
       </a-row>
-      <a-button @click="addTier">Add Tier</a-button>
-
-
-
-
-      <a-table :dataSource="modal.data.tiers" :columns="columns2">
-        <template #bodyCell="{ column, text, record, index }">
-        <template v-if="column.dataIndex=='tier_code'">
-          <a-form-item :name="['tier_code', index]" :rules="[{required:true, message:'rquired'}]">
-            <a-select v-model:value="record.tier_code" :options="memberTiers" />
-          </a-form-item>
-        </template>
-        <template v-else>
-            <a-form-item :name="['valid_at', index]" :rules="getValidationRules('valid_at', index)">
-              <a-date-picker v-model:value="record.valid_at" />
-            </a-form-item>
-      </template>
-      </template>
-    </a-table>
-
-
+      <div class="flex-auto pb-3 text-right">
+        <a-button @click="addTier">{{ $t('add') }}{{ $t('tier') }}</a-button>
+      </div>
         <div class="ant-table">
           <div class="ant-table-container pl-10 pr-10">
             <table style="table-layout: auto;">
               <thead class="ant-table-thead">
                 <tr>
-                  <th>Tier</th>
-                  <th class="text-right">Valid at</th>
-                  <th>Expired</th>
+                  <th>{{$t('tier')}}</th>
+                  <th class="text-right">{{$t('valid_at')}}</th>
+                  <th>{{$t('expired_at')}}</th>
+                  <th>{{$t('operation')}}</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="tier in modal.data.tiers">
+                <tr v-for="(tier,idx) in modal.data.tiers">
                   <td>
-                    <a-form-item  label=" " :rules="[{ required: true,message:'Required' }]" >
+                    <a-form-item :name="'tier_code_'+tier.id" :rules="[{value:tier.tier_code, validator:validateNotNull,trigger:'blur'}]">
                       <a-select 
+                        name="tier_id"
                         v-model:value="tier.tier_code" 
                         :options="memberTiers"
-                        style="width: 200px"
-                        
+                        :fieldNames="{value:'label',label:'label'}"
+                        style="width: 200px"                        
                       />
                     </a-form-item>
                   </td>
                   <td>
-                    <a-date-picker 
-                      v-model:value="tier.valid_at"
-                      :format="dateFormat"
-                      :valueFormat="dateFormat"
-                      required
-                    />
+                    <a-form-item :name="'valid_at_'+tier.id" :wrapper-col="{ span:24, offset: 0 }"
+                      :rules="[{value:tier.valid_at, validator:validateNotNull,trigger:'blur'}]">
+                      <a-date-picker 
+                        v-model:value="tier.valid_at"
+                        :format="dateFormat"
+                        :valueFormat="dateFormat"
+                      />
+                    </a-form-item>
                   </td>
                   <td>
-                    <a-date-picker 
-                      v-model:value="tier.expired_at"
-                      :format="dateFormat"
-                      :valueFormat="dateFormat"
-                    />
+                    <a-form-item :name="'expired_at_'+tier.id" :wrapper-col="{ span: 24, offset: 0 }">
+                      <a-date-picker 
+                        v-model:value="tier.expired_at"
+                        :format="dateFormat"
+                        :valueFormat="dateFormat" 
+                      />
+                    </a-form-item>
+                  </td>
+                  <td class="align-top">
+                    <a-popconfirm
+                      title="Are you sure delete this item?"
+                      ok-text="Yes"
+                      cancel-text="No"
+                      @confirm="deleteMemberTier(idx,tier)"
+                    >
+                    <a-button>{{$t('delete')}}</a-button>
+                    </a-popconfirm>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
+
+        
       <img :src="modal.data.avatar_url" width="200"/>
       </a-form>
       <template #footer>
+        <a-button key="back" @click="onCancelModal">返回</a-button>
+
         <a-button
           v-if="modal.mode == 'EDIT'"
           key="Update"
@@ -284,7 +286,12 @@ export default {
         gender: { required: true },
         dob: { required: true },
         email: { required: true, type: "email" },
-        state: { required: true }
+        state: { required: true },
+        // tier_code:{
+        //   required:true, 
+        //   validator:this.validateMemberTier,
+        //   trigger: 'change'
+        // }
       },
       validateMessages: {
         required: "${label} is required!",
@@ -305,6 +312,11 @@ export default {
   },
   created() {},
   methods: {
+    onCancelModal(){
+      this.modal.data={}
+      this.modal.data.current_tier={}
+      this.modal.isOpen=false
+    },
     createRecord() {
       this.modal.data = {};
       this.modal.data.current_tier={}
@@ -346,7 +358,6 @@ export default {
               this.modal.data,
             {
               onSuccess: (page) => {
-                console.log('updated....');
                 this.modal.isOpen = false;
                 //this.modal.data = {};
                 console.log(page);
@@ -366,7 +377,6 @@ export default {
     },
 
     createLogin(recordId) {
-      console.log(recordId);
       axios.post(route("manage.member.createLogin", recordId)).then((response) => {
         if (response.data.result == false) {
           PopupModal.warning({
@@ -376,12 +386,24 @@ export default {
         }
         this.modal.data = {};
         this.modal.isOpen = false;
-        console.log(response.data);
       });
     },
     addTier(){
-      console.log(this.modal.data.tiers)
       this.modal.data.tiers.unshift({tier_code:null,valid_at:null,expired_at:null })
+    },
+    validateNotNull(rule){
+      if(rule.value){
+        return Promise.resolve();
+      }else{
+        return Promise.reject("必填欄位 Required input!");
+      }
+    },
+    deleteMemberTier(tierIdx, tier){
+      if(tier.id){
+        console.log('to delete record: '+tier.id);
+      }else{
+        this.modal.data.tiers.splice(tierIdx,1)        
+      }
     }
   },
 };
