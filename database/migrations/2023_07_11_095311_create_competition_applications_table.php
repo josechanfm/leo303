@@ -36,6 +36,7 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('staff_options')->nullable();
             $table->string('referee_options')->nullable();
+            $table->boolean('accepted')->defaut(false);
             $table->timestamps();
         });
     }

@@ -24,7 +24,14 @@
         <template v-if="column.dataIndex == 'operation'">
           <a :href="route('manage.competition.application.success',record.id)" target="_blank" class="ant-btn">{{ $t('receipt') }}</a>
           <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
-          <a-button @click="deleteRecord(record)">{{ $t("delete") }}</a-button>
+          <a-popconfirm
+            :title="'刪除報名記錄?'+record.name_zh +' / ' + record.name_fn"
+            ok-text="確定"
+            cancel-text="放棄"
+            @confirm="deleteRecord(record)"
+          >
+            <a-button>{{ $t("delete") }}</a-button>
+          </a-popconfirm>
         </template>
         <template v-else-if="column.dataIndex == 'full_name'">
           {{ record.given_name }} {{ record.middle_name }} {{ record.family_name }}
@@ -34,6 +41,21 @@
         </template>
         <template v-else-if="column.dataIndex == 'avatar'">
           <img :src="record.avatar_url" width="60"/>
+        </template>
+        <template v-else-if="column.dataIndex == 'accepted'">
+          <a-popconfirm
+            :title="record.accepted?'是否確定錄取?':'是否確定不錄取?'"
+            ok-text="確定"
+            cancel-text="放棄"
+            @confirm="acceptedConfirmed(record)"
+            @cancel="record.accepted=!record.accepted"
+          >
+            <a-switch v-model:checked="record.accepted" 
+              checked-children="取錄"
+              un-checked-children="不取錄"
+              :disabled="acceptDisabled"
+            />
+          </a-popconfirm>
         </template>
         <template v-else>
           {{ record[column.dataIndex] }}
@@ -47,7 +69,6 @@
         :model="modal.data"
         name="Teacher"
         :label-col="{ span: 4 }"
-        :wrapper-col="{ span: 16 }"
         autocomplete="off"
         :rules="rules"
         :validate-messages="validateMessages"
@@ -61,21 +82,15 @@
         <a-form-item :label="$t('name_fn')" name="name_fn">
           <a-input v-model:value="modal.data.name_fn" />
         </a-form-item>
-        <a-form-item :label="$t('id_num')" name="id_num">
-          <a-input v-model:value="modal.data.id_num" />
-        </a-form-item>
-        <a-form-item :label="$t('display_name')" name="display_name">
-          <a-input v-model:value="modal.data.display_name" />
-        </a-form-item>
-        <a-form-item :label="$t('email')" name="email">
-          <a-input v-model:value="modal.data.email" />
-        </a-form-item>
-        <a-form-item :label="$t('mobile_number')" name="mobile">
-          <a-input v-model:value="modal.data.mobile" />
-        </a-form-item>
         <a-row :span="24">
-          <a-col :span="18">
-            <a-form-item :label="$t('gender')" :label-col="{ span: 5 }" name="gender">
+          <a-col :span="12">
+            <a-form-item :label="$t('display_name')" name="display_name" :label-col="{ span: 8 }">
+              <a-input v-model:value="modal.data.display_name" />
+            </a-form-item>
+            <a-form-item :label="$t('email')" name="email" :label-col="{ span: 8 }">
+              <a-input v-model:value="modal.data.email" />
+            </a-form-item>
+            <a-form-item :label="$t('gender')" name="gender" :label-col="{ span: 8 }">
               <a-radio-group
                 v-model:value="modal.data.gender"
                 button-style="solid"
@@ -85,20 +100,32 @@
                 <a-radio-button value="F">{{$t('female')}}</a-radio-button>
               </a-radio-group>
             </a-form-item>
-            <a-form-item :label="$t('dob')" :label-col="{ span: 5 }" name="dob">
+          </a-col>
+          <a-col :span="12">
+            <a-form-item :label="$t('id_num')" name="id_num" :label-col="{ span: 8 }">
+              <a-input v-model:value="modal.data.id_num" />
+            </a-form-item>
+            <a-form-item :label="$t('mobile_number')" name="mobile" :label-col="{span:8}">
+              <a-input v-model:value="modal.data.mobile" />
+            </a-form-item>
+            <a-form-item :label="$t('dob')" name="dob" :label-col="{ span: 8 }">
               <a-date-picker
                 v-model:value="modal.data.dob"
                 :format="dateFormat"
                 :valueFormat="dateFormat"
               />
             </a-form-item>
-            <a-form-item :label="$t('role')" :label-col="{ span: 5 }" name="role">
+          </a-col>
+        </a-row>
+        <a-row :span="24">
+          <a-col :span="12">
+            <a-form-item :label="$t('role')" name="role" :label-col="{ span: 8 }">
               <a-select v-model:value="modal.data.role" :options="competition.roles" />
             </a-form-item>
             <template v-if="modal.data.role == 'athlete'">
               <a-form-item
                 :label="$t('category')"
-                :label-col="{ span: 5 }"
+                :label-col="{ span: 8 }"
                 name="category"
               >
                 <a-select
@@ -108,7 +135,7 @@
                   @change="onChangeCategory"
                 />
               </a-form-item>
-              <a-form-item :label="$t('weight')" :label-col="{ span: 5 }" name="weight">
+              <a-form-item :label="$t('weight')" :label-col="{ span: 8 }" name="weight">
                 <a-select
                   v-model:value="modal.data.weight"
                   :options="modal.data.weight_list"
@@ -116,8 +143,14 @@
                 />
               </a-form-item>
             </template>
+            <a-form-item :label="$t('accepted')" name="accepted" :label-col="{ span: 8 }">
+              <a-switch v-model:checked="modal.data.accepted" 
+                checked-children="取錄"
+                un-checked-children="不取錄"
+              />
+            </a-form-item>
           </a-col>
-          <a-col>
+          <a-col :span="12">
               <img :src="modal.data.avatar_url" width="200"/>
           </a-col>
         </a-row>
@@ -166,7 +199,7 @@ export default {
         title: "Modal",
         mode: "",
       },
-      teacherStateLabels: {},
+      acceptDisabled:false,
       columns: [
         {
           title: "Name (zh)",
@@ -213,6 +246,12 @@ export default {
           i18n:"avatar",
           dataIndex: "avatar",
           key: "avatar",
+        },{
+          title: "Accepted",
+          i18n:"accepted",
+          dataIndex: "accepted",
+          key: "accepted",
+          width: "100px"
         },{
           title: "Operation",
           i18n:"operation",
@@ -271,27 +310,26 @@ export default {
     },
     deleteRecord(record){
       Modal.confirm({
-                title: '是否確定',
-                icon: createVNode(ExclamationCircleOutlined),
-                content: '刪除報名記錄?'+record.name_zh +' / ' + record.name_fn,
-                okText: '確定',
-                cancelText: '取消',
-                onOk: () => {
-                  this.$inertia.delete(route('manage.competition.applications.destroy',
-                    {
-                      competition: this.competition.id,
-                      application: record.id,
-                    }),{
-                    onSuccess: (page) => {
-                      console.log(page);
-                    },
-                    onError: (error) => {
-                      console.log(error);
-                    },
-                  })
-                }
+          title: '是否確定',
+          icon: createVNode(ExclamationCircleOutlined),
+          content: '刪除報名記錄?'+record.name_zh +' / ' + record.name_fn,
+          okText: '確定',
+          cancelText: '取消',
+          onOk: () => {
+            this.$inertia.delete(route('manage.competition.applications.destroy',
+              {
+                competition: this.competition.id,
+                application: record.id,
+              }),{
+              onSuccess: (page) => {
+                console.log(page);
+              },
+              onError: (error) => {
+                console.log(error);
+              },
             })
-
+          }
+      })
 
     }, 
     genWeightList() {
@@ -370,8 +408,24 @@ export default {
       })
       //console.log(selected, selectedRows, changeRows);
     },      
-    
+    acceptedConfirmed(record){
+      this.$inertia.put(
+            route("manage.competition.applications.update", {
+              competition: this.competition.id,
+              application: record.id,
+            }),
+            record,
+            {
+              onSuccess: (page) => {
+                console.log(page);
+              },
+              onError: (error) => {
+                console.log(error);
+              },
+            }
+          );
 
+    }
   },
 };
 </script>

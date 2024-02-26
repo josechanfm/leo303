@@ -265,6 +265,8 @@ export default {
           title: "Tier",
           dataIndex: "tier",
           i18n: "tier",
+          filters:this.memberTiers.map(t=>({value:t.label,text:t.label})),
+          onFilter: (value, record) => record.current_tier.tier_code === value,
         },{
           title: "State",
           dataIndex: "state",
