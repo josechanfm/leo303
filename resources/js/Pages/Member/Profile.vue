@@ -323,11 +323,7 @@ export default {
       if(this.avatarData){
         this.member.avatar = this.avatarData.blob;
       }
-<<<<<<< HEAD
-      
-=======
       //this.member.avatar = this.avatarData.blob;
->>>>>>> d926c4b898b1c1b1d900c8d2ebe2826bfa2369c6
       this.member._method = "PATCH";
       this.$inertia.post(route("member.profile.update", this.member.id), this.member, {
         onSuccess: (page) => {

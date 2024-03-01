@@ -125,8 +125,8 @@ class CompetitionController extends Controller
         };
         //dd(json_encode($competition->score));
         //$competition->update(['result_scores'=>json_encode($competition->score)]);
-        return redirect()->back();
-        //return redirect()->route('manage.competitions.index');
+        //return redirect()->back();
+        return redirect()->route('manage.competitions.index');
         //return response($request->all());
     }
     /**

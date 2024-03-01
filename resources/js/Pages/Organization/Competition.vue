@@ -105,13 +105,11 @@
           </a-form-item>
           <a-form-item
             :label="$t('referee_options')"
-            name="referee_options"
+            name="refereeOptionsSelected"
             v-if="competitionData.roleSelected.includes('referee')"
-            :rules="
-              competitionData.roleSelected.includes('referee') ? [{ required: true }] : []
-            "
+            :rules="competitionData.roleSelected.includes('referee') ? [{ required: true }] : []"
           >
-            <a-checkbox-group v-model:value="competitionData.referee_options">
+            <a-checkbox-group v-model:value="competitionData.refereeOptionsSelected">
               <a-checkbox
                 v-for="option in refereeOptions"
                 :style="virticalStyle"
@@ -122,13 +120,13 @@
           </a-form-item>
           <a-form-item
             :label="$t('staff_options')"
-            name="staff_options"
+            name="staffOptionsSelected"
             v-if="competitionData.roleSelected.includes('staff')"
             :rules="
               competitionData.roleSelected.includes('staff') ? [{ required: true }] : []
             "
           >
-            <a-checkbox-group v-model:value="competitionData.staff_options">
+            <a-checkbox-group v-model:value="competitionData.staffOptionsSelected">
               <a-checkbox
                 v-for="option in staffOptions"
                 :style="virticalStyle"
@@ -391,6 +389,7 @@ export default {
         (cw) => cw.code
       );
       this.competitionData.roleSelected = this.competition.roles.map((cw) => cw.value);
+      // console.log(this.competitionData.roleSelected);
       this.competitionData.staffOptionsSelected = this.competition.staff_options?.map(
         (so) => so.value
       );
@@ -452,7 +451,6 @@ export default {
       }
     },
     onFinish() {
-      console.log(this.competitionData);
       this.competitionData.categories_weights = this.categories_weights.filter((cw) =>
         this.competitionData.cwSelected.includes(cw.code)
       );
@@ -464,7 +462,6 @@ export default {
       );
       this.competitionData.end_date = this.competitionData.period[1].format("YYYY-MM-DD");
       if (this.mode == "CREATE") {
-        console.log(this.competitionData);
         this.$inertia.post(route("manage.competitions.store"), this.competitionData, {
           onSuccess: (page) => {
             console.log(page);
@@ -474,6 +471,14 @@ export default {
           },
         });
       } else {
+        this.competitionData.referee_options=[]
+        this.competitionData.refereeOptionsSelected.forEach(option=>
+          this.competitionData.referee_options.push(this.refereeOptions.find(r=>r.value==option))
+        )
+        this.competitionData.staff_options=[]
+        this.competitionData.staffOptionsSelected.forEach(option=>
+          this.competitionData.staff_options.push(this.staffOptions.find(s=>s.value==option))
+        )
         console.log(this.competitionData);
         this.competitionData._method = "PATCH";
         this.$inertia.post(

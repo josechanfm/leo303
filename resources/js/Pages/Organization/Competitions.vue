@@ -21,8 +21,8 @@
           <template #bodyCell="{ column, text, record, index }">
             <template v-if="column.dataIndex == 'operation'">
               <inertia-link
-                :href="route('manage.competitions.show', record.id)"
                 class="ant-btn"
+                :href="route('manage.competitions.show', record.id)"
                 >{{ $t("view") }}</inertia-link
               >
               <inertia-link
@@ -35,6 +35,12 @@
                 class="ant-btn"
               >{{ $t("applications") }}</inertia-link
               >
+              <inertia-link 
+                class="ant-btn"
+                :href="route('manage.competition.results.index',record.id)"
+              >
+                Result
+              </inertia-link>
             </template>
             <template v-else-if="column.dataIndex == 'state'">
               {{ teacherStateLabels[text] }}

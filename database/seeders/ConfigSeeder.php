@@ -15,7 +15,6 @@ class ConfigSeeder extends Seeder
      */
     public function run()
     {
-        
         DB::table('configs')->insert([
             'organization_id'=>0,
             'key'=>'categories_weights',
@@ -530,6 +529,19 @@ class ConfigSeeder extends Seeder
                 'value'=>'[
                     {"value":"TEAM_A","label":"代表隊A"},
                     {"value":"TEAM_B","label":"代表隊B"}
+                ]'
+            ]);
+            DB::table('configs')->insert([
+                'organization_id'=>0,
+                'key'=>'competition_results',
+                'value'=>'[
+                    {"value": "first","label": "第一名","label_zh":"第一名","label_en":"First Place"},
+                    {"value": "second","label": "第二名","label_zh":"第二名","label_en":"Second Place"},
+                    {"value": "third","label": "第三名","label_zh":"第三名","label_en":"Third Place"},
+                    {"value": "fifth","label": "第五名","label_zh":"第五名","label_en":"Fifth Place"},
+                    {"value": "seventh","label": "第七名","label_zh":"第七名","label_en":"Senventh Place"},
+                    {"value": "advance","label": "晉級","label_zh":"晉級","label_en":"Advance"},
+                    {"value": "participate","label": "出席","label_zh":"出席","label_en":"Participate"}
                 ]'
             ]);
     

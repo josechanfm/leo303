@@ -22,33 +22,51 @@ class CompetitionApplication extends Model
     public function organization(){
         return $this->belongsTo(Organization::class);
     }
-    public static function unique($competition, $role, $identifier, $value){
-        //$applications=$competition->applications->where($identifier, $value)->selectRaw('category, weight, count(*) as count')->groupBy('category,weight');
-        $asAthleteDuplicateCount=self::whereBelongsTo($competition)
-                            ->where($identifier, $value)
-                            ->selectRaw('category, weight, COUNT(*) as count')
-                            ->where('role',$role)
-                            ->groupBy('category','weight')
-                            ->having('count','>=',1)
+    public static function unique($competition, $data){
+        if($data['role']=='athlete'){
+            if($competition->for_member){
+                $applicationCount=self::whereBelongsTo($competition)
+                            ->where('role','athlete')
+                            ->where('member_id', $data['member_id'])
+                            ->where('weight',$data['weight'])
                             ->count();
-        $byRoleDuplicateCount=self::whereBelongsTo($competition)
-                            ->where($identifier, $value)
-                            ->selectRaw('role, COUNT(*) as count')
-                            ->groupBy('role')
-                            ->having('count','>',1)
+                if($applicationCount>0){
+                    return false;
+                }
+                $applicationCount=self::whereBelongsTo($competition)
+                            ->where('role','athlete')
+                            ->where('member_id', $data['member_id'])
                             ->count();
-        
-        //dd($asAthleteDuplicateCount);
-        if($asAthleteDuplicateCount >=1 || $byRoleDuplicateCount >= 1){
-            dd('duplicated');
+                if($applicationCount>1){
+                    return false;
+                }
+            }else{
+                $applicationCount=self::whereBelongsTo($competition)
+                            ->where('role','athlete')
+                            ->where('id_num', $data['id_num'])
+                            ->where('weight',$data['weight'])
+                            ->count();
+                if($applicationCount>0){
+                    return false;
+                };
+                $applicationCount=self::whereBelongsTo($competition)
+                            ->where('role','athlete')
+                            ->where('id_num', $data['id_num'])
+                            ->count();
+                if($applicationCount>1){
+                    return false;
+                };
+            }
         }else{
-            dd('yes yes');
+            $applicationCount=self::whereBelongsTo($competition)
+                ->where('id_num', $data['id_num'])
+                ->where('role','!=','athlete')
+                ->count();
+            if($applicationCount>1){
+                return false;
+            }
         }
-        if($competition->scope=='PUB'){
-        }else{
-
-        }
-        dd($applications);
+        return true;
     }
 
 }

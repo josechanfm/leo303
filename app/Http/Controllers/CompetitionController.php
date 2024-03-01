@@ -46,6 +46,7 @@ class CompetitionController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+        // dd($data);
         $competition = Competition::find($data['competition_id']);
         if ($competition->scope != 'PUB') { // for member only
             if ($data['role'] == 'athlete') { //member, role as athelte
@@ -82,13 +83,13 @@ class CompetitionController extends Controller
                 }
             }
         }else{ // for non member
-            if($data['role']=='athlete'){ //none member, role as athelete
-                CompetitionApplication::unique($competition,'athlete','id_num',$data['id_num']);
-            }else{  // none member, role as not athelete
-                dd('none member, role as not athelete');
+            if(CompetitionApplication::unique($competition,$data)){
+                CompetitionApplication::create($data);
+            }else{
+                dd('sorry duplicated');
             }
         }
-        return true;
+        return redirect()->back();
 
         if ($request->file('avatar')) {
             $file = $request->file('avatar');

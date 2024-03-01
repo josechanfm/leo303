@@ -5,17 +5,61 @@
         {{ $t("application_result") }}
       </h2>
     </template>
-    <template v-for="result in competitionResults">
-        <a-card :title="result.label">
-            <template #extra><a href="#">Applications</a></template>
-            <a-select 
-                v-model:value="result.application_id" 
-                :options="competition.applications"
-                :fieldNames="{value:'id',label:'display_name'}"
-                style="width: 300px"
-            />
+    <a-row>
+      <a-col :span="12">
+        <table>
+          <tr v-for="cw in competition.categories_weights">
+            <td>{{cw.name}}</td>
+            <td>
+              <ol>
+                <li v-for="w in cw.female">
+                  <input type="radio" v-model="selectedCategoryWeight" @change="onChangeCW" :value="cw.code +'|F|'+ w.code"/>{{ w.name }}
+                </li>
+              </ol>
+            </td>
+            <td>
+              <ol>
+                <li v-for="w in cw.male">
+                  <input type="radio" v-model="selectedCategoryWeight" @change="onChangeCW" :value="cw.code +'|M|'+ w.code"/>{{ w.name }}
+                </li>
+              </ol>
+            </td>
+          </tr>
+        </table>
+      </a-col>
+      <a-col :span="12">
+        {{ selectedCategoryWeight }}
+        {{ competitionResults }}
+        <a-card :title="competition.title_zh">
+          <template #extra><a href="#">Applications</a></template>
+            <template v-for="result in competitionResults">
+            <a-row class="pb-5">
+              <a-col :span="6">{{ result.label }}</a-col>
+              <a-col :span="18">
+                <template v-if="result.value=='advance' || result.value=='participate'">
+                  {{ result.value }}
+                  <a-select 
+                      v-model:value="result.application_id" 
+                      :options="allAthletes"
+                      :fieldNames="{value:'id',label:'display_name'}"
+                      style="width: 300px"
+                  />
+                </template>
+                <template v-else>
+                  <a-select 
+                      v-model:value="result.application_id" 
+                      :options="athletes"
+                      :fieldNames="{value:'id',label:'display_name'}"
+                      style="width: 300px"
+                      @change="onChangeResult"
+                  />
+                </template>
+              </a-col>
+            </a-row>
+          </template>
         </a-card>
-    </template>
+      </a-col>
+    </a-row>
     <a-table 
       :dataSource="competition.applications" 
       :columns="columns"
@@ -202,6 +246,9 @@ export default {
   data() {
     return {
       dateFormat: "YYYY-MM-DD",
+      selectedCategoryWeight:null,
+      athletes:[],
+      allAthletes:[],
       modal: {
         isOpen: false,
         data: {},
@@ -292,6 +339,12 @@ export default {
         style: {
           width: "150px",
         },
+      },
+      virticalStyle: {
+        display: "flex",
+        minHeight: "30px",
+        lineHeight: "30px",
+        marginLeft: "8px",
       },
       selectedRowKeyIds:[],
     };
@@ -433,7 +486,18 @@ export default {
               },
             }
           );
-
+    },
+    onChangeCW(){
+      const cw=this.selectedCategoryWeight.split('|');
+      this.athletes=this.competition.applications.filter(a=>
+        a.category==cw[0] && a.gender==cw[1] && a.weight==cw[2]
+      );
+      this.allAthletes=JSON.parse(JSON.stringify(this.athletes))
+    },
+    onChangeResult(value){
+      this.athletes.find(a=>a.id==value).disabled=true;
+      
+      console.log(value);
     }
   },
 };
