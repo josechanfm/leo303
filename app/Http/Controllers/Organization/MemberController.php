@@ -72,7 +72,7 @@ class MemberController extends Controller
      */
     public function show(Member $member)
     {
-        return Inertia::render('Organization/MemberShow',[
+        return Inertia::render('Organization/Member',[
             'member'=>$member,
         ]);
     }

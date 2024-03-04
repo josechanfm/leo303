@@ -1,5 +1,5 @@
 <template>
-  <OrganizationLayout title="Dashboard">
+  <OrganizationLayout title="證書" :breadcrumb="breadcrumb">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         {{ $t("certificates") }}
@@ -165,6 +165,9 @@ export default {
   props: ["certificates", "certificate_categories"],
   data() {
     return {
+      breadcrumb:[
+          {label:"證書列表" ,url:null},
+      ],
       loading: false,
       uploadPreview: null,
       uploadData: null,

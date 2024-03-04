@@ -1,12 +1,7 @@
 <template>
-  <OrganizationLayout title="Dashboard">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("application_result") }}
-      </h2>
-    </template>
-    <a-row>
-      <a-col :span="12">
+  <OrganizationLayout title="賽事結果" :breadcrumb="breadcrumb">
+    <a-row :gutter="10">
+      <a-col :span="8">
         <a-card>
           <table>
             <tr v-for="cw in competition.categories_weights">
@@ -29,9 +24,9 @@
           </table>
         </a-card>
       </a-col>
-      <a-col :span="12">
+      <a-col :span="8">
         <a-card :title="competition.title_zh">
-          <template #extra><a :href="route('manage.competition.applications.index',competition.id)">Applications</a></template>
+          <template #extra><a :href="route('manage.competition.applications.index',competition.id)">{{ $t('applications')  }}</a></template>
             <template v-for="result in competitionResults">
             <a-row class="pb-5">
               <a-col :span="6">{{ result.label }}</a-col>
@@ -43,7 +38,7 @@
                       :options="athletes"
                       :fieldNames="{value:'id',label:'display_name'}"
                       :allowClear="true"
-                      style="width: 300px"
+                      style="width: 200px"
                       @change="onChangeResult(result)"
                   />
                 </template>
@@ -53,7 +48,7 @@
                       :options="athletes"
                       :fieldNames="{value:'id',label:'display_name'}"
                       :allowClear="true"
-                      style="width: 300px"
+                      style="width: 200px"
                       @change="onChangeResult(result)"
                   />
                 </template>
@@ -62,6 +57,16 @@
           </template>
           <a-button @click="submitResult">Submit</a-button>
         </a-card>
+      </a-col>
+      <a-col :span="8">
+        <a-table :dataSource="participateAthletes" :columns="columns">
+          <template #headerCell="{ column }">
+            {{ column.i18n ? $t(column.i18n) : column.title }}
+          </template>
+          <template #bodyCell="{ column, text, record, index }">
+              {{ text }}
+          </template>
+        </a-table>
       </a-col>
     </a-row>
 
@@ -84,9 +89,41 @@ export default {
   props: ["competitionResults","competition"],
   data() {
     return {
+      breadcrumb: [
+        { label: "賽事列表", url: route('manage.competitions.index') },
+        { label: "賽事結果", url: null }
+      ],
       dateFormat: "YYYY-MM-DD",
       selectedCategoryWeight:null,
+      participateAthletes:[],
       athletes:[],
+      columns: [
+        {
+          title: "Display Name",
+          i18n: "display_name",
+          dataIndex: "display_name",
+        },{
+          title: "Gender",
+          i18n: "gender",
+          dataIndex: "gender",
+        },{
+          title: "Category",
+          i18n: "category",
+          dataIndex: "category",
+        },{
+          title: "Weight",
+          i18n: "weight",
+          dataIndex: "weight",
+        },{
+          title: "Result",
+          i18n: "result_rank",
+          dataIndex: "result_rank",
+        },{
+          title: "Score",
+          i18n: "result_score",
+          dataIndex: "result_score",
+        },
+      ]
     };
   },
   created() {
@@ -96,6 +133,12 @@ export default {
   },
   methods: {
     resetParams(){
+      this.participateAthletes=[]
+      this.competition.applications.forEach(a=>{
+        if(a.result_rank){
+          this.participateAthletes.push(a)
+        }
+      })
       this.selectedCategoryWeight=null
       this.competitionResults.forEach(r=>{
         if(r.value=='advance' || r.value=='participate'){
@@ -146,7 +189,10 @@ export default {
     submitResult(){
       console.log(this.competitionResults)
       this.$inertia.post(
-        route("manage.competition.results.store", {competition:this.competition}),this.competitionResults,{
+        route("manage.competition.results.store", {competition:this.competition}),{
+          cgw:this.selectedCategoryWeight.split('|'),
+          results:this.competitionResults
+        },{
           onSuccess: (page) => {
             console.log(page);
             this.resetParams()

@@ -122,7 +122,7 @@ export default {
                   {{ $t("guardian") }}
                 </NavLink>
                 <NavLink
-                  :href="route('manage.dashboard')"
+                  :href="route('manage')"
                   v-if="$page.props.user.roles.includes('organizer')"
                 >
                   {{ $t("manager") }}
@@ -342,7 +342,7 @@ export default {
                 {{$t('account')}}
               </ResponsiveNavLink>
               <ResponsiveNavLink
-                :href="route('manage.dashboard')"
+                :href="route('manage')"
                 v-if="$page.props.user.roles.includes('organizer')"
               >
                 {{$t('manager')}}

@@ -1,15 +1,10 @@
 <template>
-  <OrganizationLayout title="Dashboard">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("competitions") }}
-      </h2>
-    </template>
+  <OrganizationLayout title="賽事列表" :breadcrumb="breadcrumb">
     <div class="flex-auto pb-3 text-right">
       <inertia-link
         :href="route('manage.competitions.create')"
         class="ant-btn ant-btn-primary"
-        >{{ $t("competiton_create") }}</inertia-link
+        >{{ $t("competition_create") }}</inertia-link
       >
     </div>
     <div class="container mx-auto pt-5">
@@ -39,7 +34,7 @@
                 class="ant-btn"
                 :href="route('manage.competition.results.index',record.id)"
               >
-                Result
+                {{$t("competition_result")}}
               </inertia-link>
             </template>
             <template v-else-if="column.dataIndex == 'state'">
@@ -66,6 +61,9 @@ export default {
   props: ["competitions"],
   data() {
     return {
+      breadcrumb: [
+        { label: "賽事列表", url: null }
+      ],
       modal: {
         isOpen: false,
         data: {},

@@ -1,9 +1,7 @@
 
 <template>
     <div class="m-4">
-        <a-page-header 
-            style="text-transform: capitalize;" 
-            >
+        <a-page-header style="text-transform: capitalize;" >
             <template #title>
                 <div >
                     <slot name="header" />

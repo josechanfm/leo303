@@ -23,7 +23,7 @@
           <PieChartOutlined />
         </template>
         <span>
-          <inertia-link :href="route('manage.dashboard')">
+          <inertia-link :href="route('manage')">
             Management
           </inertia-link>
         </span>

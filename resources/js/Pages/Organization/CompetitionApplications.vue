@@ -1,10 +1,5 @@
 <template>
-  <OrganizationLayout title="Dashboard">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("applications") }}
-      </h2>
-    </template>
+  <OrganizationLayout title="報名列表" :breadcrumb="breadcrumb">
     <a :href="route('manage.competition.applications.receipts',{competition:competition.id,applicationIds:selectedRowKeyIds.toString()})" target="_blank" class="ant-btn">打印收據</a>
     <a :href="route('manage.competition.applications.export',competition.id)" class="ant-btn">滙出Excel</a>
     <a-table 
@@ -212,6 +207,10 @@ export default {
   props: ["competitionResults","competition"],
   data() {
     return {
+      breadcrumb: [
+        { label: "賽事列表", url: route('manage.competitions.index') },
+        { label: "報名列表", url: null }
+      ],
       dateFormat: "YYYY-MM-DD",
       modal: {
         isOpen: false,

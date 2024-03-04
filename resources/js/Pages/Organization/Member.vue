@@ -1,5 +1,5 @@
 <template>
-  <OrganizationLayout title="Dashboard" :organization="organization">
+  <OrganizationLayout title="Dashboard" :breadcrumb="breadcrumb">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         {{$t('view_member_profile')}}
@@ -24,6 +24,10 @@ export default {
   props: ["organization", "member"],
   data() {
     return {
+      breadcrumb:[
+          {label:"會員列表" ,url:route('manage.members.index')},
+          {label:"會員" ,url:null},
+      ],
       modal: {
         isOpen: false,
         data: {},

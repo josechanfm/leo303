@@ -1,15 +1,11 @@
 <template>
-  <OrganizationLayout title="Dashboard" :department="department">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">From Fields</h2>
-    </template>
+  <OrganizationLayout title="表格欄位" :breadcrumb="breadcrumb">
     <button
       @click="createRecord()"
       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3"
     >
       Create Field
     </button>
-
     <div class="ant-table">
       <div class="ant-table-container">
         <table style="table-layout: auto">
@@ -164,6 +160,10 @@ export default {
   props: ["form", "fields"],
   data() {
     return {
+      breadcrumb: [
+        { label: "表格列表", url:route('manage.forms.index')},
+        { label: "表格欄位", url: null }
+      ],
       modal: {
         isOpen: false,
         data: {},

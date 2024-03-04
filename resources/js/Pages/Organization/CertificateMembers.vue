@@ -155,6 +155,10 @@ export default {
   props: ["organization", "certificate", "members"],
   data() {
     return {
+      breadcrumb:[
+          {label:"證書列表" ,url:route('manage.certificates.index')},
+          {label:"會員證書" ,url:null},
+      ],
       dateFormat: "YYYY-MM-DD",
       modal: {
         isOpen: false,

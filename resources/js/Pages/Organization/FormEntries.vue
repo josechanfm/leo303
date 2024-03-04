@@ -1,10 +1,5 @@
 <template>
-  <OrganizationLayout title="Dashboard">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Management Dashboard department
-      </h2>
-    </template>
+  <OrganizationLayout title="表格列表" :breadcrumb="breadcrumb">
     {{ selectedDisplayName }}
     <!-- <a-select
       v-model:value="selectedDisplayName"
@@ -242,15 +237,21 @@
 import OrganizationLayout from "@/Layouts/OrganizationLayout.vue";
 import { message } from "ant-design-vue";
 import CropperModal from "@/Components/Member/CropperModal.vue";
+import { quillEditor } from 'vue3-quill';
 
 export default {
   components: {
     OrganizationLayout,
     CropperModal,
+    quillEditor
   },
   props: ["form", "entries", "entryColumns"],
   data() {
     return {
+      breadcrumb: [
+        { label: "表格列表", url:route('manage.forms.index')},
+        { label: "表格報名", url: null }
+      ],
       dateFormat: "YYYY-MM-DD",
       selectedDisplayName: null,
       avatarPreview: null,

@@ -47,7 +47,16 @@ class CompetitionResultController extends Controller
      */
     public function store(Request $request, Competition $competition)
     {
-        $results=$request->all();
+        $cgw=$request->cgw;
+        $results=$request->results;
+        // dd($request->all());
+        CompetitionApplication::where('category',$cgw[0])
+        ->where('gender',$cgw[1])
+        ->where('weight',$cgw[2])
+        ->update([
+            'result_rank'=>null,
+            'result_score'=>null
+        ]);
         $scores=$competition->score->toArray();
         foreach($results as $result){
             if(isset($result['application_id'])){

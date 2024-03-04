@@ -1,10 +1,5 @@
 <template>
-  <OrganizationLayout title="Dashboard">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("form_generator") }}
-      </h2>
-    </template>
+  <OrganizationLayout :title="form.id?'表格修改':'表格新增'" :breadcrumb="breadcrumb">
     <div class="container mx-auto">
       <div class="bg-white relative shadow  p-5 rounded-lg overflow-x-auto">
         <a-form
@@ -176,6 +171,10 @@ export default {
   props: ["organization", "form"],
   data() {
     return {
+      breadcrumb: [
+        { label: "表格列表", url:route('manage.forms.index')},
+        { label: this.form.id?'表格修改':'表格新增', url: null }
+      ],
       loading: false,
       imageUrl: null,
       rules: {

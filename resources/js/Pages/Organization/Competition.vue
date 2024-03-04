@@ -1,16 +1,5 @@
 <template>
-  <OrganizationLayout title="Dashboard">
-    <template #header>
-      <h2
-        v-if="mode == 'CREATE'"
-        class="font-semibold text-xl text-gray-800 leading-tight"
-      >
-        {{ $t("competition_create") }}
-      </h2>
-      <h2 v-else class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("competition_edit") }}
-      </h2>
-    </template>
+  <OrganizationLayout :title="competition.id?'賽事修改':'賽事新增'" :breadcrumb="breadcrumb">
     <div class="container mx-auto">
       <div class="bg-white relative shadow rounded-lg p-5">
         <a-form
@@ -312,6 +301,10 @@ export default {
   ],
   data() {
     return {
+      breadcrumb: [
+        { label: "賽事列表", url: route('manage.competitions.index') },
+        { label: this.competition.id?'賽事修改':'賽事新增', url: null }
+      ],
       mode: null,
       showWeightList: false,
       dateFormat: "YYYY-MM-DD",

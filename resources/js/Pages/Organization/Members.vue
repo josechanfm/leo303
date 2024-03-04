@@ -1,10 +1,5 @@
 <template>
-  <OrganizationLayout title="Dashboard">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("members") }}
-      </h2>
-    </template>
+  <OrganizationLayout :title="$t('members')" :breadcrumb="breadcrumb">
     <div class="flex-auto pb-3 text-right">
       <a-button type="primary" class="!rounded" @click="createRecord()">{{
         $t("create_member")
@@ -182,6 +177,9 @@ export default {
   props: ["memberTiers", "members"],
   data() {
     return {
+      breadcrumb:[
+          {label:"會員列表" ,url:null},
+      ],
       dateFormat: "YYYY-MM-DD",
       modal: {
         isOpen: false,
