@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Config;
 use App\Models\Competition;
+use App\Models\CompetitionApplication;
 
 class CompetitionResultController extends Controller
 {
@@ -44,9 +45,26 @@ class CompetitionResultController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Competition $competition)
     {
-        //
+        $results=$request->all();
+        $scores=$competition->score->toArray();
+        foreach($results as $result){
+            if(isset($result['application_id'])){
+                if(is_array($result['application_id'])){
+                    CompetitionApplication::whereIn('id',$result['application_id'])->update([
+                        'result_rank'=>$result['value'],
+                        'result_score'=>$scores[$result['value']]
+                    ]);
+                }else{
+                    CompetitionApplication::where('id',$result['application_id'])->update([
+                        'result_rank'=>$result['value'],
+                        'result_score'=>$scores[$result['value']]
+                    ]);
+                }
+            }
+        }
+        return redirect()->back();
     }
 
     /**
@@ -80,7 +98,6 @@ class CompetitionResultController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
     }
 
     /**
