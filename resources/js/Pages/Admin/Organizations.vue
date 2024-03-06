@@ -5,10 +5,7 @@
         {{ $t("organizations") }}
       </h2>
     </template>
-    <button
-      @click="createRecord()"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3"
-    >
+    <button @click="createRecord()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
       {{ $t("create_organization") }}
     </button>
     <div class="container mx-auto pt-5">
@@ -174,14 +171,6 @@ export default {
         title: "Modal",
         mode: "",
       },
-      zones: [
-        { value: "L", label: "Macao Local"},
-        { value: "C", label: "Central Zone" },
-        { value: "SE", label: "South East Zone" },
-        { value: "E", label: "East Zone" },
-        { value: "W", label: "West Zone" },
-        { value: "S", label: "South Zone" },
-      ],
       organizationStates: [
         { value: "ACTIVE", label: "Active" },
         { value: "SUSPENDED", label: "Suspended" },
@@ -191,33 +180,23 @@ export default {
           title: "Region",
           i18n: "region",
           dataIndex: "region",
-        },
-        {
-          title: "Territory",
-          i18n: "territory",
-          dataIndex: "territory",
-        },
-        {
+        },{
           title: "Abbreviation",
           i18n: "abbreviation",
           dataIndex: "abbr",
-        },
-        {
+        },{
           title: "Full name",
           i18n: "full_name",
           dataIndex: "full_name",
-        },
-        {
+        },{
           title: "Email",
           i18n: "email",
           dataIndex: "email",
-        },
-        {
+        },{
           title: "Manager",
           i18n: "manager",
           dataIndex: "manager",
-        },
-        {
+        },{
           title: "Operation",
           i18n: "operation",
           dataIndex: "operation",

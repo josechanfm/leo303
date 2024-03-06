@@ -34,7 +34,7 @@ class DashboardController extends Controller
     public function select(Organization $organization){
         $this->authorize('view',$organization);
         session(['organization'=>$organization]);
-        return redirect()->route('manage.dashboard');
+        return redirect()->route('manage');
     }
 
     public function index(){

@@ -33,7 +33,7 @@ class LoginResponse implements LoginResponseContract
         }
         if(Auth()->user()->organizations->count()>0){
             session(['organization'=>Auth()->user()->organizations[0]]);
-            return redirect()->route('manage.dashboard');
+            return redirect()->route('manage');
         // }else{
         //     return Inertia::render('Error',[
         //         'message'=>"You don't belongs to any organization"

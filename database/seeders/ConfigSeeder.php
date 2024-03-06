@@ -544,6 +544,17 @@ class ConfigSeeder extends Seeder
                     {"value": "participate","label": "出席","label_zh":"出席","label_en":"Participate"}
                 ]'
             ]);
+            DB::table('configs')->insert([
+                'organization_id'=>0,
+                'key'=>'regions',
+                'value'=>'[
+                    {"value":"C","label":"Central Zone"},
+                    {"value":"S","label":"South Zone"},
+                    {"value":"E","label":"East Zone"},
+                    {"value":"W","label":"West Zone"},
+                    {"value":"SE","label":"South East Zone"}
+                ]'
+            ]);
     
     }
 }

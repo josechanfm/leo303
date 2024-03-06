@@ -1,12 +1,7 @@
 <template>
   <div>
-    <a-menu
-      v-model:openKeys="openKeys"
-      v-model:selectedKeys="selectedKeys"
-      mode="inline"
-      theme="light"
-      :inline-collapsed="collapsed"
-    >
+    <a-menu v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline" theme="light"
+      :inline-collapsed="collapsed">
       <a-menu-item key="1">
         <template #icon>
           <PieChartOutlined />
@@ -17,18 +12,6 @@
           </inertia-link>
         </span>
       </a-menu-item>
-      <!--
-      <a-menu-item key="2" v-if="$page.props.organizations.length>0">
-        <template #icon>
-          <PieChartOutlined />
-        </template>
-        <span>
-          <inertia-link :href="route('manage')">
-            Management
-          </inertia-link>
-        </span>
-      </a-menu-item>
-      -->
       <a-menu-item key="2">
         <template #icon>
           <PieChartOutlined />
@@ -69,7 +52,6 @@
           </inertia-link>
         </span>
       </a-menu-item>
-
       <a-sub-menu key="sub1">
         <template #icon>
           <MailOutlined />
@@ -106,7 +88,6 @@ import {
   InboxOutlined,
   AppstoreOutlined,
 } from "@ant-design/icons-vue";
-
 export default defineComponent({
   components: {
     MenuFoldOutlined,
@@ -125,11 +106,9 @@ export default defineComponent({
       openKeys: ["sub1"],
       preOpenKeys: ["sub1"],
     });
-    watch(
-      () => state.openKeys,
-      (_val, oldVal) => {
-        state.preOpenKeys = oldVal;
-      }
+    watch(() => state.openKeys, (_val, oldVal) => {
+      state.preOpenKeys = oldVal;
+    }
     );
     const toggleCollapsed = () => {
       state.collapsed = !state.collapsed;
