@@ -28,12 +28,12 @@ const showingNavigationDropdown = ref(false);
       <div class="flex justify-between items-center py-6 px-10 container mx-auto">
         <div class="flex">
           <div class="shrink-0 flex items-center">
-            <a href="http://localhost:8000/member/dashboard"
+            <a href="http://localhost:8000"
               ><img src="/images/site_logo.png" class="block h-14 w-auto"
             /></a>
           </div>
           <h1 class="pt-4 text-2xl font-bold">
-            <a href="/" class="text-white">澳門柔道協會</a>
+            <a href="/" class="text-white">公務人員聯合總會</a>
           </h1>
         </div>
 
@@ -73,15 +73,15 @@ const showingNavigationDropdown = ref(false);
             <ul class="sm:flex space-x-4 hidden items-center text-white">
               <li>
                 <a
-                  href="https://onlinejua.org"
+                  href="http://www.faom.org.mo/portal/"
                   target="_blank"
                   class="text-bold text-white hover:text-yellow-300 text-md"
-                  >JUA</a
+                  >工聯</a
                 >
               </li>
               <li>
-                <a href="https://ijf.org" target="_blank"
-                  class="text-bold text-white hover:text-yellow-300 text-md">IJF</a>
+                <a href="https://www.mo.gov.mo" target="_blank"
+                  class="text-bold text-white hover:text-yellow-300 text-md">一戶通</a>
               </li>
               <template v-if="$page.props.user.id">
                 <li>
@@ -207,26 +207,21 @@ const showingNavigationDropdown = ref(false);
             </h1>
             <div class="bg-white rounded-md list-none text-center">
               <li class="py-3 border-b-2">
-                <inertia-link :href="route('competitions.index')">賽事報名</inertia-link>
-              </li>
-              <li class="py-3 border-b-2">
-                <inertia-link :href="route('forms.index')">表格填寫</inertia-link>
+                <inertia-link :href="route('forms.index')">報名表格</inertia-link>
               </li>
               <li class="py-3 border-b-2">
                 <a
-                  href="http://www.judo.org.mo"
+                  href="https://www.gcs.gov.mo"
                   target="_blank"
                   class="list-none hover:text-indigo-600"
-                  >澳門柔道協會</a
-                >
+                  >新聞局</a>
               </li>
               <li class="py-3 border-b-2">
                 <a
-                  href="https://www.sport.gov.mo/pt"
+                  href="https://www.io.gov.mo/cn/home/"
                   class="list-none hover:text-indigo-600"
                   target="_blank"
-                  >澳門體育局</a
-                >
+                  >印務局</a>
               </li>
             </div>
           </div>

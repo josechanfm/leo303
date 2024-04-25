@@ -17,9 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('region');
             $table->string('abbr');
-            $table->string('territory')->nullable();
-            $table->string('title')->nullable();
-            $table->string('full_name');
+            $table->string('name_display')->nullable();
+            $table->string('name_zh')->nullable();
+            $table->string('name_en')->nullable();
+            $table->string('name_pt')->nullable();
             $table->string('email');
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
