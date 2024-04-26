@@ -112,13 +112,6 @@ class Member extends Model
     //     return $this->belongsToMany(Event::class,'event_manager','member_id','event_id');
     // }
 
-    public function attendances(){
-        return $this->belongsToMany(Attendance::class);
-    }
-
-    public function events(){
-        return $this->morphToMany(Event::class,'attendee');
-    }
     public function tiers(){
         return $this->hasMany(MemberTier::class)->orderBy('valid_at','DESC');
     }

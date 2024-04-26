@@ -10,7 +10,6 @@ use App\Models\Form;
 use App\Models\Entry;
 use App\Models\EntryRecord;
 use App\Models\Event;
-use App\Models\Attendees;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class FormController extends Controller
@@ -145,7 +144,6 @@ class FormController extends Controller
         $form->require_login=$request->require_login;
         $form->for_member=$request->for_member;
         $form->published=$request->published;
-        $form->with_attendance=$request->with_attendance;
         $form->save();
         //dd($request->file('image'));
         if($request->file('image')){
@@ -197,21 +195,4 @@ class FormController extends Controller
         $media->delete();
     }
 
-    public function createEventAttendees(Request $request, Form $form){
-        $event=Event::where('form_id',$form->id)->first();
-        if(empty($event)){
-            $event=new Event();
-        }
-        $event->organization_id=$form->organization_id;
-        $event->category_code='FORM';
-        $event->title_en=$form->title;
-        $event->credit=0;
-        $event->start_date=null;
-        $event->end_date=null;
-        $event->form_id=$form->id;
-        $event->with_attendance=true;
-        $event->save();
-        $event->entries()->syncWithoutDetaching($request->all());      
-        return redirect()->back();
-    }
 }

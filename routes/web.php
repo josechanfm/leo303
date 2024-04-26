@@ -41,8 +41,6 @@ Route::get('/language/{language}', function ($language) {
 })->name('language');
 
 Route::resource('forms', App\Http\Controllers\FormController::class)->names('forms');
-Route::resource('competitions', App\Http\Controllers\CompetitionController::class)->names('competitions');
-Route::get('competition/application/{competitionApplication}/success', [App\Http\Controllers\CompetitionController::class, 'applicationSuccess'])->name('competition.application.success');
 Route::get('form/{form}/entry/{entry}/success', [App\Http\Controllers\Organization\EntryController::class, 'entrySuccess'])->name('form.entry.success');
 Route::resource('exam', App\Http\Controllers\ExamController::class)->names('exam');
 
@@ -56,34 +54,13 @@ Route::group([
     ]
 ], function () {
     Route::get('/', [\App\Http\Controllers\Member\DashboardController::class, 'index'])->name('member.dashboard');
-    //Route::get('dashboard', [\App\Http\Controllers\Member\DashboardController::class, 'index'])->name('member.dashboard');
     Route::get('get_qrcode', [\App\Http\Controllers\Member\DashboardController::class, 'getQrcode'])->name('member.getQrcode');
     Route::resource('portfolios', App\Http\Controllers\Member\PortfolioController::class)->names('member.portfolios');
     Route::resource('profile', App\Http\Controllers\Member\ProfileController::class)->names('member.profile');
     Route::resource('professionals', App\Http\Controllers\Member\ProfessionalController::class)->names('member.professionals');
     Route::get('membership', [App\Http\Controllers\Member\MembershipController::class, 'index'])->name('member.membership');
-    Route::resource('competition/{competition}/applications', App\Http\Controllers\Member\CompetitionApplicationController::class)->names('member.competition.applications');
     Route::resource('events', App\Http\Controllers\Member\EventController::class)->names('member.events');
 
-    Route::resource('attendances', App\Http\Controllers\Member\AttendanceController::class)->names('member.attendances');
-
-    // Route::get('attendees/{type}/{id}',[App\Http\Controllers\Member\AttendeeController::class,'index'])->name('member.attendees.index');
-    // Route::get('attendees/{type}/{id}/scan',[App\Http\Controllers\Member\AttendeeController::class,'scan'])->name('member.attendees.scan');
-    // Route::get('attendees/get_member',[App\Http\Controllers\Member\AttendeeController::class,'getMember'])->name('member.attendees.getMember');
-
-    //Route::patch('attendees/{type}/{id}/store',[App\Http\Controllers\Member\AttendeeController::class,'store'])->name('member.attendees.store');
-    //Route::post('attendees/{type}/{id}/storeBatch',[App\Http\Controllers\Member\AttendeeController::class,'storeBatch'])->name('member.attendees.storeBatch');
-
-    //Route::resource('event/{event}/attendees',App\Http\Controllers\Member\AttendeeController::class)->names('member.event.attendees');
-    Route::get('event/{event}/attendees', [App\Http\Controllers\Member\AttendeeController::class, 'index'])->name('member.event.attendees.index');
-    Route::get('event/{event}/attendees/scan', [App\Http\Controllers\Member\AttendeeController::class, 'scan'])->name('member.event.attendees.scan');
-    Route::put('event/{event}/attendees', [App\Http\Controllers\Member\AttendeeController::class, 'update'])->name('member.event.attendees.update');
-
-    Route::resource('event/{event}/attendances', App\Http\Controllers\Member\AttendanceController::class)->names('member.event.attendances');
-    Route::get('event/{event}/attendance/scan', [App\Http\Controllers\Member\AttendanceController::class, 'scan'])->name('member.event.attendance.scan');
-    Route::get('event/{event}/attendances_modify', [App\Http\Controllers\Member\AttendanceController::class, 'modify'])->name('member.event.attendances.modify');
-    Route::put('event/{event}/attendances_sync', [App\Http\Controllers\Member\AttendanceController::class, 'sync'])->name('member.event.attendances.sync');
-    Route::get('attendance/get_member', [App\Http\Controllers\Member\AttendanceController::class, 'getMember'])->name('member.attendance.getMember');
 });
 
 //Manage
@@ -118,17 +95,9 @@ Route::group([
     Route::get('certificates/delete_media/{mediaId}', [App\Http\Controllers\Organization\CertificateController::class, 'deleteMedia'])->name('manage.certificate.deleteMedia');
     Route::resource('certificate/{certificate}/members', App\Http\Controllers\Organization\CertificateMemberController::class)->names('manage.certificate.members');
     Route::resource('organizations', App\Http\Controllers\Organization\OrganizationController::class)->names('manage.organizations');
-    Route::resource('competitions', App\Http\Controllers\Organization\CompetitionController::class)->names('manage.competitions');
-    Route::get('competition/{competition}/applications/export', [App\Http\Controllers\Organization\CompetitionApplicationController::class, 'export'])->name('manage.competition.applications.export');
-    Route::get('competition/{competition}/applications/receipts', [App\Http\Controllers\Organization\CompetitionApplicationController::class, 'receipts'])->name('manage.competition.applications.receipts');
-    Route::resource('competition/{competition}/applications', App\Http\Controllers\Organization\CompetitionApplicationController::class)->names('manage.competition.applications');
-    Route::resource('competition/{competition}/results', App\Http\Controllers\Organization\CompetitionResultController::class)->names('manage.competition.results');
-    Route::post('competition/delete_media', [App\Http\Controllers\Organization\CompetitionController::class, 'deleteMedia'])->name('manage.competition.deleteMedia');
-    Route::get('competition/application/{competition_application}/success', [App\Http\Controllers\Organization\CompetitionApplicationController::class, 'success'])->name('manage.competition.application.success');
 
     Route::resource('articles', App\Http\Controllers\Organization\ArticleController::class)->names('manage.articles');
     Route::resource('events', App\Http\Controllers\Organization\EventController::class)->names('manage.events');
-    Route::resource('event/{event}/attendees', App\Http\Controllers\Organization\AttendeeController::class)->names('manage.event.attendees');
     Route::resource('configs', App\Http\Controllers\Organization\ConfigController::class)->names('manage.configs');
     Route::get('image_upload', [App\Http\Controllers\Organization\UploaderController::class, 'image'])->name('manage.image_upload');
 
@@ -154,5 +123,4 @@ Route::group([
     Route::resource('members', App\Http\Controllers\Admin\MemberController::class)->names('admin.members');
     Route::resource('users', App\Http\Controllers\Admin\UserController::class)->names('admin.users');
     Route::resource('configs', App\Http\Controllers\Admin\ConfigController::class)->names('admin.configs');
-    Route::resource('competition_scores', App\Http\Controllers\Admin\CompetitionScoreController::class)->names('admin.competitionScores');
 });

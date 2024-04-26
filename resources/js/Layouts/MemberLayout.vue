@@ -109,9 +109,6 @@ export default {
                 <NavLink class="text-blue-100 hover:text-blue-100">
                   {{ $t("portfolios") }}
                 </NavLink>
-                <NavLink :href="route('member.attendances.index')">
-                  {{ $t("attendances") }}
-                </NavLink>
                 <NavLink :href="route('member.profile.index')">
                   {{ $t("profile") }}
                 </NavLink>
@@ -317,12 +314,6 @@ export default {
             <div class="mt-3 space-y-1">
               <ResponsiveNavLink> {{ $t("professional") }} </ResponsiveNavLink>
               <ResponsiveNavLink> {{ $t("portfolios") }} </ResponsiveNavLink>
-              <ResponsiveNavLink
-                :href="route('member.attendances.index')"
-                :active="route().current('member.attendances.index')"
-              >
-                {{ $t("attendances") }}
-              </ResponsiveNavLink>
               <ResponsiveNavLink
                 :href="route('member.profile.index')"
                 :active="route().current('member.profile.index')"

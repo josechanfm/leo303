@@ -22,19 +22,9 @@
           <template #bodyCell="{ column, text, record, index }">
             <template v-if="column.dataIndex == 'operation'">
               <inertia-link
-                :href="route('member.event.attendees.index', record.id)"
-                class="ant-btn"
-                >{{ $t("tick") }}</inertia-link
-              >
-              <inertia-link
                 :href="route('manage.events.edit', record.id)"
                 class="ant-btn"
                 >{{ $t("edit") }}</inertia-link
-              >
-              <inertia-link
-                :href="route('manage.event.attendees.index', record.id)"
-                class="ant-btn"
-                >{{ $t("attendees") }}</inertia-link
               >
             </template>
             <template v-else>

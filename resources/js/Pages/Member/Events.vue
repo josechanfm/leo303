@@ -12,7 +12,6 @@
                 </template>
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <inertia-link :href="route('member.event.attendance.scan',record.id)">Scan</inertia-link>
                         <a-button @click="editRecord(record)">{{$t('edit')}}</a-button>
                         <a-button @click="deleteRecord(record.id)">{{$t('delete')}}</a-button>
                     </template>
@@ -91,16 +90,6 @@ export default {
         },
         onSave(){
             console.log(this.targetKeys);
-            this.$inertia.put(route('member.event.attendances.sync', this.event.id), this.targetKeys, {
-                onSuccess: (page) => {
-                    console.log(page);
-                },
-                onError: (error) => {
-                    alert(error.message);
-                }
-
-            });
-
         }
     },
 }

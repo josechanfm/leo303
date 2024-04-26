@@ -23,8 +23,6 @@ class Entry extends Model
     public function records(){
         return $this->hasMany(EntryRecord::class);
     }
-    public function events(){
-        return $this->morphToMany(Event::class,'attendee');
-    }
+    
 
 }
