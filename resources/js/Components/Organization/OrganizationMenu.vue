@@ -13,7 +13,7 @@
         </template>
         <span>
           <inertia-link :href="route('manage')">
-            {{ $t("affiliate") }}
+            {{ $t("organization_management") }}
           </inertia-link>
         </span>
       </a-menu-item>
@@ -43,14 +43,6 @@
         </template>
         <span>
           <inertia-link :href="route('manage.forms.index')"> {{$t('forms')}} </inertia-link>
-        </span>
-      </a-menu-item>
-      <a-menu-item key="5">
-        <template #icon>
-          <MergeCellsOutlined/>
-        </template>
-        <span>
-          <inertia-link :href="route('manage.competitions.index')"> {{$t('competitions')}} </inertia-link>
         </span>
       </a-menu-item>
       <a-menu-item key="6">

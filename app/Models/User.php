@@ -88,8 +88,5 @@ class User extends Authenticatable
     public function organizations(){
         return $this->belongsToMany(Organization::class);
     }
-    public function guardian(){
-        return $this->hasOne(Guardian::class);
-    }
 
 }

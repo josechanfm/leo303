@@ -82,7 +82,8 @@ class UserSeeder extends Seeder
             'name' => explode(' ', $user->name, 2)[0]."'s Team",
             'personal_team' => true,
         ]));
-        Member::find(1)->update(['user_id'=>$user->id]);
+        $user->assignRole('organizer');
+        // Member::find(1)->update(['user_id'=>$user->id]);
 
         $user=User::create([
             'name' => 'Member 2',
@@ -94,7 +95,7 @@ class UserSeeder extends Seeder
             'name' => explode(' ', $user->name, 2)[0]."'s Team",
             'personal_team' => true,
         ]));
-        Member::find(2)->update(['user_id'=>$user->id]);
+        // Member::find(2)->update(['user_id'=>$user->id]);
 
         $user=User::create([
             'name' => 'Member3',
@@ -106,7 +107,7 @@ class UserSeeder extends Seeder
             'name' => explode(' ', $user->name, 2)[0]."'s Team",
             'personal_team' => true,
         ]));
-        Member::find(3)->update(['user_id'=>$user->id]);
+        // Member::find(3)->update(['user_id'=>$user->id]);
         
     }
 }

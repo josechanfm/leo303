@@ -37,15 +37,18 @@ class OrganizationSeeder extends Seeder
             Organization::create($org);
         }
         $organization=Organization::find(1);
-        $user=User::where('email','organizer@example.com')->get()->first();
+        $user=User::where('email','organizer@example.com')->get();
         $organization->users()->attach($user);
+        $user=User::where('email','member1@example.com')->get();
+        $organization->users()->attach($user);
+
         $member=Member::find(1);
         $organization->members()->attach($member);
         $member=Member::find(2);
         $organization->members()->attach($member);
         $member=Member::find(3);
         $organization->members()->attach($member);
-        
+
 
     }
 }

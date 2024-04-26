@@ -85,9 +85,7 @@ class Member extends Model
     // {
     //     return $this->user()->exists();
     // }
-    public function guardian(){
-        return $this->belongsTo(Guardian::class);
-    }
+
     public function organizations(){
         return $this->belongsToMany(Organization::class);
     }

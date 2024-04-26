@@ -17,31 +17,31 @@ export default {
       interval: 0,
       features: [
         {
-          image: "images/features_public.png",
-          title: "公眾",
-          description:"主要公開內容，無需會員登入。包括網站介紹及所有公開信息，及連結等。",
+          image: "images/news_event.png",
+          title: "新聞與活動",
+          description:"新聞部分是用來發布組織的最新消息和事件，向公眾展示其在社會和環境領域中所做的工作，並提高對其使命的認識和理解。",
           tags: ["#通告"],
           link: "/",
         },
         {
-          image: "/images/features_forms.png",
-          title: "表格",
-          description:"所有線上表格，系統會跟據登入狀態及屬會顯示所填的線上表格內容。",
+          image: "/images/form_application.png",
+          title: "表格及報名",
+          description:"包括各種類型的表格和報名表，方便訪問者提交相關資訊並表達他們的參與意願。",
           tags: ["#報名"],
           link: "forms",
         },
         {
-          image: "images/features_competition.png",
-          title: "賽事",
-          description:"與表格相類此，但只適用於賽事報名。同樣不同用戶可能顯示出不同內容。",
-          tags: ["#報名", "#比賽"],
-          link: "competitions",
+          image: "images/learn_share.png",
+          title: "學習興分享",
+          description:"提供教育資源、知識分享和學習機會的區域。提供有價值的學習內容，並促進知識交流和社群互動。",
+          tags: ["#學習", "#分享"],
+          link: "#",
         },
         {
-          image: "images/features_other.png",
-          title: "其它",
-          description: "包括線上學習、分享、留言、意見回饋等功能，會逐步開放供用戶使用。",
-          tags: ["#學習", "#留言"],
+          image: "images/community.png",
+          title: "虛擬社區",
+          description: "交流和參與組織活動的線上平台。讓志願者、支持者和參與者能夠連結起來，分享資源、經驗和想法。",
+          tags: ["#學習", "#交流"],
         },
       ],
       data: [
@@ -113,9 +113,9 @@ export default {
                   <div class="gutter-row">
                     <div class="max-w rounded overflow-hidden shadow-lg">
                       <img class="w-full" alt="Use any sample image here..." :src="feature.image">
-                      <div class="px-6 py-4">
+                      <div class="px-2 py-4 xs:h-64 lg:h-48">
                         <div class="font-bold text-xl mb-2">{{ feature.title }}</div>
-                        <p class="text-gray-700 text-base pl-3">
+                        <p class="text-gray-700 text-base pl-1">
                           {{ feature.description }}
                         <ol class="list-disc">
                           <li v-for="form in $page.props.current_organization.forms">
@@ -182,9 +182,9 @@ export default {
                     </div>
                     <div class="flex">
                       <div class="flex flex-col flex-auto gap-1">
-                        <div class="">Name: </div>
-                        <div class="mb-2">{{ member.display_name }}</div>
-                        <div class="">Number: </div>
+                        <div class="">姓名：</div>
+                        <div class="mb-2">{{ member.family_name }}{{ member.given_name }}</div>
+                        <div class="">會員編號：</div>
                         <div class="font-sans mb-2">{{ member.member_number }}</div>
                       </div>
                       <div class="flex text-right">
@@ -194,11 +194,11 @@ export default {
                   </div>
                   <div class="flex text-xs">
                     <div class="flex flex-col gap-1 flex-auto">
-                      <div class="">Valid at:</div>
+                      <div class="">發出日期：</div>
                       <div class="font-sans text-base">{{ member.valid_at }}</div>
                     </div>
                     <div class="flex flex-col gap-1 flex-auto">
-                      <div class="">Expired at:</div>
+                      <div class="">有效日期：</div>
                       <div class="font-sans text-base">{{ member.expired_at }}</div>
                     </div>
                   </div>
@@ -209,11 +209,13 @@ export default {
 
               <div class="mt-16">
                 <h1 class="font-bold text-center text-3xl text-gray-900">
-                  {{ member.given_name }} {{ member.middle_name }} {{ member.family_name }}
+                  {{ member.display_name }}
+                </h1>
+                <h1 class="font-bold text-center text-2xl text-gray-900">
+                  {{ member.family_name }}{{ member.given_name }}
                 </h1>
                 <p class="text-center text-sm text-gray-400 font-medium">
-
-                  {{ $page.props.current_organization.full_name }}
+                  {{ $page.props.current_organization.name_zh }}
                 </p>
                 <p>
                   <span> </span>
