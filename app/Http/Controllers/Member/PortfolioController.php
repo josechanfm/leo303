@@ -17,28 +17,13 @@ class PortfolioController extends Controller
      */
     public function index()
     {
-        // $portfolios=auth()->user()->member->portfolios;
-        // if(empty($portfolio)){
-        //     $portfolio=new Portfolio;
-        //     $portfolio->member_id=auth()->user()->member->id;
-        //     $portfolio->approbate_id=1;
-        //     $portfolio->save();
-        //     $portfolios=auth()->user()->member->portfolio;
-        // }
         $member=auth()->user()->member;
         if($member==null){ return redirect()->back();};
         $member->portfolios;
         
         return Inertia::render('Member/Portfolios',[
             'member'=>$member,
-            //'portfolios'=>$portfolios
         ]);
-
-        // return Inertia::render('Member/Portfolios',[
-        //     'portfolios' => auth()->user()->member->portfolios,
-        //     'approbates'=>session('organization')->approbates,
-        //     'member'=>auth()->user()->member
-        // ]);        
     }
 
     /**

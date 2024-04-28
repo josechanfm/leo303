@@ -8,7 +8,6 @@ use Inertia\Inertia;
 use App\Models\Config;
 use App\Models\Organization;
 use App\Models\Member;
-use App\Models\MemberTier;
 use App\Models\User;
 use App\Exports\MemberExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -29,12 +28,8 @@ class MemberController extends Controller
      */
     public function index()
     {
-        // $org=Organization::find(session('organization')->id)->members;
-        // session('organization')->fresh;
-        // dd(session('organization')->members);
         return Inertia::render('Organization/Members',[
             //'members'=>session('organization')->members
-            'memberTiers'=>Config::item('member_tiers'),
             'members'=>Organization::find(session('organization')->id)->members
         ]);
 
@@ -59,7 +54,6 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $member= Member::create($request->all());
-        $member->tiers()->create($request->update_tier);
         $member->organizations()->attach(session('organization')->id);
         return redirect()->back();
     }
@@ -100,28 +94,6 @@ class MemberController extends Controller
      */
     public function update(Request $request, Member $member)
     {
-       // dd($request->all());
-        foreach($request->tiers as $tier){
-            if(isset($tier['id'])){
-                MemberTier::find($tier['id'])->update([
-                    'tier_code'=>$tier['tier_code'],
-                    'valid_at'=>$tier['valid_at'],
-                    'expired_at'=>$tier['expired_at']
-                ]);
-            }else{
-                MemberTier::create([
-                    'member_id'=>$member->id,
-                    'tier_code'=>$tier['tier_code'],
-                    'valid_at'=>$tier['valid_at'],
-                    'expired_at'=>$tier['expired_at']
-                ]);
-            }
-        }
-        // if($request->current_tier['tier_code'] == $request->update_tier['tier_code']){
-        //     $memberTier=$member->currentTier->update($request->update_tier);
-        // }else{
-        //     $member->tiers()->create($request->update_tier);
-        // }
         $member->update($request->all());
         return redirect()->back();
     }

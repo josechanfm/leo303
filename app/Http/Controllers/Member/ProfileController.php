@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Approbate;
 use App\Models\Portfolio;
-use App\Models\Position;
 use App\Models\Member;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -21,21 +20,12 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        // $portfolio=auth()->user()->member->portfolio;
-        // if(empty($portfolio)){
-        //     $portfolio=new Portfolio;
-        //     $portfolio->member_id=auth()->user()->member->id;
-        //     $portfolio->approbate_id=1;
-        //     $portfolio->save();
-        // }
         $member = auth()->user()->member;
         if($member==null){ return redirect()->back();};
         $member->positions;
         $member->athlete;
         return Inertia::render('Member/Profile', [
             'member' => $member,
-            // 'profile'=>$portfolio,
-            'positions' => Position::all()
         ]);
     }
 
@@ -92,7 +82,6 @@ class ProfileController extends Controller
     {
         $data = $request->all();
         $member = Member::find($id);
-        //$data['positions']=$request->positions;
         $member->update($data);
 
         if($request->file('avatar')){
@@ -102,7 +91,7 @@ class ProfileController extends Controller
                 }
             }
             $file = $request->file('avatar');
-            $path = Storage::putFile('public/images/members/avatar', $file);
+            $path = Storage::putFile('public/images/avatars', $file);
             $member->avatar = $path;
             $member->save();
 

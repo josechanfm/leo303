@@ -11,6 +11,7 @@ class Config extends Model
     use HasFactory;
     //protected $casts=['value'=>'json'];
     protected $fillable=['organization_id','key','value','remark'];
+    protected $casts=['value'=>'json'];
     
     static function item($key,$organization=null)
     {
@@ -29,7 +30,7 @@ class Config extends Model
             $item = Config::where('organization_id',0)->where('key', $key)->first();
         }
         if ($item) {
-            return json_decode($item->value);
+            return $item->value;
         } else {
             return false;
         }

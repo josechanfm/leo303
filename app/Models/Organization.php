@@ -14,7 +14,7 @@ class Organization extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable=['region','territory','abbr','full_name','email','phone','address','country','href','title','avatar','description','content','president','registration_code','card_style','status'];
+    protected $fillable=['region','territory','abbr','full_name','email','phone','address','country','href','title','avatar','description','content','president','registration_code','card_style','logo','status'];
 
     public function registerMediaConversions(Media $media = null): void
     {
@@ -38,7 +38,7 @@ class Organization extends Model implements HasMedia
     }
 
     public function members(){
-        return $this->belongsToMany(Member::class)->with('user')->with('tiers');
+        return $this->belongsToMany(Member::class)->with('user');
     }
 
     public function hasUser($user){
@@ -61,6 +61,9 @@ class Organization extends Model implements HasMedia
         }else{
             return $this->hasMany(Form::class)->where('published',$published)->with('media')->withCount('entries');
         }
+    }
+    public function features(){
+        return $this->hasMany(Feature::class);
     }
 
 }

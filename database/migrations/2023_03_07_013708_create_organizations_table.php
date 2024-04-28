@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('president')->nullable();
             $table->boolean('status')->nullable();
             $table->string('card_style')->nullable();
+            $table->string('logo')->nullable();
             $table->timestamps();
       
         });

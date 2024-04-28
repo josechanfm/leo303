@@ -8,6 +8,7 @@ use App\Models\Article;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Config;
+use App\Models\Feature;
 use App\Models\Form;
 use App\Models\Member;
 use App\Models\Organization;
@@ -16,22 +17,18 @@ class DashboardController extends Controller
 {
     public function index()
     {
-
         $member = Auth()->user()->member;
         if (!$member) {
             return Inertia::render('Error', [
                 'message' => "You are not a register member."
             ]);
         }
-        //dd(Config::item('card_style'));
         $member->organizations;
         return Inertia::render('Member/Dashboard', [
             'member' => $member,
-            // 'organizations'=>$member->organizations,
+            'features'=>Feature::whereBelongsTo(session('organization'))->get(),
             'articles' => Article::privates(),
-            'card_style' => Config::item('card_style')->{session('organization')->card_style},
-            //'current_organization'=>session('organization'),//set current_organization, coz the first access has not activate session variable yet.
-            //'articles'=>Classify::whereBelongsTo(session('organization'))->first()->articles
+            'card_style' => Config::item('card_styles')[session('organization')->card_style],
         ]);
     }
     public function getQrcode()
