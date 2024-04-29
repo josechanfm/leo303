@@ -10,12 +10,12 @@ export default {
     ArticleList,
     QRCodeVue3,
   },
-  props: ["member", "articles", "card_style"],
+  props: ["member",'features', "articles", "card_style"],
   data() {
     return {
       qrcode: "",
       interval: 0,
-      features: [
+      features2: [
         {
           image: "images/news_event.png",
           title: "新聞與活動",
@@ -70,7 +70,6 @@ export default {
     };
   },
   created() {
-    
   },
   mounted() {},
   methods: {
@@ -114,9 +113,9 @@ export default {
                     <div class="max-w rounded overflow-hidden shadow-lg">
                       <img class="w-full" alt="Use any sample image here..." :src="feature.image">
                       <div class="px-2 py-4 xs:h-64 lg:h-48">
-                        <div class="font-bold text-xl mb-2">{{ feature.title }}</div>
+                        <div class="font-bold text-xl mb-2">{{ feature['title_'+$t('lang')] }}</div>
                         <p class="text-gray-700 text-base pl-1">
-                          {{ feature.description }}
+                          {{ feature['content_'+$t('lang')] }}
                         <ol class="list-disc">
                           <li v-for="form in $page.props.current_organization.forms">
                             <inertia-link :href="route('forms.show', form.id)">{{ form.title }}</inertia-link>
@@ -125,7 +124,7 @@ export default {
                         </p>
                       </div>
                       <div class="px-6 py-4">
-                        <span v-for="tag in feature.tags"
+                        <span v-for="tag in feature['tags_'+$t('lang')]"
                           class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">{{
                             tag }}</span>
                       </div>

@@ -1,16 +1,18 @@
 <script setup>
 //import { defineProps } from "vue";
-const cardNumberFormat = (format, num) => {
-    var len=(format.match(/0+/)[0].length) * -1;
-    return format.replace(/0+/, ('000000000'+num).slice(len));
+const organizationNumberFormat = (format, num) => {
+    // var len=(format.match(/0+/)[0].length) * -1;
+    // return format.replace(/0+/, ('000000000'+num).slice(len));
+    return num
 };
 const cidFormat = (num) => {
-    return ('0000'+num.toString(16)).slice(-3);
+    return num;
+    //return ('0000'+num.toString(16)).slice(-3);
 };
 
 defineProps({
     title: String,
-    card: Object,
+    organization: Object,
 });
 </script>
 
@@ -18,68 +20,65 @@ defineProps({
     <div class="md:grid md:grid-cols-3 py-5 md:gap-6">
         <div class="md:col-span-1 flex justify-between pl-5">
             <div class="px-4 sm:px-0">
-                <h3 class="text-lg font-medium text-gray-900">{{ title }}</h3>
+                <h3 class="text-lg font-medium text-gray-900">{{organization.name_zh}}</h3>
                 <p class="mt-1 text-sm text-gray-600">
                     <slot name="description" />
                 </p>
             </div>
             <div class="px-4 sm:px-0"></div>
         </div>
-        {{ card }}
         <div class="mt-5 md:mt-0 md:col-span-2">
-            <div class="w-96 h-56 m-auto bg-red-100 rounded-lg relative text-white shadow-2xl transition-transform transform hover:scale-110">
-                <img class="relative object-cover w-full h-full rounded-lg" :src="card.background"
+            <div class="w-96 h-56 m-auto bg-red-100 rounded-lg relative text-white shadow-2xl transition-transform transform hover:scale-110" :style="organization.card_design.font_style">
+                <img class="relative object-cover w-full h-full rounded-lg" :src="'/images/'+organization.card_design.background"
                     width="10px">
-                <div class="absolute w-full text-center text-lg" style="top:1em">{{ card.cert_title }}</div>
+                <div class="absolute w-full text-center text-lg" >{{ organization.cert_title }}</div>
                 <div class="w-full px-8 absolute top-8">
                     <div class="flex justify-between">
                         <div class="">
                             <p class="font-light">
-                                Name
+                                姓名
                             </p>
                             <p p class="font-medium tracking-widest">
-                                {{ card.pivot.display_name }}
+                                {{ organization.pivot.display_name }}
                             </p>
                         </div>
-                        <img class="w-14 h-14" :src="card.pivot.avatar" />
+                        <img class="w-14 h-14" :src="'/images/'+organization.card_design.logo" />
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div class="pt-1">
                             <p class="font-light">
-                                Number
+                                會員編號：
                             </p>
                             <p class="font-medium tracking-more-wider">
-                                {{ cardNumberFormat(card.number_format, card.pivot.number) }}
+                                {{ organizationNumberFormat(organization.number_format, organization.pivot.number) }}
                             </p>
                         </div>
                         <div class="pt-1">
                             <p class="font-light">
-                                {{ card.rank_caption }}
+                                {{ organization.rank_caption }}
                             </p>
                             <p class="font-medium tracking-more-wider">
-                                {{ card.pivot.rank }}
+                                {{ organization.pivot.rank }}
                             </p>
                         </div>
-
                     </div>
-
-                    
+                   
                     <div class="pt-6 pr-6">
                         <div class="flex justify-between">
                             <div class="">
                                 <p class="font-light text-xs">
-                                    Valid
+                                    發出日期：
                                 </p>
                                 <p class="font-medium tracking-wider text-sm">
-                                    {{card.pivot.valid_from}}
+                                    {{organization.pivot.valid_from}}
                                 </p>
                             </div>
                             <div class="">
                                 <p class="font-light text-xs text-xs">
-                                    Expiry
+                                    有效日期：
                                 </p>
                                 <p class="font-medium tracking-wider text-sm">
-                                    {{card.pivot.valid_until}}
+                                    {{organization.pivot.valid_until}}
                                 </p>
                             </div>
 
@@ -88,7 +87,7 @@ defineProps({
                                     CID
                                 </p>
                                 <p class="font-bold tracking-more-wider text-sm">
-                                    {{ cidFormat(card.pivot.id) }}
+                                    {{ cidFormat(organization.pivot.id) }}
                                 </p>
                             </div>
                         </div>
