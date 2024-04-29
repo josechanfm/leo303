@@ -51,7 +51,7 @@ class ArticleController extends Controller
     {
         $data=$request->all();
         $data['organization_id']=session('organization')->id;
-        $data['uuid']=Str::uuid();
+        //$data['uuid']=Str::uuid();
         $data['user_id']=auth()->user()->id;
         $data['author']=auth()->user()->name;
         Article::create($data);

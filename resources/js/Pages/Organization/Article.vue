@@ -32,6 +32,10 @@
           <a-form-item :label="$t('title')" name="title">
             <a-input v-model:value="article.title" />
           </a-form-item>
+          <a-form-item :label="$t('intro')" name="intro">
+            <a-textarea v-model="article.content" :rows="5"/>
+          </a-form-item>
+
           <a-form-item :label="$t('content')" name="content">
             <ckeditor
               ref="editorRef"
@@ -128,6 +132,9 @@
       @after-visible-change="afterVisibleChange"
     >
       <div class="h-max-48 overflow-auto">
+        Design for files and images 
+        with media library<br>
+        comming soon...
         <ul>
           <li v-for="media in medias" @click="selectMedia(media)">
             {{ media.file_name }}
