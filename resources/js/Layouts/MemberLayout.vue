@@ -309,7 +309,6 @@ export default {
             </div>
 
             <div class="mt-3 space-y-1">
-              <ResponsiveNavLink> {{ $t("professional") }} </ResponsiveNavLink>
               <ResponsiveNavLink> {{ $t("portfolios") }} </ResponsiveNavLink>
               <ResponsiveNavLink
                 :href="route('member.profile.index')"

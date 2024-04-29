@@ -10,7 +10,7 @@ const props = defineProps({
 
   <div v-for="article in articles" class="container mx-auto pt-5">
     <div class="bg-white relative shadow rounded-lg pl-5">
-      <div class="flex items-center">
+      <div class="flex flex-col md:flex-row items-center">
         <img v-if="article.thumbmail" :src="article.thumbmail" alt="Thumbnail" class="w-30 h-30 mr-4">
         <img src="/images/site_logo.png" alt="Thumnail" class="w-30 h-30 mr-4"/>
           
