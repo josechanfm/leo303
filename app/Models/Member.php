@@ -30,29 +30,10 @@ class Member extends Model
         'vat',
         'address',
         'club',
-        'positions',
-        'role_referees',
-        'role_coaches',
-        'athlete_belt',
-        'athlete_coach',
-        'athlete_technique',
-        'athlete_side',
-        'athlete_height',
-        'athlete_weight',
-        'federation_officials',
-        'organization_officials',
     ];
-    protected $casts=['positions'=>'json','federation_officials'=>'json','organization_officials'=>'json'];
 
-    protected $appends=['avatar_url','member_number','current_tier'];
+    protected $appends=['avatar_url','member_number'];
 
-    public function getCurrentTierAttribute(){
-        $tier=$this->hasMany(MemberTier::class)->whereRaw('valid_at <= CURRENT_DATE() AND (expired_at >= CURRENT_DATE() OR expired_at IS NULL)')->orderBy('valid_at','DESC')->first();
-        // if(empty($tier)){
-        //     dd(MemberTier::make());
-        // }
-        return $tier??MemberTier::make();
-    }
     public function getAvatarUrlAttribute(){
         return $this->avatar?Storage::url($this->avatar):'';
     }
@@ -101,18 +82,4 @@ class Member extends Model
             'id','display_name','number','number_display','issue_date','valid_from','valid_until','authorize_by','rank','avatar');
     }
 
-    // public function portfolio(){
-    //     return $this->hasMany(Portfolio::class);
-    // }
-    public function positions(){
-        return $this->belongsToMany(Position::class);
-    }
-
-    // public function events(){
-    //     return $this->belongsToMany(Event::class,'event_manager','member_id','event_id');
-    // }
-
-    public function tiers(){
-        return $this->hasMany(MemberTier::class)->orderBy('valid_at','DESC');
-    }
 }

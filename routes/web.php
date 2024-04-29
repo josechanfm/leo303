@@ -33,16 +33,15 @@ Route::get('/', function () {
 Route::get('article', [\App\Http\Controllers\ArticleController::class, 'item'])->name('article.item');
 Route::get('registration', [\App\Http\Controllers\RegistrationController::class, 'create'])->name('registration');
 Route::post('registration', [\App\Http\Controllers\RegistrationController::class, 'store'])->name('registration.store');
-Route::get('/language/{language}', function ($language) {
+// Route::get('/language/{language}', function ($language) {
 
-    Session::put('applocale', $language);
+//     Session::put('applocale', $language);
 
-    return Redirect::back();
-})->name('language');
+//     return Redirect::back();
+// })->name('language');
 
 Route::resource('forms', App\Http\Controllers\FormController::class)->names('forms');
 Route::get('form/{form}/entry/{entry}/success', [App\Http\Controllers\Organization\EntryController::class, 'entrySuccess'])->name('form.entry.success');
-Route::resource('exam', App\Http\Controllers\ExamController::class)->names('exam');
 
 //Member
 Route::group([
@@ -74,8 +73,10 @@ Route::group([
     ]
 ], function () {
     Route::get('/', [App\Http\Controllers\Organization\DashboardController::class, 'index'])->name('manage');
+    Route::resource('organizations', App\Http\Controllers\Organization\OrganizationController::class)->names('manage.organizations');
+    Route::post('organization/delete_logo/{organization}', [App\Http\Controllers\Organization\OrganizationController::class,'deleteLogo'])->name('admin.organization.deleteLogo');
     Route::get('/{organization}/medias', [App\Http\Controllers\Organization\MediaController::class, 'getMedias'])->name('manage.medias');
-    Route::get('/select/{organization}', [App\Http\Controllers\Organization\DashboardController::class, 'select'])->name('manage.select');
+    // Route::get('/select/{organization}', [App\Http\Controllers\Organization\DashboardController::class, 'select'])->name('manage.select');
     Route::resource('members', App\Http\Controllers\Organization\MemberController::class)->names('manage.members');
     Route::post('member/create/login/{member}', [App\Http\Controllers\Organization\MemberController::class, 'createLogin'])->name('manage.member.createLogin');
     Route::resource('forms', App\Http\Controllers\Organization\FormController::class)->names('manage.forms');
@@ -94,17 +95,11 @@ Route::group([
     Route::resource('certificates', App\Http\Controllers\Organization\CertificateController::class)->names('manage.certificates');
     Route::get('certificates/delete_media/{mediaId}', [App\Http\Controllers\Organization\CertificateController::class, 'deleteMedia'])->name('manage.certificate.deleteMedia');
     Route::resource('certificate/{certificate}/members', App\Http\Controllers\Organization\CertificateMemberController::class)->names('manage.certificate.members');
-    Route::resource('organizations', App\Http\Controllers\Organization\OrganizationController::class)->names('manage.organizations');
 
     Route::resource('articles', App\Http\Controllers\Organization\ArticleController::class)->names('manage.articles');
     Route::resource('events', App\Http\Controllers\Organization\EventController::class)->names('manage.events');
     Route::resource('configs', App\Http\Controllers\Organization\ConfigController::class)->names('manage.configs');
     Route::get('image_upload', [App\Http\Controllers\Organization\UploaderController::class, 'image'])->name('manage.image_upload');
-
-    Route::resource('exams', App\Http\Controllers\Organization\Exam\ExamController::class)->names('manage.exams');
-    Route::resource('exam/{exam}/questions', App\Http\Controllers\Organization\Exam\QuestionController::class)->names('manage.exam.questions');
-    Route::resource('exam/{exam}/papers', App\Http\Controllers\Organization\Exam\PaperController::class)->names('manage.exam.papers');
-    Route::resource('paper/{paper}/answers', App\Http\Controllers\Organization\Exam\AnswerController::class)->names('manage.paper.answers');
 });
 
 //admin
@@ -123,4 +118,6 @@ Route::group([
     Route::resource('members', App\Http\Controllers\Admin\MemberController::class)->names('admin.members');
     Route::resource('users', App\Http\Controllers\Admin\UserController::class)->names('admin.users');
     Route::resource('configs', App\Http\Controllers\Admin\ConfigController::class)->names('admin.configs');
+    Route::resource('features', App\Http\Controllers\Admin\FeatureController::class)->names('admin.features');
+    Route::post('feature/delete_image/{feature}', [App\Http\Controllers\Admin\FeatureController::class,'deleteImage'])->name('admin.feature.deleteImage');
 });

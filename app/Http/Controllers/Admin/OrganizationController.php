@@ -23,7 +23,7 @@ class OrganizationController extends Controller
         $organizations=Organization::with('users')->get();
         // dd($organizations);
         return Inertia::render('Admin/Organizations',[
-            'regions'=>Config::item('regions'),
+            'parishes'=>Config::item('parishes'),
             'organizations'=>$organizations,
             'users'=>User::all()
         ]);

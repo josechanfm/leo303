@@ -23,22 +23,16 @@ class OrganizationController extends Controller
      */
     public function index()
     {
-        if(Auth()->user()->hasRole('admin')){
-            $organizations=Organization::all();
-        }else{
-            $organizations=AdminUser::find(Auth()->user()->id)->organizations;
+        $organizations=auth()->user()->organizations;
+        if(empty($organizations)){
+            return to_route('/');
         }
-
-        if($organizations->count()==1){
-            return redirect()->route('organizations.show',$organizations[0]->id);
-        }elseif($organizations->count()>1){
-            return Inertia::render('Organization/Selection',[
-                'organizations' => $organizations
-            ]);
-        }else{
-            echo '!!';
+        if($organizations->count() == 1){
+            return to_route('manage.organizations.edit',$organizations[0]->id);
         }
-
+        return Inertia::render('Organization/Organizations',[
+            'organizations' => $organizations
+        ]);
     }
 
     /**
@@ -71,11 +65,9 @@ class OrganizationController extends Controller
     public function show(Organization $organization)
     {
         // \App::setLocale('en');
-
-        return Inertia::render('Organization/Dashboard',[
+        return Inertia::render('Organization/OrganizationEdit',[
             'organization'=>$organization
         ]);
-        //return redirect(route('organization.certificates.index',[$organization->id]));
     }
 
     /**
@@ -103,9 +95,18 @@ class OrganizationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Organization $organization, Request $request)
     {
-        //
+        $data=$request->all();
+        if($request->file('logo_upload')){
+            $file=$request->file('logo_upload');
+            $fileName=$organization->id.'_'.$file->getClientOriginalName();
+            $file->move(public_path('logos'), $fileName);
+            $data['logo']='/logos/'.$fileName;
+        }
+        $organization->update($data);
+
+        return to_route('manage.organizations.index');
     }
 
     /**
@@ -118,5 +119,12 @@ class OrganizationController extends Controller
     {
         //
     }
+    public function deleteLogo(Organization $organization){
+        unlink(public_path($organization->logo));
+        $organization->logo=null;
+        $organization->save();
+        return redirect()->back();
+    }
+
 
 }

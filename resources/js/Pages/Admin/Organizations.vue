@@ -31,8 +31,8 @@
                 <a-button>{{ $t("delete") }}</a-button>
               </a-popconfirm>
             </template>
-            <template v-else-if="column.dataIndex == 'region'">
-              {{ regions.find((z) => z.value == record[column.dataIndex]).label }}
+            <template v-else-if="column.dataIndex == 'parish'">
+              {{ getOptionLabel(parishes,text) }}
             </template>
             <template v-else-if="column.dataIndex == 'manager'">
               <ol class="list-decimal">
@@ -162,7 +162,7 @@ export default {
   components: {
     AdminLayout,
   },
-  props: ["regions","organizations", "users"],
+  props: ["parishes","organizations", "users"],
   data() {
     return {
       modal: {
@@ -177,9 +177,9 @@ export default {
       ],
       columns: [
         {
-          title: "Region",
-          i18n: "region",
-          dataIndex: "region",
+          title: "Parish",
+          i18n: "parish",
+          dataIndex: "parish",
         },{
           title: "Abbreviation",
           i18n: "abbreviation",
@@ -294,6 +294,13 @@ export default {
         },
       });
     },
+    getOptionLabel(options, itemValue){
+      if(options[this.$t('lang')]){
+        const option=options[this.$t('lang')].find(o=>o.value==itemValue)
+        return option?option.label:null
+      }
+      return null
+    }
   },
 };
 </script>

@@ -48,7 +48,7 @@
           <a-select
             v-model:value="modal.data.organization_id"
             :options="organizations"
-            :fieldNames="{ value: 'id', label: 'full_name' }"
+            :fieldNames="{ value: 'id', label: 'name_zh' }"
           />
         </a-form-item>
         <a-form-item :label="$t('key')" name="key">
@@ -141,7 +141,7 @@ export default {
     };
   },
   created() {
-    this.organizations.unshift({ id: 0, full_name: "General Config Item" });
+    this.organizations.unshift({ id: 0, name_zh: "General Config Item" });
   },
   methods: {
     createRecord() {

@@ -33,8 +33,7 @@ class DatabaseSeeder extends Seeder
             OrganizationSeeder::class,
             FormSeeder::class,
             ConfigSeeder::class,
-            PositionSeeder::class,
-            ExamSeeder::class
+            FeatureSeeder::class,
         ]);
 
 

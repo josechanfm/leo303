@@ -61,7 +61,7 @@ class OrganizationPolicy
      * @param  \App\Models\Organization  $organization
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(AdminUser $user, Organization $organization)
+    public function update(User $user, Organization $organization)
     {
         if($user->hasRole('admin')){
             return true;
@@ -76,7 +76,7 @@ class OrganizationPolicy
      * @param  \App\Models\Organization  $organization
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(AdminUser $user, Organization $organization)
+    public function delete(User $user, Organization $organization)
     {
         if($user->hasRole('admin')){
             return true;

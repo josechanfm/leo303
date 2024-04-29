@@ -7,10 +7,10 @@
     </template>
     <div>
       <a-button @click="isDrawerVisible = !isDrawerVisible" type="primary">{{
-        $t("images")
+        $t("Images")
       }}</a-button>
     </div>
-    <a-button @click="getCursor()">{{ $t("cursor") }}</a-button>
+    <!-- <a-button @click="getCursor()">{{ $t("cursor") }}</a-button> -->
     <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto p-5">
         <a-form
@@ -248,12 +248,12 @@ export default {
       console.log("focus out");
       console.log(event);
     },
-    getCursor() {
-      var content = this.$refs.editorRef.modelValue;
-      console.log(content);
-      var selection = this.$refs.editorRef.instance;
-      console.log(selection);
-    },
+    // getCursor() {
+    //   var content = this.$refs.editorRef.modelValue;
+    //   console.log(content);
+    //   var selection = this.$refs.editorRef.instance;
+    //   console.log(selection);
+    // },
   },
 };
 </script>

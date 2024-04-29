@@ -72,7 +72,7 @@ export default {
       dateFormat: "YYYY-MM-DD",
       rules: {
         title_en: { required: true },
-        category: { required: true },
+        category_code: { required: true },
         start_date: { required: true },
       },
       validateMessages: {

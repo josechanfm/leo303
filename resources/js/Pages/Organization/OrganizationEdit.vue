@@ -5,51 +5,109 @@
                 課程規劃
             </h2>
         </template>
+        <div class="container mx-auto">
+            <div class="bg-white relative shadow rounded-lg p-5">
+                <a-form :model="organization" v-bind="layout" :rules="rules" :validate-messages="validateMessages"
+                    @finish="onFinish" enctype="multipart/form-data">
+                    <a-row :gutter="10">
+                        <a-col :span="8">
+                            <a-form-item label="Abbr" name="abbr" :labelCol="{ span: 9 }">
+                                <a-input v-model:value="organization.abbr" />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="16">
+                            <a-form-item label="Name Zh" name="name_zh">
+                                <a-input v-model:value="organization.name_zh" />
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                    <a-row :gutter="10">
+                        <a-col :span="8">
+                            <a-form-item :label="$t('email')" name="email" :labelCol="{ span: 9 }">
+                                <a-input v-model:value="organization.email" />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="8">
+                            <a-form-item :label="$t('phone')" :labelCol="{ span: 9 }">
+                                <a-input v-model:value="organization.phone" />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="8">
+                            <a-form-item :label="$t('country')" :labelCol="{ span: 9 }">
+                                <a-input v-model:value="organization.country" />
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                    <a-form-item :label="$t('address')">
+                        <a-input v-model:value="organization.address" />
+                    </a-form-item>
+                    <a-form-item label="Website">
+                        <a-input v-model:value="organization.href" />
+                    </a-form-item>
+                    <a-form-item label="Description">
+                        <a-input v-model:value="organization.description" />
+                    </a-form-item>
+                    <a-form-item label="Content">
+                        <a-input v-model:value="organization.content" />
+                    </a-form-item>
+                    <a-form-item label="Card Style">
+                        <a-select v-model:value="organization.card_style" :options="cardStyles" />
+                    </a-form-item>
+                    <a-form-item label="Logo">
+                        <a-input v-model:value="organization.logo" />
+                    </a-form-item>
 
-        <a-form :model="organization" v-bind="layout" name="nest-messages" :validate-messages="validateMessages">
-            <a-form-item name="abbr" label="Abbr" >
-                <a-input v-model:value="organization.abbr" />
-            </a-form-item>
-            <a-form-item name="full_name" label="Full Name" >
-                <a-input v-model:value="organization.full_name" />
-            </a-form-item>
-            <a-form-item name="title" label="Title" >
-                <a-input v-model:value="organization.title" />
-            </a-form-item>
-            <a-form-item name="email" :label="$t('email')" >
-                <a-input v-model:value="organization.email" />
-            </a-form-item>
-            <a-form-item name="phone" :label="$t('phone')" >
-                <a-input v-model:value="organization.phone" />
-            </a-form-item>
-            <a-form-item name="address" :label="$t('address')" >
-                <a-input v-model:value="organization.address" />
-            </a-form-item>
-            <a-form-item name="country" :label="$t('country')" >
-                <a-input v-model:value="organization.country" />
-            </a-form-item>
-            <a-form-item name="href" label="Official Website" >
-                <a-input v-model:value="organization.href" />
-            </a-form-item>
-            <a-form-item name="avatar" label="Avatar" >
-                <a-input v-model:value="organization.avatar" />
-            </a-form-item>
-            <a-form-item name="description" label="Description" >
-                <a-input v-model:value="organization.description" />
-            </a-form-item>
-            <a-form-item name="content" label="Content" >
-                <a-input v-model:value="organization.content" />
-            </a-form-item>
-            <div class="flex flex-row item-center justify-center">
-                <a-button type="primary" html-type="submit">{{$t('submit')}}</a-button>
+                    <a-form-item :label="$t('logo')">
+
+                        <template v-if="organization.logo">
+                            <img :src="organization.logo" width="300px" />
+                            <a @click="onDeleteLogo(organization)">Delete</a>
+                        </template>
+
+                        <template v-else>
+                            <template v-if="previewImage">
+                                <img :src="previewImage" class="w-64" />
+                                <a @click="onRemoveLogo">Remove</a>
+                            </template>
+
+                            <template v-else>
+                                <div class="flex items-center justify-center w-64">
+                                    <label for="dropzone-file"
+                                        class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                            <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 20 16">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                            </svg>
+                                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                                <div v-html="$t('upload_drag_drop')"/>
+                                            </p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400">{{ $t('logo_size_note')}}</p>
+                                        </div>
+                                        <input id="dropzone-file" type="file" @change="onSelectFile"
+                                            accept="image/png, image/gif, image/jpeg" style="display:none" />
+                                    </label>
+                                </div>
+
+                            </template>
+                        </template>
+                    </a-form-item>
+
+                    <div class="flex flex-row item-center justify-center">
+                        <a-button type="primary" html-type="submit">{{ $t('submit') }}</a-button>
+                    </div>
+                </a-form>
             </div>
-        </a-form>
+        </div>
     </OrganizationLayout>
 </template>
 
 <script>
 import OrganizationLayout from '@/Layouts/OrganizationLayout.vue';
-import { defineComponent, reactive } from 'vue';
+import { Modal } from 'ant-design-vue';
 
 export default {
     components: {
@@ -58,35 +116,9 @@ export default {
     props: ['organization'],
     data() {
         return {
-            modal: {
-                isOpen: false,
-                data: {},
-                title: "Modal",
-                mode: ""
-            },
-            teacherStateLabels: {},
-            columns: [
-                {
-                    title: '姓名(中文)',
-                    dataIndex: 'first_name',
-                }, {
-                    title: '姓名(外文)',
-                    dataIndex: 'last_name',
-                }, {
-                    title: '別名',
-                    dataIndex: 'gender',
-                }, {
-                    title: '手機',
-                    dataIndex: 'dob',
-                }, {
-                    title: '狀態',
-                    dataIndex: 'state',
-                }, {
-                    title: '操作',
-                    dataIndex: 'operation',
-                    key: 'operation',
-                },
-            ],
+            dataFormat: 'YYYY-MM-DD',
+            cardStyles: [],
+            previewImage: null,
             rules: {
                 name_zh: { required: true },
                 mobile: { required: true },
@@ -104,78 +136,68 @@ export default {
             },
             layout: {
                 labelCol: {
-                    span: 8,
+                    span: 4,
                 },
                 wrapperCol: {
-                    span: 16,
+                    span: 20,
                 },
             },
         }
     },
     created() {
+        axios.get(route("api.config.item", { key: 'card_styles' })).then((resp) => {
+            let cs = resp.data[0].value;
+            console.log(cs)
+            Object.entries(cs).forEach(([key, card]) => {
+                this.cardStyles.push({ value: key, label: card.name })
+            })
+        });
     },
     methods: {
-        createRecord() {
-            this.modal.data = {};
-            this.modal.mode = "CREATE";
-            this.modal.title = "新增問卷";
-            this.modal.isOpen = true;
-        },
-        editRecord(record) {
-            this.modal.data = { ...record };
-            this.modal.mode = "EDIT";
-            this.modal.title = "修改";
-            this.modal.isOpen = true;
-        },
-        storeRecord() {
-            this.$refs.modalRef.validateFields().then(() => {
-                this.$inertia.post('/admin/teachers/', this.modal.data, {
-                    onSuccess: (page) => {
-                        this.modal.data = {};
-                        this.modal.isOpen = false;
-                    },
-                    onError: (err) => {
-                        console.log(err);
-                    }
+        onSelectFile(event) {
+            const file = event.target.files[0]
+            console.log(file.size);
+            console.log(1024 * 1024);
+
+            if (file.size > 1024 ) {
+                Modal.error({
+                    title: this.$t('file_size_over'),
+                    content: this.$t('logo_size_note'),
                 });
-            }).catch(err => {
-                console.log(err);
-            });
-        },
-        updateRecord() {
-            console.log(this.modal.data);
-            this.$refs.modalRef.validateFields().then(() => {
-                this.$inertia.patch('/admin/teachers/' + this.modal.data.id, this.modal.data, {
-                    onSuccess: (page) => {
-                        this.modal.data = {};
-                        this.modal.isOpen = false;
-                        console.log(page);
-                    },
-                    onError: (error) => {
-                        console.log(error);
-                    }
-                });
-            }).catch(err => {
-                console.log("error", err);
-            });
+                return false
+            }
+            this.organization.logo_upload = file
+            this.previewImage = URL.createObjectURL(file)
 
         },
-        deleteRecord(recordId) {
-            console.log(recordId);
-            if (!confirm('Are you sure want to remove?')) return;
-            this.$inertia.delete('/admin/teachers/' + recordId, {
+        onRemoveLogo() {
+            this.organization.logo_upload = null
+            this.previewImage = null
+        },
+        onDeleteLogo(feature) {
+            this.$inertia.post(route('admin.organization.deleteLogo', this.organization), {
                 onSuccess: (page) => {
-                    console.log(page);
+                    console.log(page)
                 },
-                onError: (error) => {
-                    console.log(error);
+                onError: (err) => {
+                    console.log(err);
+                },
+            })
+
+        },
+
+        onFinish() {
+            console.log(this.organization);
+            this.organization._method = "PATCH"
+            this.$inertia.post(route('manage.organizations.update', this.organization.id), this.organization, {
+                onSuccess: (page) => {
+                    console.log(page)
+                },
+                onError: (err) => {
+                    console.log(err);
                 }
             });
         },
-        createLogin(recordId) {
-            console.log('create login' + recordId);
-
-        }
     },
 }
 </script>
