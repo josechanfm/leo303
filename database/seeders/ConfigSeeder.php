@@ -102,13 +102,13 @@ class ConfigSeeder extends Seeder
             ],
             ['organization_id'=>0,'key'=>'parishes','value'=>
                 '[
-                    {"value":"F","label_zh":"花地瑪堂區","lable_en":"Nossa Senhora de Fátima"},
-                    {"value":"A","label_zh":"聖安多尼堂區","lable_en":"Santo António"},
-                    {"value":"S","label_zh":"大堂區","lable_en":"Sé"},
-                    {"value":"Z","label_zh":"望德堂區","lable_en":"São Lázaro"},
-                    {"value":"L","label_zh":"風順堂區","lable_en":"São Lourenço"},
-                    {"value":"C","label_zh":"嘉模堂區(氹仔)","lable_en":"Novo campus da Universidade de Macau"},
-                    {"value":"F","label_zh":"聖方濟各堂區(路環)","lable_en":"São Francisco Xavier"}
+                    {"value":"F","label_zh":"花地瑪堂區","label_en":"Nossa Senhora de Fátima"},
+                    {"value":"A","label_zh":"聖安多尼堂區","label_en":"Santo António"},
+                    {"value":"S","label_zh":"大堂區","label_en":"Sé"},
+                    {"value":"Z","label_zh":"望德堂區","label_en":"São Lázaro"},
+                    {"value":"L","label_zh":"風順堂區","label_en":"São Lourenço"},
+                    {"value":"C","label_zh":"嘉模堂區(氹仔)","label_en":"Novo campus da Universidade de Macau"},
+                    {"value":"F","label_zh":"聖方濟各堂區(路環)","label_en":"São Francisco Xavier"}
                 ]'
             ]
         ];

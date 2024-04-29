@@ -102,7 +102,7 @@ const showingNavigationDropdown = ref(false);
                     $t("login") }}</inertia-link>
                 </li>
                 <li>
-                  <inertia-link :href="route('register')"
+                  <inertia-link :href="route('registration')"
                     class="text-bold text-white hover:text-yellow-300 text-md">{{ $t("register") }}</inertia-link>
                 </li>
               </template>

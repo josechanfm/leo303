@@ -7,7 +7,7 @@
       </div>
       <div class="m-4 text-center text-lg" v-else>
         <inertia-link :href="route('manage')">{{
-          $page.props.current_organization.full_name
+          $page.props.current_organization['name_'+$t('lang')]
         }}</inertia-link>
       </div>
 

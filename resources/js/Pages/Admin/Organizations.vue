@@ -60,9 +60,8 @@
         :rules="rules"
         :validate-messages="validateMessages"
       >
-        <a-input type="hidden" v-model:value="modal.data.id" />
         <a-form-item :label="$t('parish')" name="parish" :rules="[{ required: true }]">
-          <a-select v-model:value="modal.data.parish" :options="parishes" />
+          <a-select v-model:value="modal.data.parish" :options="parishes" :fieldNames="{value:'value',label:'label_'+$t('lang')}" />
         </a-form-item>
         <a-form-item
           :label="$t('abbreviation')"
@@ -81,10 +80,10 @@
           <a-input v-model:value="modal.data.name_zh" />
         </a-form-item>
         <a-form-item :label="$t('name_en')" name="name_en">
-          <a-input v-model:value="modal.data.name_zh" />
+          <a-input v-model:value="modal.data.name_en" />
         </a-form-item>
         <a-form-item :label="$t('name_pt')" name="name_pt">
-          <a-input v-model:value="modal.data.name_zh" />
+          <a-input v-model:value="modal.data.name_pt" />
         </a-form-item>
         <a-form-item :label="$t('email')" name="email">
           <a-input v-model:value="modal.data.email" />

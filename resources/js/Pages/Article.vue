@@ -23,9 +23,13 @@ export default {
                 News & Events
             </h2>
         </template>
-        <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-            <h2 class="font-bold text-2xl text-gray-800">{{ article.title}}</h2>
+        <div class="max-w-7xl mx-auto py-10 px-2 sm:px-6 lg:px-8">
+            <h2 class="font-bold text-2xl text-gray-800">
+                {{ article.title}}</h2>
             <div v-html="article.content"/>
+            <div class="text-center pt-10">
+            <inertia-link :href="article.url">Link</inertia-link>
+            </div>
         </div>
         
     </MemberLayout>

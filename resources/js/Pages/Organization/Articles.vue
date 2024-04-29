@@ -173,7 +173,7 @@ export default {
       columns: [
         {
           title: "Category",
-          i18n: "catetory",
+          i18n: "category",
           dataIndex: "category_code",
         },
         {

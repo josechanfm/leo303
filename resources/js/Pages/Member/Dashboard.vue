@@ -106,7 +106,7 @@ export default {
 
           <!-- Feature Section -->
           <div class="container mx-auto mt-5 bg-white rounded-lg">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 py-3 px-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 py-3 px-2">
               <template v-for="feature in features">
                 <a :href="feature.link">
                   <div class="gutter-row">

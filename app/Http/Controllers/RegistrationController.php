@@ -60,8 +60,9 @@ class RegistrationController extends Controller
             'family_name'=>$request->family_name,
             'email'=>$request->email
         ]);
-        $member->organizations()->attach($organization->id);;
-        return redirect()->back();
+        $member->organizations()->attach($organization->id);
+
+        return to_route('login');
     }
 }
 

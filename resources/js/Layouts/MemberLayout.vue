@@ -51,7 +51,7 @@ export default {
   },
   mounted() {
     console.log()
-    //this.loadLanguageAsync(this.$page.props.lang);
+    this.loadLanguageAsync(this.$page.props.lang);
   },
 };
 // defineProps({
