@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             OrganizationSeeder::class,
             FormSeeder::class,
             ConfigSeeder::class,
-            FeatureSeeder::class,
+            ArticleSeeder::class,
         ]);
 
 

@@ -3,15 +3,10 @@
 namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
-use App\Models\Classify;
 use App\Models\Article;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Config;
 use App\Models\Feature;
-use App\Models\Form;
-use App\Models\Member;
-use App\Models\Organization;
 
 class DashboardController extends Controller
 {
@@ -26,8 +21,8 @@ class DashboardController extends Controller
         $member->organizations;
         return Inertia::render('Member/Dashboard', [
             'member' => $member,
-            'features'=>Feature::whereBelongsTo(session('organization'))->get(),
-            'articles' => Article::privates(),
+            'features'=>Article::whereBelongsTo(session('organization'))->where('category_code','FEATURE')->get(),
+            'articles' => Article::whereBelongsTo(session('organization'))->where('category_code','NEWS')->get(),
             'card_style' => Config::item('card_styles')[session('organization')->card_style],
         ]);
     }

@@ -121,7 +121,7 @@ export default {
             previewImage: null,
             rules: {
                 name_zh: { required: true },
-                mobile: { required: true },
+                email: { required: true },
                 state: { required: true },
             },
             validateMessages: {
@@ -156,10 +156,7 @@ export default {
     methods: {
         onSelectFile(event) {
             const file = event.target.files[0]
-            console.log(file.size);
-            console.log(1024 * 1024);
-
-            if (file.size > 1024 ) {
+            if (file.size > 1024 *1024) {
                 Modal.error({
                     title: this.$t('file_size_over'),
                     content: this.$t('logo_size_note'),

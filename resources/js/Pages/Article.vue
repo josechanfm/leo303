@@ -20,12 +20,12 @@ export default {
     <MemberLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
+                News & Events
             </h2>
         </template>
         <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-            <h2 class="font-bold text-2xl text-gray-800">{{ article.title_en}}</h2>
-            <div v-html="article.content_en"/>
+            <h2 class="font-bold text-2xl text-gray-800">{{ article.title}}</h2>
+            <div v-html="article.content"/>
         </div>
         
     </MemberLayout>

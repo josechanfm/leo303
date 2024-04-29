@@ -63,11 +63,11 @@
             :options="articleCategories"
           />
         </a-form-item>
-        <a-form-item :label="$t('title_en')" name="title_en">
-          <a-input v-model:value="modal.data.title_en" />
+        <a-form-item :label="$t('title')" name="title">
+          <a-input v-model:value="modal.data.title" />
         </a-form-item>
-        <a-form-item :label="$t('title_fn')" name="title_fn">
-          <a-input v-model:value="modal.data.title_fn" />
+        <a-form-item :label="$t('title')" name="title_fn">
+          <a-input v-model:value="modal.data.title" />
         </a-form-item>
         <a-form-item :label="$t('content')" name="content_en">
           <ckeditor
@@ -172,9 +172,14 @@ export default {
       },
       columns: [
         {
+          title: "Category",
+          i18n: "catetory",
+          dataIndex: "category_code",
+        },
+        {
           title: "Title",
           i18n: "title",
-          dataIndex: "title_en",
+          dataIndex: "title",
         },
         {
           title: "Validated at",

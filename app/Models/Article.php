@@ -12,7 +12,8 @@ class Article extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable=['uuid','organization_id','category_code','title_en','title_fn','content_en','content_fn','valid_at','expire_at','url','reference','published','public','author','user_id'];
+    protected $fillable=['uuid','organization_id','category_code','title','content','valid_at','expire_at','url','reference','published','public','author','thumbnail','lang','user_id'];
+    protected $casts=['tags'=>'json'];
 
     public static function publics(){
         return Article::where('published',true)->where('public',true)
@@ -36,5 +37,8 @@ class Article extends Model implements HasMedia
                     $query->whereNull('expire_at')->orWhere('expire_at','>=',date('Y-m-d'));
                 })
                 ->get();
+    }
+    public function organization(){
+        return $this->belongsTo(Organization::class);
     }
 }

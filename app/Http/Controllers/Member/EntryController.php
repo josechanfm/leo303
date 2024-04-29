@@ -5,13 +5,9 @@ namespace App\Http\Controllers\Member;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Approbate;
-use App\Models\Portfolio;
-use App\Models\Member;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use App\Models\Entry;
 
-class ProfileController extends Controller
+class EntryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,12 +16,8 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $member = auth()->user()->member;
-        if($member==null){ return redirect()->back();};
-        $member->positions;
-        $member->athlete;
-        return Inertia::render('Member/Profile', [
-            'member' => $member,
+        return Inertia::render('Member/Entries',[
+            'entries'=>Entry::whereBelongsTo(auth()->user()->member)->with('records')->with('form')->get()
         ]);
     }
 
@@ -58,6 +50,7 @@ class ProfileController extends Controller
      */
     public function show($id)
     {
+        //
     }
 
     /**
@@ -80,23 +73,7 @@ class ProfileController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = $request->all();
-        $member = Member::find($id);
-        if($request->file('avatar')){
-            // if($member->avatar!=null){
-            //     if(Storage::exists($member->avatar)){
-            //         Storage::delete($member->avatar);
-            //     }
-            // }
-            $file = $request->file('avatar');
-            $fileName=$member->id.'_avatar'.'.png';
-            $file->move(public_path('avatars'), $fileName);
-            // $path = Storage::putFile('public/images/avatars', $file);
-            $data['avatar']='/avatars/'.$fileName;
-        }
-        $member->update($data);
-        return to_route('member.dashboard');
-        //return redirect()->back()->with('message',$data['avatar']);
+        //
     }
 
     /**
@@ -109,6 +86,4 @@ class ProfileController extends Controller
     {
         //
     }
-
-
 }

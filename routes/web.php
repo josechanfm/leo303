@@ -33,12 +33,12 @@ Route::get('/', function () {
 Route::get('article', [\App\Http\Controllers\ArticleController::class, 'item'])->name('article.item');
 Route::get('registration', [\App\Http\Controllers\RegistrationController::class, 'create'])->name('registration');
 Route::post('registration', [\App\Http\Controllers\RegistrationController::class, 'store'])->name('registration.store');
-// Route::get('/language/{language}', function ($language) {
+Route::get('/language/{language}', function ($language) {
 
-//     Session::put('applocale', $language);
+    Session::put('applocale', $language);
 
-//     return Redirect::back();
-// })->name('language');
+    return Redirect::back();
+})->name('language');
 
 Route::resource('forms', App\Http\Controllers\FormController::class)->names('forms');
 Route::get('form/{form}/entry/{entry}/success', [App\Http\Controllers\Organization\EntryController::class, 'entrySuccess'])->name('form.entry.success');
@@ -59,7 +59,8 @@ Route::group([
     Route::resource('professionals', App\Http\Controllers\Member\ProfessionalController::class)->names('member.professionals');
     Route::get('membership', [App\Http\Controllers\Member\MembershipController::class, 'index'])->name('member.membership');
     Route::resource('events', App\Http\Controllers\Member\EventController::class)->names('member.events');
-
+    Route::resource('entries', App\Http\Controllers\Member\EntryController::class)->names('member.entries');
+    Route::get('sphere', [App\Http\Controllers\Member\SphereController::class, 'index'])->name('member.sphere');
 });
 
 //Manage

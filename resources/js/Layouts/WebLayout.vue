@@ -28,12 +28,12 @@ const showingNavigationDropdown = ref(false);
       <div class="flex justify-between items-center py-6 px-10 container mx-auto">
         <div class="flex">
           <div class="shrink-0 flex items-center">
-            <a href="http://localhost:8000"
+            <a href="/"
               ><img src="/images/site_logo.png" class="block h-14 w-auto"
             /></a>
           </div>
           <h1 class="ml-2 pt-4 text-2xl font-bold">
-            <a href="/" class="text-white">公務人員聯合總會</a>
+            <a href="/" class="text-white">Sync Connect</a>
           </h1>
         </div>
 
@@ -124,7 +124,7 @@ const showingNavigationDropdown = ref(false);
         class="sm:hidden bg-white"
       >
         <div class="pt-2 pb-3 space-y-1">
-          <ResponsiveNavLink :href="route('member.dashboard')" :active="route().current('dashboard')">
+          <ResponsiveNavLink :href="route('/')" :active="route().current('dashboard')">
             {{ $t('dashboard') }}
           </ResponsiveNavLink>
         </div>
@@ -133,10 +133,10 @@ const showingNavigationDropdown = ref(false);
         <div class="pt-4 pb-1 border-t border-gray-200">
           <div class="mt-3 space-y-1">
             <ResponsiveNavLink
-              :href="route('profile.show')"
-              :active="route().current('profile.show')"
+              :href="route('member.dashboard')"
+              :active="route().current('member.dashboard')"
             >
-              {{ $t("profile") }}
+              {{ $t("memberDashboard") }}
             </ResponsiveNavLink>
             <!-- Authentication -->
             <template v-if="$page.props.user.id">

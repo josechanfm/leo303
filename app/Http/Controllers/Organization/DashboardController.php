@@ -16,20 +16,6 @@ class DashboardController extends Controller
         $this->authorizeResource(Organization::class);
     }
 
-    // public function list()
-    // {
-    //     $organizations=auth()->user()->organizations;
-    //     if($organizations->count()==0){
-    //         return redirect('/');
-    //     }else if($organizations->count()==1){
-    //         session(['organization'=>$organizations[0]]);
-    //         return redirect()->route('manage.dashboard');
-    //     }else{
-    //         return Inertia::render('Organization/Selection',[
-    //             'organizations' => $organizations
-    //         ]);
-    //     }
-    // }
 
     public function select(Organization $organization){
         $this->authorize('view',$organization);
@@ -38,14 +24,6 @@ class DashboardController extends Controller
     }
 
     public function index(){
-        // if(session('organization')==null){
-        //     $organizations=auth()->user()->organizations;
-        //     if($organizations->count()==0){
-        //         return redirect('/');
-        //     }else{
-        //         session(['organization'=>$organizations[0]]);
-        //     }
-        // };
         $this->authorize('view',session('organization'));
         return Inertia::render('Organization/Dashboard',[
             'organizations' => auth()->user()->organizations,

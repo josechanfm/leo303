@@ -30,6 +30,7 @@ class Member extends Model
         'vat',
         'address',
         'club',
+        'avatar'
     ];
 
     protected $appends=['avatar_url','member_number'];

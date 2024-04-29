@@ -23,6 +23,11 @@ class Entry extends Model
     public function records(){
         return $this->hasMany(EntryRecord::class);
     }
-    
+    public function member(){
+        return $this->belongsTo(Member::class);
+    }
+    public function form(){
+        return $this->belongsTo(Form::class)->with('fields');
+    }
 
 }

@@ -18,7 +18,7 @@ class ConfigSeeder extends Seeder
     {
         $data=[
             ['organization_id'=>0,'key'=>'article_categories','value'=>
-                '[{"value":"BLOG","label":"Blog"},{"value":"NEWS","label":"News"}]'
+                '[{"value":"FEATURE","label":"Feature"},{"value":"BLOG","label":"Blog"},{"value":"NEWS","label":"News"}]'
             ],
             ['organization_id'=>0,'key'=>'bulletin_categories','value'=>
                 '[{"value": "CMTE","label": "Committee"}, {"value": "GEN","label": "General"}]',
@@ -69,7 +69,7 @@ class ConfigSeeder extends Seeder
                         "label": "Absent"
                 }]'
             ],
-            ['organization_id'=>0,'key'=>'card_style','value'=>
+            ['organization_id'=>0,'key'=>'card_styles','value'=>
                 '{"card_01": {"name":"Card 01","background": "card_01.png","logo": "site_logo.png","font_style": "font-family:sans-serif;color:#c24641"},
                   "card_02": {"name":"Card 02","background": "card_02.png","logo": "site_logo.png","font_style": "font-family:sans-serif;color:white"},
                   "card_03": {"name":"Card 03","background": "card_03.png","logo": "site_logo.png","font_style": "font-family:sans-serif;color:white"},
@@ -113,7 +113,8 @@ class ConfigSeeder extends Seeder
             ]
         ];
         foreach($data as $d){
-            Config::create($d);
+            DB::table('configs')->insert($d);
+            //Config::create($d);
         }
     }
 }

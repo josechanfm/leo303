@@ -90,6 +90,9 @@
                 </a-row>
               </a-collapse-panel>
               <a-collapse-panel key="9" :header="$t('picture_title')">
+                <div v-if="member.avatar">
+                  <img :src="member.avatar"/>
+                </div>
                 <a-button @click="showCropModal = true">{{$t("upload_profile_image")}}</a-button>
                 <CropperModal
                   v-if="showCropModal"
@@ -102,9 +105,6 @@
                   <div class="w-full md:w-1/2 px-3">
                     <div v-if="avatarPreview !== null">
                       <img :src="avatarPreview" />
-                    </div>
-                    <div v-else>
-                      <img :src="member.avatar_url" />
                     </div>
                   </div>
                 </div>

@@ -10,37 +10,37 @@ export default {
     ArticleList,
     QRCodeVue3,
   },
-  props: ["member",'features', "articles", "card_style"],
+  props: ["member","features", "articles", "card_style"],
   data() {
     return {
       qrcode: "",
       interval: 0,
       features2: [
         {
-          image: "images/news_event.png",
-          title: "新聞與活動",
-          description:"新聞部分是用來發布組織的最新消息和事件，向公眾展示其在社會和環境領域中所做的工作，並提高對其使命的認識和理解。",
+          image: "/features/0_news_events.png",
+          title_zh: "新聞與活動",
+          content_zh: "新聞部分是用來發布組織的最新消息和事件，向公眾展示其在社會和環境領域中所做的工作，並提高對其使命的認識和理解。",
           tags: ["#通告"],
           link: "/",
         },
         {
-          image: "/images/form_application.png",
-          title: "表格及報名",
-          description:"包括各種類型的表格和報名表，方便訪問者提交相關資訊並表達他們的參與意願。",
+          image: "/features/0_form_application.png",
+          title_zh: "表格及報名",
+          content_zh: "包括各種類型的表格和報名表，方便訪問者提交相關資訊並表達他們的參與意願。",
           tags: ["#報名"],
           link: "forms",
         },
         {
-          image: "images/learn_share.png",
-          title: "學習興分享",
-          description:"提供教育資源、知識分享和學習機會的區域。提供有價值的學習內容，並促進知識交流和社群互動。",
+          image: "/features/0_learn_share.png",
+          title_zh: "學習興分享",
+          content_zh: "提供教育資源、知識分享和學習機會的區域。提供有價值的學習內容，並促進知識交流和社群互動。",
           tags: ["#學習", "#分享"],
           link: "#",
         },
         {
-          image: "images/community.png",
-          title: "虛擬社區",
-          description: "交流和參與組織活動的線上平台。讓志願者、支持者和參與者能夠連結起來，分享資源、經驗和想法。",
+          image: "/features/0_community.png",
+          title_zh: "虛擬社區",
+          content_zh: "交流和參與組織活動的線上平台。讓志願者、支持者和參與者能夠連結起來，分享資源、經驗和想法。",
           tags: ["#學習", "#交流"],
         },
       ],
@@ -71,7 +71,7 @@ export default {
   },
   created() {
   },
-  mounted() {},
+  mounted() { },
   methods: {
     getQrcode() {
       axios.get(route("member.getQrcode")).then((response) => {
@@ -97,7 +97,7 @@ export default {
   <MemberLayout title="Dashboard">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{$t('membership')}}
+        {{ $t('membership') }}
       </h2>
     </template>
     <div class="container mx-auto">
@@ -111,11 +111,11 @@ export default {
                 <a :href="feature.link">
                   <div class="gutter-row">
                     <div class="max-w rounded overflow-hidden shadow-lg">
-                      <img class="w-full" alt="Use any sample image here..." :src="feature.image">
+                      <img class="w-full" alt="Use any sample image here..." :src="feature.thumbnail">
                       <div class="px-2 py-4 xs:h-64 lg:h-48">
-                        <div class="font-bold text-xl mb-2">{{ feature['title_'+$t('lang')] }}</div>
+                        <div class="font-bold text-xl mb-2">{{ feature.title }}</div>
                         <p class="text-gray-700 text-base pl-1">
-                          {{ feature['content_'+$t('lang')] }}
+                          {{ feature.intro }}
                         <ol class="list-disc">
                           <li v-for="form in $page.props.current_organization.forms">
                             <inertia-link :href="route('forms.show', form.id)">{{ form.title }}</inertia-link>
@@ -124,9 +124,8 @@ export default {
                         </p>
                       </div>
                       <div class="px-6 py-4">
-                        <span v-for="tag in feature['tags_'+$t('lang')]"
-                          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">{{
-                            tag }}</span>
+                        <span v-for="tag in feature.tags"
+                          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">{{ tag }}</span>
                       </div>
                     </div>
                   </div>
@@ -139,10 +138,11 @@ export default {
           <!-- News Section-->
           <div class="container mx-auto pt-5">
             <div class="bg-white relative shadow rounded-lg pl-5">
-              <ArticleList :articles="articles"/>
+              <ArticleList :articles="articles" />
             </div>
           </div>
           <!-- News Section end-->
+
         </div>
 
         <div class="flex-none w-[400px]">
@@ -152,22 +152,22 @@ export default {
               <div class="flex flex-col justify-center items-center" v-if="showQrcode">
                 <div>
                   <QRCodeVue3 :key="qrcode" v-bind:value="qrcode" :image="'/images/' + card_style['logo']" :dotsOptions="{
-                    type: 'dots',
-                    color: '#26249a',
-                    gradient: {
-                      type: 'linear',
-                      rotation: 0,
-                      colorStops: [
-                        { offset: 0, color: '#26249a' },
-                        { offset: 1, color: '#26249a' },
-                      ],
-                    },
-                  }" :cornersSquareOptions="{
-                    type: 'square',
-                    color: '#e00404'
-                  }" :cornersDotOptions="{
-                    color: '#e00404'
-                  }" />
+          type: 'dots',
+          color: '#26249a',
+          gradient: {
+            type: 'linear',
+            rotation: 0,
+            colorStops: [
+              { offset: 0, color: '#26249a' },
+              { offset: 1, color: '#26249a' },
+            ],
+          },
+        }" :cornersSquareOptions="{
+          type: 'square',
+          color: '#e00404'
+        }" :cornersDotOptions="{
+          color: '#e00404'
+        }" />
                 </div>
               </div>
               <!-- card start -->
@@ -187,7 +187,8 @@ export default {
                         <div class="font-sans mb-2">{{ member.member_number }}</div>
                       </div>
                       <div class="flex text-right">
-                        <img class="w-20 h-20" :src="'/images/' + card_style['logo']" />
+                        <img v-if="member.avatar" class="w-20 h-20" :src="member.avatar" />
+                        <img v-else class="w-20 h-20" src="/avatars/dummy-avatar.jpg" />
                       </div>
                     </div>
                   </div>
@@ -202,7 +203,8 @@ export default {
                     </div>
                   </div>
                 </div>
-                <img class="relative object-cover w-96 h-52 rounded-lg z-0" :src="'/images/' + card_style['background']"/>
+                <img class="relative object-cover w-96 h-52 rounded-lg z-0"
+                  :src="'/images/' + card_style['background']" />
               </div>
               <!-- card end -->
 
@@ -279,7 +281,7 @@ export default {
         </div>
       </div>
     </div>
-    
+
   </MemberLayout>
 </template>
 

@@ -50,7 +50,7 @@ export default {
     };
   },
   mounted() {
-    
+    console.log()
     //this.loadLanguageAsync(this.$page.props.lang);
   },
 };
@@ -89,7 +89,8 @@ export default {
               <!-- Logo -->
               <div class="shrink-0 flex items-center">
                 <Link :href="route('member.dashboard')">
-                  <img src="/images/site_logo.png" class="block h-14 w-auto" />
+                  <img v-if="this.$page.props.current_organization.logo" :src="this.$page.props.current_organization.logo" class="block h-14 w-auto" />
+                  <img v-else src="/images/site_logo.png" class="block h-14 w-auto" />
                 </Link>
               </div>
 
@@ -101,14 +102,10 @@ export default {
                 >
                   {{ $t("dashboard") }}
                 </NavLink>
-                <!-- <NavLink :href="route('member.professionals.index')" > -->
-                <NavLink class="text-blue-100 hover:text-blue-100">
-                  {{ $t("professional") }}
+                <NavLink :href="route('member.entries.index')">
+                  {{ $t("form_filled") }}
                 </NavLink>
-                <!-- <NavLink :href="route('member.portfolios.index')" > -->
-                <NavLink class="text-blue-100 hover:text-blue-100">
-                  {{ $t("portfolios") }}
-                </NavLink>
+
                 <NavLink :href="route('member.profile.index')">
                   {{ $t("profile") }}
                 </NavLink>

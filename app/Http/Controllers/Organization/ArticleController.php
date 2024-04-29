@@ -93,7 +93,15 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
-        $article->update($request->all());
+        $data=$request->all();
+        if($request->file('thumbnail_upload')){
+            $file=$request->file('thumbnail_upload');
+            $fileName=$article->id.'_'.$file->getClientOriginalName();
+            $file->move(public_path('articles'), $fileName);
+            $data['thumbnail']='/articles/'.$fileName;
+        }
+        $article->update($data);
+
         return redirect()->route('manage.articles.index');
     }
 
@@ -110,4 +118,11 @@ class ArticleController extends Controller
         }
         return redirect()->back();
     }
+    public function deleteImage(Feature $feature){
+        unlink(public_path($feature->image));
+        $feature->image=null;
+        $feature->save();
+        return redirect()->back();
+    }
+
 }
