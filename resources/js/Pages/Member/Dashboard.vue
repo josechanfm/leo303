@@ -113,7 +113,9 @@ export default {
                     <div class="max-w rounded overflow-hidden shadow-lg">
                       <img class="w-full" alt="Use any sample image here..." :src="feature.thumbnail">
                       <div class="px-2 py-4 xs:h-64 lg:h-48">
+                        <inertia-link :href="feature.url">
                         <div class="font-bold text-xl mb-2">{{ feature.title }}</div>
+                      </inertia-link>
                         <p class="text-gray-700 text-base pl-1">
                           {{ feature.intro }}
                         <ol class="list-disc">

@@ -17,8 +17,8 @@ class ArticleSeeder extends Seeder
     public function run()
     {
         $data=[
-            ['organization_id'=>11,'category_code'=>'FEATURE','title'=>'新聞與活動','intro'=>'新聞部分是用來發布組織的最新消息和事件，向公眾展示其在社會和環境領域中所做的工作，並提高對其使命的認識和理解。 ','tags'=>'["通告"]','url'=>'#','thumbnail'=>'/features/1_news_events.png','user_id'=>1,'public'=>0,'published'=>1],
-            ['organization_id'=>11,'category_code'=>'FEATURE','title'=>'表格及報名','intro'=>'包括各種類型的表格和報名表，方便訪問者提交相關資訊並表達他們的參與意願。','tags'=>'["報名"]','url'=>'#','thumbnail'=>'/features/2_form_application.png','user_id'=>1,'public'=>0,'published'=>1],
+            ['organization_id'=>11,'category_code'=>'FEATURE','title'=>'新聞與活動','intro'=>'新聞部分是用來發布組織的最新消息和事件，向公眾展示其在社會和環境領域中所做的工作，並提高對其使命的認識和理解。 ','tags'=>'["通告"]','url'=>'/','thumbnail'=>'/features/1_news_events.png','user_id'=>1,'public'=>0,'published'=>1],
+            ['organization_id'=>11,'category_code'=>'FEATURE','title'=>'表格及報名','intro'=>'包括各種類型的表格和報名表，方便訪問者提交相關資訊並表達他們的參與意願。','tags'=>'["報名"]','url'=>'/forms','thumbnail'=>'/features/2_form_application.png','user_id'=>1,'public'=>0,'published'=>1],
             ['organization_id'=>11,'category_code'=>'FEATURE','title'=>'學習興分享','intro'=>'提供教育資源、知識分享和學習機會的區域。提供有價值的學習內容，並促進知識交流和社群互動。','tags'=>'["學習","分享"]','url'=>'#','thumbnail'=>'/features/3_learn_share.png','user_id'=>1,'public'=>0,'published'=>1],
             ['organization_id'=>11,'category_code'=>'FEATURE','title'=>'虛擬社區','intro'=>'交流和參與組織活動的線上平台。讓志願者、支持者和參與者能夠連結起來，分享資源、經驗和想法。','tags'=>'["學習","交流"]','url'=>'#','thumbnail'=>'/features/4_community.png','user_id'=>1,'public'=>0,'published'=>1],
             ['organization_id'=>11,
@@ -39,7 +39,7 @@ class ArticleSeeder extends Seeder
             'intro'=>'',
             'content'=>'澳門公務人員聯合總會青年委員會及行政公職局聯合舉辦『慶祝六一兒童節填色比賽』。優勝者將有豐富的獎賞及獎狀。每位參賽者交稿時可獲紀念品一份，歡迎本澳公務人員就讀幼稚園/小學之子女參加。',
             'tags'=>'["學習","交流"]',
-            'url'=>'https://wj.qq.com/r/login.html?s_url=https%3A%2F%2Fwj.qq.com%2Fs2%2F14547749%2Fkqtl%2F&sid=14547749&hash=kqtl&login_type=unite&scene_type=respondent',
+            'url'=>'/forms/3',
             'thumbnail'=>'',
             'user_id'=>1,
             'public'=>1,

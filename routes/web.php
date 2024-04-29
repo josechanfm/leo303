@@ -60,7 +60,6 @@ Route::group([
     Route::get('membership', [App\Http\Controllers\Member\MembershipController::class, 'index'])->name('member.membership');
     Route::resource('events', App\Http\Controllers\Member\EventController::class)->names('member.events');
     Route::resource('entries', App\Http\Controllers\Member\EntryController::class)->names('member.entries');
-    Route::get('sphere', [App\Http\Controllers\Member\SphereController::class, 'index'])->name('member.sphere');
 });
 
 //Manage
