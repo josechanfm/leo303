@@ -100,15 +100,15 @@ class ConfigSeeder extends Seeder
                   {"value":"general","label":"總務小組"},{"value":"venue_setup","label":"場地佈置"}
                  ]'
             ],
-            ['organization_id'=>0,'key'=>'regions','value'=>
+            ['organization_id'=>0,'key'=>'parishes','value'=>
                 '[
-                    {"value":"F","label":"花地瑪堂區"},
-                    {"value":"A","label":"聖安多尼堂區"},
-                    {"value":"S","label":"大堂區"},
-                    {"value":"Z","label":"望德堂區"},
-                    {"value":"L","label":"風順堂區"},
-                    {"value":"C","label":"嘉模堂區(氹仔)"},
-                    {"value":"F","label":"聖方濟各堂區(路環)"}
+                    {"value":"F","label_zh":"花地瑪堂區","lable_en":"Nossa Senhora de Fátima"},
+                    {"value":"A","label_zh":"聖安多尼堂區","lable_en":"Santo António"},
+                    {"value":"S","label_zh":"大堂區","lable_en":"Sé"},
+                    {"value":"Z","label_zh":"望德堂區","lable_en":"São Lázaro"},
+                    {"value":"L","label_zh":"風順堂區","lable_en":"São Lourenço"},
+                    {"value":"C","label_zh":"嘉模堂區(氹仔)","lable_en":"Novo campus da Universidade de Macau"},
+                    {"value":"F","label_zh":"聖方濟各堂區(路環)","lable_en":"São Francisco Xavier"}
                 ]'
             ]
         ];

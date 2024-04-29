@@ -61,8 +61,8 @@
         :validate-messages="validateMessages"
       >
         <a-input type="hidden" v-model:value="modal.data.id" />
-        <a-form-item :label="$t('region')" name="region" :rules="[{ required: true }]">
-          <a-select v-model:value="modal.data.region" :options="regions" />
+        <a-form-item :label="$t('parish')" name="parish" :rules="[{ required: true }]">
+          <a-select v-model:value="modal.data.parish" :options="parishes" />
         </a-form-item>
         <a-form-item
           :label="$t('abbreviation')"
@@ -77,18 +77,14 @@
         >
           <a-input v-model:value="modal.data.territory" />
         </a-form-item> -->
-        <a-form-item :label="$t('country')" name="country">
-          <a-input v-model:value="modal.data.country" />
+        <a-form-item :label="$t('name_zh')" name="name_zh">
+          <a-input v-model:value="modal.data.name_zh" />
         </a-form-item>
-        <a-form-item
-          :label="$t('full_name')"
-          name="full_name"
-          :rules="[{ required: true }]"
-        >
-          <a-input v-model:value="modal.data.full_name" />
+        <a-form-item :label="$t('name_en')" name="name_en">
+          <a-input v-model:value="modal.data.name_zh" />
         </a-form-item>
-        <a-form-item :label="$t('title')" name="title">
-          <a-input v-model:value="modal.data.title" />
+        <a-form-item :label="$t('name_pt')" name="name_pt">
+          <a-input v-model:value="modal.data.name_zh" />
         </a-form-item>
         <a-form-item :label="$t('email')" name="email">
           <a-input v-model:value="modal.data.email" />
@@ -185,9 +181,9 @@ export default {
           i18n: "abbreviation",
           dataIndex: "abbr",
         },{
-          title: "Full name",
-          i18n: "full_name",
-          dataIndex: "full_name",
+          title: "Name",
+          i18n: "name_zh",
+          dataIndex: "name_zh",
         },{
           title: "Email",
           i18n: "email",
@@ -295,9 +291,9 @@ export default {
       });
     },
     getOptionLabel(options, itemValue){
-      if(options[this.$t('lang')]){
-        const option=options[this.$t('lang')].find(o=>o.value==itemValue)
-        return option?option.label:null
+      if(options){
+        const option=options.find(o=>o.value==itemValue)
+        return option?option['label_'+this.$t('lang')]:null
       }
       return null
     }
