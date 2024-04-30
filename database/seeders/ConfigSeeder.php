@@ -86,20 +86,6 @@ class ConfigSeeder extends Seeder
                   "card_14": {"name":"Card 14","background": "card_03.png","logo": "site_logo.png","font_style": "font-family:sans-serif;color:white"}
                 }'
             ],
-            ['organization_id'=>0,'key'=>'staff_options','value'=>
-                '[{"value":"parent","label":"家長義工"},
-                  {"value":"student","label":"學生義工"},
-                  {"value":"weighting","label":"過磅工作人員(裁判人員或已有相關工作經驗優先)"},
-                  {"value":"mc_match","label":"賽事司儀(已有相關工作經驗優先)"},
-                  {"value":"checker","label":"檢錄組(已有相關工作經驗優先)"},
-                  {"value":"score_digital","label":"電子計分操作員(已持有IJF國際柔道賽事計時記分系統操作員培訓優先報名)"},
-                  {"value":"score_manual","label":"計時記分操作員(手動計時記分)"},
-                  {"value":"control","label":"司令台(已有相關工作經驗優先)"},
-                  {"value":"mc_award","label":"頒獎禮司儀(已有相關工作經驗優先)"},
-                  {"value":"helper_award","label":"頒獎小組(已有相關工作經驗優先)"},
-                  {"value":"general","label":"總務小組"},{"value":"venue_setup","label":"場地佈置"}
-                 ]'
-            ],
             ['organization_id'=>0,'key'=>'parishes','value'=>
                 '[
                     {"value":"F","label_zh":"花地瑪堂區","label_en":"Nossa Senhora de Fátima"},
@@ -109,6 +95,23 @@ class ConfigSeeder extends Seeder
                     {"value":"L","label_zh":"風順堂區","label_en":"São Lourenço"},
                     {"value":"C","label_zh":"嘉模堂區(氹仔)","label_en":"Novo campus da Universidade de Macau"},
                     {"value":"F","label_zh":"聖方濟各堂區(路環)","label_en":"São Francisco Xavier"}
+                ]'
+            ],
+            ['organization_id'=>0,'key'=>'field_types','value'=>
+                '[
+                    { "value": "input", "label_zh": "單行文字","label_en":"Text","label_pt":"Text"},
+                    { "value": "textarea", "label_zh": "多行文字","label_en":"Multi Text","label_pt":"Multi Text" },
+                    { "value": "largetext", "label_zh": "長編文字" ,"label_en":"Long Text","label_pt":"Long Text"},
+                    { "value": "richtext", "label_zh": "格式文字" ,"label_en":"Rich Text","label_pt":"Rich Text"},
+                    { "value": "radio", "label_zh": "單項選擇" ,"label_en":"Radio","label_pt":"Radio"},
+                    { "value": "checkbox", "label_zh": "多項選擇" ,"label_en":"Checkbox","label_pt":"Checkbox"},
+                    { "value": "dropdown", "label_zh": "下拉清單" ,"label_en":"Dropdown","label_pt":"Dropdown"},
+                    { "value": "true_false", "label_zh": "真/偽" ,"label_en":"True/False","label_pt":"True/False"},
+                    { "value": "date", "label_zh": "日期格式" ,"label_en":"Date","label_pt":"Date"},
+                    { "value": "datetime", "label_zh": "日期時間" ,"label_en":"Date time","label_pt":"Date time"},
+                    { "value": "email", "label_zh": "電郵欄位" ,"label_en":"E-mail","label_pt":"E-mail"},
+                    { "value": "number", "label_zh": "數值欄位" ,"label_en":"Number","label_pt":"Numero"},
+                    { "value": "photo", "label_zh": "上傳相片" ,"label_en":"Photo","label_pt":"Photo"}
                 ]'
             ]
         ];

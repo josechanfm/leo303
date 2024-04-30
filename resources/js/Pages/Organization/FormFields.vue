@@ -6,6 +6,7 @@
     >
       Create Field
     </button>
+    {{fieldTypes}}
     <div class="ant-table">
       <div class="ant-table-container">
         <table style="table-layout: auto">
@@ -69,6 +70,7 @@
             v-model:value="modal.data.type"
             placeholder="Field Type"
             :options="fieldTypes"
+            :fieldNames="{value:value,label:'label_zh'}"
             @change="onChangeType"
           />
         </a-form-item>
@@ -157,7 +159,7 @@ export default {
     OrganizationLayout,
     draggable: VueDraggableNext,
   },
-  props: ["form", "fields"],
+  props: ["form", "fields","fieldTypes"],
   data() {
     return {
       breadcrumb: [
@@ -170,7 +172,7 @@ export default {
         title: "Modal",
         mode: "",
       },
-      fieldTypes: [
+      fieldTypes2: [
         { value: "input", label: "單行文字" },
         { value: "textarea", label: "多行文字" },
         { value: "largetext", label: "長編文字" },
@@ -253,28 +255,6 @@ export default {
           value: "clear",
           label: "Reset",
           template: [{ value: "option_1", label: "option_1" }],
-        },
-        {
-          value: "belt",
-          label: "Belt",
-          template: [
-            { value: "white", label: "白帶" },
-            { value: "yellow", label: "黃帶" },
-            { value: "orange", label: "橙帶" },
-            { value: "green", label: "綠帶" },
-            { value: "blue", label: "藍帶" },
-            { value: "brown", label: "啡帶" },
-            { value: "dan_1", label: "黑帶1段" },
-            { value: "dan_2", label: "黑帶2段" },
-            { value: "dan_3", label: "黑帶3段" },
-            { value: "dan_4", label: "黑帶4段" },
-            { value: "dan_5", label: "黑帶5段" },
-            { value: "dan_6", label: "黑帶6段" },
-            { value: "dan_7", label: "黑帶7段" },
-            { value: "dan_8", label: "黑帶8段" },
-            { value: "dan_9", label: "黑帶9段" },
-            { value: "dan_10", label: "黑帶10段" },
-          ],
         },
       ],
     };

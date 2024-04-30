@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Organization;
 
 use App\Http\Controllers\Controller;
+use App\Models\Config;
 use App\Models\Organization;
 use App\Models\Form;
 use App\Models\FormField;
@@ -26,6 +27,7 @@ class FormFieldController extends Controller
     {
         $this->authorize('view', $form);
         return Inertia::render('Organization/FormFields', [
+            'fieldTypes'=>Config::item('field_types'),
             'form' => $form,
             'fields' => $form->fields,
         ]);
