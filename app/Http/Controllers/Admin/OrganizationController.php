@@ -20,8 +20,8 @@ class OrganizationController extends Controller
      */
     public function index()
     {
-        $organizations=Organization::with('users')->get();
-        // dd($organizations);
+        $organizations=Organization::with('users')->with('members')->get();
+
         return Inertia::render('Admin/Organizations',[
             'parishes'=>Config::item('parishes'),
             'organizations'=>$organizations,
@@ -117,6 +117,7 @@ class OrganizationController extends Controller
         Password::broker(config('fortify.passwords'))->sendResetLink(
             [ 'email' => $user->email ]
         );
-
     }
+
+
 }

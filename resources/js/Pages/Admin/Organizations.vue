@@ -119,12 +119,13 @@
             :unCheckedValue="0"
           />
         </a-form-item>
+        {{modal.data.members}}
         <a-form-item :label="$t('manager')" name="manager">
           <a-select
             v-model:value="modal.data.user_ids"
             mode="multiple"
-            :options="users"
-            :fieldNames="{ value: 'id', label: 'name' }"
+            :options="modal.data.members"
+            :fieldNames="{ value: 'id', label: 'given_name' }"
           />
         </a-form-item>
       </a-form>
