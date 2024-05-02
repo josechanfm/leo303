@@ -5,7 +5,6 @@ import { Modal } from 'ant-design-vue';
 export default {
     components: {
         WebLayout
-
     },
     props: ['organizations'],
     data() {
@@ -20,12 +19,10 @@ export default {
         onFinish(values) {
             this.$inertia.post(route('registration.store'), this.formState, {
                 onSuccess: (page) => {
-                    console.log('success')
                     console.log(page);
                     //this.modal.isOpen = false;
                 },
                 onError: (err) => {
-                    console.log('error')
                     console.log(err.code);
                       Modal.error({
                             title: this.$t('registration_error'),

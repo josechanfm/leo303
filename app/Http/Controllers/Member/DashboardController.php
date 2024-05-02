@@ -21,7 +21,7 @@ class DashboardController extends Controller
         $member->organizations;
         return Inertia::render('Member/Dashboard', [
             'member' => $member,
-            'features'=>Article::whereBelongsTo(session('organization'))->where('category_code','FEATURE')->get(),
+            'features'=>Article::whereBelongsTo(session('organization'))->where('category_code','FEATURE')->orderBy('id','DESC')->limit(4)->get(),
             'articles' => Article::whereBelongsTo(session('organization'))->where('category_code','NEWS')->get(),
             'card_style' => Config::item('card_styles')[session('organization')->card_style],
         ]);

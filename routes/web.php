@@ -42,6 +42,7 @@ Route::get('/language/{language}', function ($language) {
 
 Route::resource('forms', App\Http\Controllers\FormController::class)->names('forms');
 Route::get('form/{form}/entry/{entry}/success', [App\Http\Controllers\Organization\EntryController::class, 'entrySuccess'])->name('form.entry.success');
+Route::get('content', [App\Http\Controllers\ContentController::class,'page'])->name('content');
 
 //Member
 Route::group([
@@ -74,7 +75,7 @@ Route::group([
 ], function () {
     Route::get('/', [App\Http\Controllers\Organization\DashboardController::class, 'index'])->name('manage');
     Route::resource('organizations', App\Http\Controllers\Organization\OrganizationController::class)->names('manage.organizations');
-    Route::post('organization/delete_logo/{organization}', [App\Http\Controllers\Organization\OrganizationController::class,'deleteLogo'])->name('admin.organization.deleteLogo');
+    Route::post('organization/delete_logo/{organization}', [App\Http\Controllers\Organization\OrganizationController::class,'deleteLogo'])->name('manage.organization.deleteLogo');
     Route::get('/{organization}/medias', [App\Http\Controllers\Organization\MediaController::class, 'getMedias'])->name('manage.medias');
     // Route::get('/select/{organization}', [App\Http\Controllers\Organization\DashboardController::class, 'select'])->name('manage.select');
     Route::resource('members', App\Http\Controllers\Organization\MemberController::class)->names('manage.members');

@@ -1,11 +1,10 @@
 <script>
-import MemberLayout from '@/Layouts/MemberLayout.vue';
-import CertificateCard from '@/Pages/CertificateCard.vue';
+import WebLayout from '@/Layouts/WebLayout.vue';
+
 
 export default {
     components: {
-        MemberLayout,
-        CertificateCard
+        WebLayout,
     },
     props:['article'],
     data() {
@@ -17,7 +16,7 @@ export default {
 </script>
 
 <template>
-    <MemberLayout title="Dashboard">
+    <WebLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 News & Events
@@ -32,7 +31,7 @@ export default {
             </div>
         </div>
         
-    </MemberLayout>
+    </WebLayout>
 
     
 </template>

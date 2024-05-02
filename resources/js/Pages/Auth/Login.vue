@@ -78,7 +78,7 @@ const submit = () => {
       </div>
       
       <div class="text-right">
-          <a>Register</a>
+          <inertia-link :href="route('registration')">{{$t('register')}}</inertia-link>
         </div>
 
       <div class="flex items-center justify-end mt-4">

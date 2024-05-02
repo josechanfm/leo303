@@ -15,9 +15,9 @@ const props = defineProps({
         <img src="/images/site_logo.png" alt="Thumnail" class="w-30 h-30 mr-4"/>
           
         <div>
-          <inertia-link :href="route('article.item', { t: article.uuid })">
+          <a :href="route('article.item', { t: article.uuid })" target="_blank">
             <h2 class="text-xl font-bold">{{ article.title }}</h2>
-          </inertia-link>
+          </a>
           <div class="flex items-center mt-2">
             <span class="bg-gray-200 text-gray-700 py-1 px-2 rounded-full text-sm">{{ article.category_code }}</span>
           </div>
@@ -28,7 +28,7 @@ const props = defineProps({
             <div v-else>
               {{ article.content.replace(/<[^>]+>/g, '').substring(0, 100) }} ...
             </div>
-            <a :href="article.url">{{ $t('url_link') }}</a>
+            <a :href="article.url" target="_blank">{{ $t('url_link') }}</a>
           </p>
         </div>
       </div>

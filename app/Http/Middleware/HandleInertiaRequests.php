@@ -40,6 +40,8 @@ class HandleInertiaRequests extends Middleware
         //dd(Auth()->user());
         //dd($request->is(['manage', 'manage/*']));
         //}
+        //dd(auth()->user());
+        //dd($request->all());
         $rolePermissions = $request->user() ? $request->user()->getPermissionsViaRoles()->pluck('name')->toArray() : [];
         $userPermission = $request->user() ? $request->user()->permissions()->pluck('name')->toArray() : [];
         $permissions = array_merge($rolePermissions, $userPermission);

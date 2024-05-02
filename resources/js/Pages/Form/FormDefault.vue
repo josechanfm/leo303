@@ -7,7 +7,7 @@
     </template>
     <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
       <div
-        class="mt-8 p-4 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg"
+        class="mt-8 p-4 bg-white overflow-hidden shadow sm:rounded-lg"
       >
         <div class="text-center">
           <a-typography-title :level="3">{{ form.title }}</a-typography-title>
