@@ -148,7 +148,7 @@ const showingNavigationDropdown = ref(false);
               <a :href="route('login')">
                 <ResponsiveNavLink as="button"> {{ $t('login') }}</ResponsiveNavLink>
               </a>
-              <a :href="route('register')">
+              <a :href="route('registration')">
                 <ResponsiveNavLink as="button"> {{ $t("register") }} </ResponsiveNavLink>
               </a>
             </template>
