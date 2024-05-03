@@ -230,11 +230,11 @@ export default {
 
     },
     onRemoveImage() {
-      this.farticle.thumbial_upload = null
+      this.article.thumbial_upload = null
       this.previewImage = null
     },
     onDeleteImage(article) {
-      this.$inertia.post(route('admin.article.deleteImage', this.article), {
+      this.$inertia.post(route('manage.article.deleteImage', this.article), {
         onSuccess: (page) => {
           console.log(page)
         },

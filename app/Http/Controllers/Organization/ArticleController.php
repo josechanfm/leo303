@@ -118,10 +118,10 @@ class ArticleController extends Controller
         }
         return redirect()->back();
     }
-    public function deleteImage(Feature $feature){
-        unlink(public_path($feature->image));
-        $feature->image=null;
-        $feature->save();
+    public function deleteImage(Article $article){
+        unlink(public_path($article->thumbnail));
+        $article->thumbnail=null;
+        $article->save();
         return redirect()->back();
     }
 
