@@ -6,16 +6,12 @@
             </h2>
         </template>
         <p>Admin Dashboard</p>
-        <template v-if="organizations.length>0">
-            <a :href="route('manage')">Organization Management</a>
-        </template>
     </AdminLayout>
 
 </template>
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-
 
 export default {
     components: {

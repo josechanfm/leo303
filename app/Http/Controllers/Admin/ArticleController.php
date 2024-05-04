@@ -18,13 +18,13 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Admin/Articles',[
             // 'classifies'=>Classify::whereBelongsTo(session('organization'))->get(),
             'organizations'=>Organization::all(),
             'articleCategories'=>Config::item('article_categories'),
-            'articles'=>Article::all()
+            'articles'=>Article::paginate()
         ]);
     }
 
@@ -52,8 +52,6 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $data=$request->all();
-        $data['organization_id']=session('organization')->id;
-        //$data['uuid']=Str::uuid();
         $data['user_id']=auth()->user()->id;
         $data['author']=auth()->user()->name;
         Article::create($data);

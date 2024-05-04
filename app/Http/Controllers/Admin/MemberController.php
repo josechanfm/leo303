@@ -17,10 +17,10 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Admin/Members',[
-            'members'=>Member::with('organizations')->with('user')->get(),
+            'members'=>Member::with('organizations')->with('user')->paginate($request->per_page),
             'organizations'=>Organization::all(),
             'users'=>User::whereNotIn('id',Member::whereNotNull('user_id')->get()->pluck('user_id'))->get()
         ]);

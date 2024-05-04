@@ -13,7 +13,7 @@
     </button>
     <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-        <a-table :dataSource="members" :columns="columns">
+        <a-table :dataSource="members.data" :columns="columns" :pagination="pagination" @change="onPaginationChange">
           <template #headerCell="{ column }">
             {{ column.i18n ? $t(column.i18n) : column.title }}
           </template>
@@ -57,6 +57,7 @@
         autocomplete="off"
         :rules="rules"
         :validate-messages="validateMessages"
+        @finish="onFormFinish"
       >
         <a-form-item :label="$t('organizations')" name="organization_ids">
           <a-select
@@ -122,20 +123,10 @@
                 
       </a-form>
       <template #footer>
-        <a-button
-          v-if="modal.mode == 'EDIT'"
-          key="Update"
-          type="primary"
-          @click="updateRecord()"
-          >{{ $t("update") }}</a-button
-        >
-        <a-button
-          v-if="modal.mode == 'CREATE'"
-          key="Store"
-          type="primary"
-          @click="storeRecord()"
-          >{{ $t("add") }}</a-button
-        >
+        <a-button @click="$refs.modalRef.$emit('finish')" type="primary">
+          <span v-if="modal.mode=='EDIT'">{{ $t('update') }}</span>
+          <span v-if="modal.mode=='CREATE'">{{ $t('create') }}</span>
+        </a-button>
       </template>
     </a-modal>
     <!-- Modal End-->
@@ -160,7 +151,11 @@ export default {
         title: "Modal",
         mode: "",
       },
-      teacherStateLabels: {},
+      pagination: {
+        total: this.members.total,
+        current: this.members.current_page,
+        pageSize: this.members.per_page,
+      },
       columns: [
         {
           title: "Given Name",
@@ -212,6 +207,12 @@ export default {
   },
   created() {},
   methods: {
+    onPaginationChange(page, filters, sorter) {
+      this.$inertia.get(route("admin.members.index"), {
+        page: page.current,
+        per_page: page.pageSize,
+      });
+    },
     filterOption(input, option) {
       return option.full_name.toLowerCase().indexOf(input.toLowerCase()) >= 0;
     },
@@ -229,47 +230,49 @@ export default {
       this.modal.title = "edit";
       this.modal.isOpen = true;
     },
-    storeRecord() {
+    onFormFinish(){
       this.$refs.modalRef
         .validateFields()
         .then(() => {
-          this.$inertia.post(route("admin.members.store"), this.modal.data, {
-            onSuccess: (page) => {
-              this.modal.data = {};
-              this.modal.isOpen = false;
-            },
-            onError: (err) => {
-              console.log(err);
-            },
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    updateRecord() {
-      console.log(this.modal.data);
-      this.$refs.modalRef
-        .validateFields()
-        .then(() => {
-          this.$inertia.patch(
-            route("admin.members.update", this.modal.data.id),
-            this.modal.data,
-            {
-              onSuccess: (page) => {
-                this.modal.data = {};
-                this.modal.isOpen = false;
-                console.log(page);
-              },
-              onError: (error) => {
-                console.log(error);
-              },
+            if(this.modal.mode=='CREATE'){
+              this.storeRecord(this.modal.data)
+              this.modal.isOpen=false
             }
-          );
+            if(this.modal.mode=='EDIT'){
+              this.updateRecord(this.modal.data)
+              this.modal.isOpen=false
+            }
         })
         .catch((err) => {
           console.log("error", err);
         });
+    },
+    storeRecord() {
+      this.$inertia.post(route("admin.members.store"), this.modal.data, {
+        onSuccess: (page) => {
+          this.modal.data = {};
+          this.modal.isOpen = false;
+        },
+        onError: (err) => {
+          console.log(err);
+        },
+      });
+    },
+    updateRecord() {
+      this.$inertia.patch(
+        route("admin.members.update", this.modal.data.id),
+        this.modal.data,
+        {
+          onSuccess: (page) => {
+            this.modal.data = {};
+            this.modal.isOpen = false;
+            console.log(page);
+          },
+          onError: (error) => {
+            console.log(error);
+          },
+        }
+      );
     },
     deleteRecord(record) {
       this.$inertia.delete(route("admin.members.destroy", record.id), {

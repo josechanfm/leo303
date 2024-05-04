@@ -14,7 +14,7 @@
     </div>
     <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-        <a-table :dataSource="articles" :columns="columns">
+        <a-table :dataSource="articles.data" :columns="columns" :pagination="pagination" @change="onPaginationChange">
           <template #headerCell="{ column }">
             {{ column.i18n ? $t(column.i18n) : column.title }}
           </template>
@@ -157,7 +157,11 @@ export default {
         title: "Modal",
         mode: "",
       },
-      teacherStateLabels: {},
+      pagination: {
+        total: this.articles.total,
+        current: this.articles.current_page,
+        pageSize: this.articles.per_page,
+      },
       editor: ClassicEditor,
       editorData: "<p>Content of the editor.</p>",
       editorConfig: {
@@ -228,6 +232,12 @@ export default {
   created() {},
   mounted() {},
   methods: {
+    onPaginationChange(page, filters, sorter) {
+      this.$inertia.get(route("admin.articles.index"), {
+        page: page.current,
+        per_page: page.pageSize,
+      });
+    },
     createRecord() {
       this.modal.data = {};
       this.modal.data.public = 0;

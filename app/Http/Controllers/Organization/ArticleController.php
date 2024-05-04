@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Config;
 use App\Models\Classify;
 use App\Models\Article;
+use App\Models\Organization;
 use Illuminate\Support\Str;
 
 class ArticleController extends Controller
@@ -19,10 +20,11 @@ class ArticleController extends Controller
      */
     public function index()
     {
+        //dd(session('organization'));
         return Inertia::render('Organization/Articles',[
             'classifies'=>Classify::whereBelongsTo(session('organization'))->get(),
             'articleCategories'=>Config::item('article_categories'),
-            'articles'=>Article::all()
+            'articles'=>Article::whereBelongsTo(session('organization'))->get()
         ]);
     }
 
@@ -51,7 +53,6 @@ class ArticleController extends Controller
     {
         $data=$request->all();
         $data['organization_id']=session('organization')->id;
-        //$data['uuid']=Str::uuid();
         $data['user_id']=auth()->user()->id;
         $data['author']=auth()->user()->name;
         Article::create($data);

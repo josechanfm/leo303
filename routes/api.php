@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('config/item', function(Request $request){
-    return response()->json(Config::where('key',$request->key)->get());
+    return response()->json(Config::item($request->key));
 
 })->name('api.config.item');        
 

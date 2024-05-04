@@ -27,8 +27,8 @@
           <PieChartOutlined />
         </template>
         <span>
-          <inertia-link :href="route('admin.features.index')">
-            {{ $t("feature") }}
+          <inertia-link :href="route('admin.articles.index')">
+            {{ $t("articles") }}
           </inertia-link>
         </span>
       </a-menu-item>

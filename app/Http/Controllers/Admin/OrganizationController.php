@@ -18,13 +18,11 @@ class OrganizationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $organizations=Organization::with('users')->with('members')->get();
-
         return Inertia::render('Admin/Organizations',[
             'parishes'=>Config::item('parishes'),
-            'organizations'=>$organizations,
+            'organizations'=>Organization::with('users')->with('members')->paginate($request->per_page),
             'users'=>User::all()
         ]);
     }

@@ -36,12 +36,13 @@
       <a-form
         ref="modalRef"
         :model="modal.data"
-        name="Teacher"
+        name="config"
         :label-col="{ span: 8 }"
         :wrapper-col="{ span: 16 }"
         autocomplete="off"
         :rules="rules"
         :validate-messages="validateMessages"
+        @finish="onFormFinish"
       >
         <a-input type="hidden" v-model:value="modal.data.id" />
         <a-form-item :label="$t('organization')" name="organization_id">
@@ -62,20 +63,10 @@
         </a-form-item>
       </a-form>
       <template #footer>
-        <a-button
-          v-if="modal.mode == 'EDIT'"
-          key="Update"
-          type="primary"
-          @click="updateRecord()"
-          >{{ $t("update") }}</a-button
-        >
-        <a-button
-          v-if="modal.mode == 'CREATE'"
-          key="Store"
-          type="primary"
-          @click="storeRecord()"
-          >{{ $t("add") }}</a-button
-        >
+        <a-button @click="$refs.modalRef.$emit('finish')" type="primary">
+          <span v-if="modal.mode=='EDIT'">{{ $t('update') }}</span>
+          <span v-if="modal.mode=='CREATE'">{{ $t('create') }}</span>
+        </a-button>
       </template>
     </a-modal>
     <!-- Modal End-->
@@ -152,38 +143,45 @@ export default {
     },
     editRecord(record) {
       this.modal.data = { ...record };
+      this.modal.data.value=JSON.stringify(this.modal.data.value)
       this.modal.mode = "EDIT";
       this.modal.title = "edit";
       this.modal.isOpen = true;
     },
-    storeRecord() {
+    onFormFinish(){
       this.$refs.modalRef
         .validateFields()
         .then(() => {
-          this.$inertia.post(route("admin.configs.store"), this.modal.data, {
-            onSuccess: (page) => {
-              this.modal.data = {};
-              this.modal.isOpen = false;
-            },
-            onError: (err) => {
-              console.log(err);
-            },
-          });
+            if(this.modal.mode=='CREATE'){
+              this.storeRecord(this.modal.data)
+              this.modal.isOpen=false
+            }
+            if(this.modal.mode=='EDIT'){
+              this.updateRecord(this.modal.data)
+              this.modal.isOpen=false
+            }
         })
         .catch((err) => {
-          console.log(err);
+          console.log("error", err);
         });
     },
-    updateRecord() {
-      console.log(this.modal.data);
+    storeRecord(data) {
+        this.$inertia.post(route("admin.configs.store"), data, {
+          onSuccess: (page) => {
+            data = {};
+          },
+          onError: (err) => {
+            console.log(err);
+          },
+        });
+    },
+    updateRecord(data) {
+      data.value=JSON.parse(data.value);
       this.$inertia.patch(
-        route("admin.configs.update", this.modal.data.id),
-        this.modal.data,
+        route("admin.configs.update", data.id),data,
         {
           onSuccess: (page) => {
-            this.modal.data = {};
-            this.modal.isOpen = false;
-            console.log(page);
+            data = {}
           },
           onError: (error) => {
             console.log(error);

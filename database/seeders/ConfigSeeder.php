@@ -16,21 +16,25 @@ class ConfigSeeder extends Seeder
      */
     public function run()
     {
-        $data=[
-            ['organization_id'=>0,'key'=>'article_categories','value'=>
+        $data = [
+            [
+                'organization_id' => 0, 'key' => 'article_categories', 'value' =>
                 '[{"value":"FEATURE","label":"Feature"},{"value":"BLOG","label":"Blog"},{"value":"NEWS","label":"News"}]'
             ],
-            ['organization_id'=>0,'key'=>'bulletin_categories','value'=>
+            [
+                'organization_id' => 0, 'key' => 'bulletin_categories', 'value' =>
                 '[{"value": "CMTE","label": "Committee"}, {"value": "GEN","label": "General"}]',
             ],
-            ['organization_id'=>0,'key'=>'message_categories','value'=>
+            [
+                'organization_id' => 0, 'key' => 'message_categories', 'value' =>
                 '[{"value": "ALL","label": "Everyone"}, 
                   {"value": "ORG","label": "Organization"},
                   {"value": "MEM","label": "Member Only"},
                   {"value": "IND","label": "Individual"}
                  ]',
             ],
-            ['organization_id'=>0,'key'=>'event_categories','value'=>
+            [
+                'organization_id' => 0, 'key' => 'event_categories', 'value' =>
                 '[{
                     "value": "TRANING",
                     "label": "Traning"
@@ -39,7 +43,8 @@ class ConfigSeeder extends Seeder
                     "label": "Course"
                 }]'
             ],
-            ['organization_id'=>0,'key'=>'certificate_categories','value'=>
+            [
+                'organization_id' => 0, 'key' => 'certificate_categories', 'value' =>
                 '[{
                     "value": "BELT",
                     "label": "Belt"
@@ -54,7 +59,8 @@ class ConfigSeeder extends Seeder
                     "label": "Other"
                 }]',
             ],
-            ['organization_id'=>0,'key'=>'attendance_status','value'=>
+            [
+                'organization_id' => 0, 'key' => 'attendance_status', 'value' =>
                 '[{
                         "value": "ATTEND",
                         "label": "Attend"
@@ -69,7 +75,8 @@ class ConfigSeeder extends Seeder
                         "label": "Absent"
                 }]'
             ],
-            ['organization_id'=>0,'key'=>'card_styles','value'=>
+            [
+                'organization_id' => 0, 'key' => 'card_styles', 'value' =>
                 '{"card_01": {"name":"Card 01","background": "card_01.png","logo": "site_logo.png","font_style": "font-family:sans-serif;color:#c24641"},
                   "card_02": {"name":"Card 02","background": "card_02.png","logo": "site_logo.png","font_style": "font-family:sans-serif;color:white"},
                   "card_03": {"name":"Card 03","background": "card_03.png","logo": "site_logo.png","font_style": "font-family:sans-serif;color:white"},
@@ -86,7 +93,8 @@ class ConfigSeeder extends Seeder
                   "card_14": {"name":"Card 14","background": "card_03.png","logo": "site_logo.png","font_style": "font-family:sans-serif;color:white"}
                 }'
             ],
-            ['organization_id'=>0,'key'=>'parishes','value'=>
+            [
+                'organization_id' => 0, 'key' => 'parishes', 'value' =>
                 '[
                     {"value":"F","label_zh":"花地瑪堂區","label_en":"Nossa Senhora de Fátima"},
                     {"value":"A","label_zh":"聖安多尼堂區","label_en":"Santo António"},
@@ -97,7 +105,8 @@ class ConfigSeeder extends Seeder
                     {"value":"F","label_zh":"聖方濟各堂區(路環)","label_en":"São Francisco Xavier"}
                 ]'
             ],
-            ['organization_id'=>0,'key'=>'field_types','value'=>
+            [
+                'organization_id' => 0, 'key' => 'field_types', 'value' =>
                 '[
                     { "value": "input", "label_zh": "單行文字","label_en":"Text","label_pt":"Text"},
                     { "value": "textarea", "label_zh": "多行文字","label_en":"Multi Text","label_pt":"Multi Text" },
@@ -113,9 +122,34 @@ class ConfigSeeder extends Seeder
                     { "value": "number", "label_zh": "數值欄位" ,"label_en":"Number","label_pt":"Numero"},
                     { "value": "photo", "label_zh": "上傳相片" ,"label_en":"Photo","label_pt":"Photo"}
                 ]'
+            ],
+            [
+                'organization_id' => 0, 'key' => 'parishes', 'value' =>
+                '[
+                    {
+                        "value": "agree", "label": "Level of Agreement", "template": [
+                            {"value": "5","label": "Strongly Agree"},
+                            {"value": "4","label": "Argree"},
+                            {"value": "3","label": "Neutual"},
+                            {"value": "2","label": "Disagree"},
+                            {"value": "1","label": "Strongly Disagree"},
+                            {"value": "0","label": "Not Applicable"}
+                        ]
+                    },
+                    {
+                        "value": "gender","label": "Gender","template": [
+                            {"value": "M","label": "Male"},
+                            {"value": "F","label": "Female"}
+                        ]
+                    },
+                    {"value": "clear","label": "Reset","template": [
+                            {"value": "option_1","label": "option_1"}
+                        ]
+                    }
+                ]'
             ]
         ];
-        foreach($data as $d){
+        foreach ($data as $d) {
             DB::table('configs')->insert($d);
             //Config::create($d);
         }

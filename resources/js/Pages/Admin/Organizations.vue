@@ -10,7 +10,7 @@
     </button>
     <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-        <a-table :dataSource="organizations" :columns="columns">
+        <a-table :dataSource="organizations.data" :columns="columns" :pagination="pagination" @change="onPaginationChange">
           <template #headerCell="{ column }">
             {{ column.i18n ? $t(column.i18n) : column.title }}
           </template>
@@ -59,6 +59,7 @@
         autocomplete="off"
         :rules="rules"
         :validate-messages="validateMessages"
+        @finish="onFormFinish"
       >
         <a-form-item :label="$t('parish')" name="parish" :rules="[{ required: true }]">
           <a-select v-model:value="modal.data.parish" :options="parishes" :fieldNames="{value:'value',label:'label_'+$t('lang')}" />
@@ -119,7 +120,6 @@
             :unCheckedValue="0"
           />
         </a-form-item>
-        {{modal.data.members}}
         <a-form-item :label="$t('manager')" name="manager">
           <a-select
             v-model:value="modal.data.user_ids"
@@ -130,20 +130,10 @@
         </a-form-item>
       </a-form>
       <template #footer>
-        <a-button
-          v-if="modal.mode == 'EDIT'"
-          key="Update"
-          type="primary"
-          @click="updateRecord()"
-          >{{ $t("update") }}</a-button
-        >
-        <a-button
-          v-if="modal.mode == 'CREATE'"
-          key="Store"
-          type="primary"
-          @click="storeRecord()"
-          >{{ $t("add") }}</a-button
-        >
+        <a-button @click="$refs.modalRef.$emit('finish')" type="primary">
+          <span v-if="modal.mode=='EDIT'">{{ $t('update') }}</span>
+          <span v-if="modal.mode=='CREATE'">{{ $t('create') }}</span>
+        </a-button>
       </template>
     </a-modal>
     <!-- Modal End-->
@@ -166,6 +156,11 @@ export default {
         data: {},
         title: "Modal",
         mode: "",
+      },
+      pagination: {
+        total: this.organizations.total,
+        current: this.organizations.current_page,
+        pageSize: this.organizations.per_page,
       },
       organizationStates: [
         { value: "ACTIVE", label: "Active" },
@@ -225,6 +220,12 @@ export default {
   },
   created() {},
   methods: {
+    onPaginationChange(page, filters, sorter) {
+      this.$inertia.get(route("admin.organizations.index"), {
+        page: page.current,
+        per_page: page.pageSize,
+      });
+    },
     createRecord() {
       this.modal.data = {};
       this.modal.mode = "CREATE";
@@ -238,10 +239,24 @@ export default {
       this.modal.title = "Edit Record";
       this.modal.isOpen = true;
     },
-    storeRecord() {
+    onFormFinish(){
       this.$refs.modalRef
         .validateFields()
         .then(() => {
+            if(this.modal.mode=='CREATE'){
+              this.storeRecord(this.modal.data)
+              this.modal.isOpen=false
+            }
+            if(this.modal.mode=='EDIT'){
+              this.updateRecord(this.modal.data)
+              this.modal.isOpen=false
+            }
+        })
+        .catch((err) => {
+          console.log("error", err);
+        });
+    },
+    storeRecord() {
           this.$inertia.post(route("admin.organizations.store"), this.modal.data, {
             onSuccess: (page) => {
               this.modal.data = {};
@@ -251,16 +266,8 @@ export default {
               console.log(err);
             },
           });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     },
     updateRecord() {
-      console.log(this.modal.data);
-      this.$refs.modalRef
-        .validateFields()
-        .then(() => {
           this.$inertia.patch(
             route("admin.organizations.update", this.modal.data.id),
             this.modal.data,
@@ -275,10 +282,6 @@ export default {
               },
             }
           );
-        })
-        .catch((err) => {
-          console.log("error", err);
-        });
     },
     deleteRecord(record) {
       this.$inertia.delete(route("admin.organizations.destroy", record.id), {
@@ -295,7 +298,7 @@ export default {
         const option=options.find(o=>o.value==itemValue)
         return option?option['label_'+this.$t('lang')]:null
       }
-      return null
+      return '--'
     }
   },
 };
