@@ -1,5 +1,5 @@
 <template>
-    <OrganizationLayout title="Dashboard">
+    <OrganizationLayout title="Organizations">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Club Managemnet
@@ -9,17 +9,16 @@
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
                         <inertia-link :href="route('manage.organizations.edit',record.id)" class="ant-btn">{{$t('edit')}}</inertia-link>
+                        <a-button @click="switchOrganization(record)" class="ant-btn">{{ $t('switch') }}..</a-button>
                         <!-- <inertia-link :href="route('organization.members.index',record.id)" class="ant-btn">Members</inertia-link>
                         <inertia-link :href="route('organization.forms.index',record.id)" class="ant-btn">Forms</inertia-link> -->
-                    </template>
-                    <template v-else-if="column.dataIndex=='state'">
-                        {{teacherStateLabels[text]}}
                     </template>
                     <template v-else>
                         {{record[column.dataIndex]}}
                     </template>
                 </template>
             </a-table>
+
     </OrganizationLayout>
 
 </template>
@@ -104,6 +103,9 @@ export default {
         createLogin(recordId){
             console.log('create login'+recordId);
 
+        },
+        switchOrganization(organization){
+            this.$inertia.post(route('manage.organization.switch',{organization:organization.id}))
         }
     },
 }

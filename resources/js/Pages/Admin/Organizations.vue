@@ -105,7 +105,7 @@
           <a-input v-model:value="modal.data.avatar" />
         </a-form-item>
         <a-form-item :label="$t('card_style')" name="card_style">
-          <a-input v-model:value="modal.data.card_style" />
+          <a-select v-model:value="modal.data.card_style" :options="cardStyles" />
         </a-form-item>
         <a-form-item :label="$t('content')" name="content">
           <a-textarea v-model:value="modal.data.content" />
@@ -162,6 +162,7 @@ export default {
         current: this.organizations.current_page,
         pageSize: this.organizations.per_page,
       },
+      cardStyles:[],
       organizationStates: [
         { value: "ACTIVE", label: "Active" },
         { value: "SUSPENDED", label: "Suspended" },
@@ -218,7 +219,14 @@ export default {
       },
     };
   },
-  created() {},
+  created() {
+    axios.get(route("api.config.item", { key: 'card_styles' })).then((resp) => {
+            Object.entries(resp.data).forEach(([key, card]) => {
+                console.log(card)
+                this.cardStyles.push({ value: key, label: card.name })
+            })
+        });
+  },
   methods: {
     onPaginationChange(page, filters, sorter) {
       this.$inertia.get(route("admin.organizations.index"), {

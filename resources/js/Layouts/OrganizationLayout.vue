@@ -105,11 +105,10 @@
           </nav>
         </header>
 
-        <div class="mx-6">
           <main>
             <slot />
           </main>
-        </div>
+
       </a-layout-content>
     </a-layout>
   </a-layout>

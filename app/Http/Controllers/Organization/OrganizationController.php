@@ -16,6 +16,10 @@ class OrganizationController extends Controller
         $this->authorizeResource(Organization::class);
     }
 
+    public function switch(Organization $organization){
+        session(['organization'=>$organization]);
+        return to_route('manage');
+    }
     /**
      * Display a listing of the resource.
      *

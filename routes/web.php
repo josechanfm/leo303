@@ -70,10 +70,11 @@ Route::group([
         'auth:sanctum',
         config('jetstream.auth_session'),
         'verified',
-        'role:organizer'
+        'role:organizer|admin'
     ]
 ], function () {
     Route::get('/', [App\Http\Controllers\Organization\DashboardController::class, 'index'])->name('manage');
+    Route::post('organization/switch/{organization}', [App\Http\Controllers\Organization\OrganizationController::class,'switch'])->name('manage.organization.switch');
     Route::resource('organizations', App\Http\Controllers\Organization\OrganizationController::class)->names('manage.organizations');
     Route::post('organization/delete_logo/{organization}', [App\Http\Controllers\Organization\OrganizationController::class,'deleteLogo'])->name('manage.organization.deleteLogo');
     Route::get('/{organization}/medias', [App\Http\Controllers\Organization\MediaController::class, 'getMedias'])->name('manage.medias');

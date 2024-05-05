@@ -48,7 +48,7 @@ class OrganizationPolicy
      */
     public function create(User $user)
     {
-        if($user->hasRole(['admin','organization'])){
+        if($user->hasRole(['admin'])){
             return true;
         }
 
@@ -92,7 +92,7 @@ class OrganizationPolicy
      * @param  \App\Models\Organization  $organization
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(AdminUser $user, Organization $organization)
+    public function restore(User $user, Organization $organization)
     {
         //
     }
@@ -104,7 +104,7 @@ class OrganizationPolicy
      * @param  \App\Models\Organization  $organization
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(AdminUser $user, Organization $organization)
+    public function forceDelete(User $user, Organization $organization)
     {
         //
     }

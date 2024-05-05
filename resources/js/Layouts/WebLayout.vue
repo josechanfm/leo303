@@ -89,7 +89,7 @@ const showingNavigationDropdown = ref(false);
                     :href="route('member.dashboard')"
                     target="_blank"
                     class="text-bold text-white hover:text-yellow-300 text-md"
-                    >{{ $t("memberDashboard") }}</a
+                    >{{ $t("member_dashboard") }}</a
                   >
                 </li>
                 <li>
