@@ -124,4 +124,5 @@ Route::group([
     Route::resource('features', App\Http\Controllers\Admin\FeatureController::class)->names('admin.features');
     Route::post('feature/delete_image/{feature}', [App\Http\Controllers\Admin\FeatureController::class,'deleteImage'])->name('admin.feature.deleteImage');
     Route::resource('articles', App\Http\Controllers\Admin\ArticleController::class)->names('admin.articles');
+    Route::post('article/delete_image/{article}', [App\Http\Controllers\Admin\ArticleController::class,'deleteImage'])->name('admin.article.deleteImage');
 });

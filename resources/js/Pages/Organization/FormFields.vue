@@ -214,11 +214,9 @@ export default {
     };
   },
   created() {
-    
     axios.get(route("api.config.item", { key: 'template_options' })).then((resp) => {
       this.templateOptions=resp.data
     })
-
   },
   methods: {
     createRecord() {

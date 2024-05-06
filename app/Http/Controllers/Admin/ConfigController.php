@@ -85,6 +85,7 @@ class ConfigController extends Controller
     public function update(Request $request, Config $config)
     {
         $data=$request->all();
+        $config->update($data);
         //$data['value']=json_encode($data['value']);
         $config->update($data);
         //return response()->json($request->all());   

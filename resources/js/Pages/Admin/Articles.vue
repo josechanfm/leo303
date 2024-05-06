@@ -34,9 +34,18 @@
               >
                 <a-button :disabled="record.published == 1">{{ $t("delete") }}</a-button>
               </a-popconfirm>
+              <a-button @click="onClone(record)">Clone</a-button>
             </template>
             <template v-else-if="column.dataIndex == 'published'">
               {{ record.published ? $t("yes") : $t("no") }}
+            </template>
+            <template v-else-if="column.dataIndex=='organization_id'">
+              <span v-if="record.organization">
+                {{ record.organization.abbr }}
+              </span>
+              <span v-else>
+                Template
+              </span>
             </template>
             <template v-else>
               {{ record[column.dataIndex] }}
@@ -176,31 +185,30 @@ export default {
       },
       columns: [
         {
+          title: "Organization",
+          i18n: "organization",
+          dataIndex: "organization_id",
+        },{
           title: "Category",
           i18n: "category",
           dataIndex: "category_code",
-        },
-        {
+        },{
           title: "Title",
           i18n: "title",
           dataIndex: "title",
-        },
-        {
+        },{
           title: "Validated at",
           i18n: "valid_at",
           dataIndex: "valid_at",
-        },
-        {
+        },{
           title: "Expired at",
           i18n: "expired_at",
           dataIndex: "expired_at",
-        },
-        {
+        },{
           title: "Published",
           i18n: "published",
           dataIndex: "published",
-        },
-        {
+        },{
           title: "Operation",
           i18n: "operation",
           dataIndex: "operation",
@@ -322,6 +330,22 @@ export default {
         return new UploadAdapter(loader);
       };
     },
+    onClone(record){
+      let article={...record};
+      article.id=null
+      article.uuid=null
+      article.user_id=null
+      article.thumbnail=null
+      this.$inertia.post(route("admin.articles.store"), article, {
+          onSuccess: (page) => {
+            console.log(page.data)
+          },
+          onError: (err) => {
+            console.log(err);
+          },
+        });
+
+    }
   },
 };
 </script>
