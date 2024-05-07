@@ -280,9 +280,8 @@ export default {
             this.modal.data,
             {
               onSuccess: (page) => {
-                this.modal.data = {};
                 this.modal.isOpen = false;
-                console.log(page);
+                //this.modal.data = {};
               },
               onError: (error) => {
                 console.log(error);

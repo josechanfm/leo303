@@ -27,10 +27,10 @@ class RegistrationController extends Controller
             'email'=>'required|email',
             'password'=>'required',
         ]);
+
         $organization=Organization::find($request->organization_id);
         if(!$organization){
             return redirect()->route('/');
-            //return redirect()->back()->withErrors(['message'=>'Organization not found']);
         }
 
         if($request->registration_code != $organization->registration_code){

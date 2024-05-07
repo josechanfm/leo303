@@ -19,6 +19,7 @@ class MemberController extends Controller
      */
     public function index(Request $request)
     {
+        //dd(Member::with('organizations')->with('user')->where('id','102')->get());
         return Inertia::render('Admin/Members',[
             'members'=>Member::with('organizations')->with('user')->paginate($request->per_page),
             'organizations'=>Organization::all(),
