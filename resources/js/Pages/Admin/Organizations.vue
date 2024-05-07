@@ -124,8 +124,8 @@
           <a-select
             v-model:value="modal.data.user_ids"
             mode="multiple"
-            :options="modal.data.members"
-            :fieldNames="{ value: 'id', label: 'given_name' }"
+            :options="modal.data.members.filter(m=>m.user_id!=null)"
+            :fieldNames="{ value: 'user_id', label: 'given_name' }"
           />
         </a-form-item>
       </a-form>
@@ -222,7 +222,6 @@ export default {
   created() {
     axios.get(route("api.config.item", { key: 'card_styles' })).then((resp) => {
             Object.entries(resp.data).forEach(([key, card]) => {
-                console.log(card)
                 this.cardStyles.push({ value: key, label: card.name })
             })
         });
