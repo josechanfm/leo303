@@ -89,6 +89,10 @@ export default {
         clearInterval(this.interval);
       }
     },
+    switchOrganization(organization) {
+        this.$inertia.post(route('member.membership.switch', { organization: organization.id }))
+    }
+
   },
 };
 </script>
@@ -242,13 +246,16 @@ export default {
                   <div v-if="member.organizations.length > 1">
                     <h3 class="font-medium text-gray-900 text-left px-6">Your Organizations</h3>
                     <div class="mt-5 w-full flex flex-col items-center overflow-hidden text-sm">
-                      <template v-for="organization in member.organizations">
+                      <template v-for="org in member.organizations">
                         <a href="#"
                           class="w-full border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
                           <img src="https://avatars0.githubusercontent.com/u/35900628?v=4" alt=""
                             class="rounded-full h-6 shadow-md inline-block mr-2" />
-                          {{ organization.abbr }} - {{ organization['name_'+$t('lang')] }}
-                          <span class="text-gray-500 text-xs">24 min ago</span>
+                          {{ org.abbr }} - {{ org['name_'+$t('lang')] }}
+                          <span class="text-gray-500 text-xs float-right pr-2" v-if="member.organizations.length>1">
+                            <a @click="switchOrganization(org)">{{ $t('organization_switch') }}</a>
+                          </span>
+
                         </a>
                       </template>
                     </div>

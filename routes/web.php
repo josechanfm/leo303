@@ -59,6 +59,7 @@ Route::group([
     Route::resource('profile', App\Http\Controllers\Member\ProfileController::class)->names('member.profile');
     Route::resource('professionals', App\Http\Controllers\Member\ProfessionalController::class)->names('member.professionals');
     Route::get('membership', [App\Http\Controllers\Member\MembershipController::class, 'index'])->name('member.membership');
+    Route::post('membership/switch/{organization}', [App\Http\Controllers\Member\MembershipController::class, 'switch'])->name('member.membership.switch');
     Route::resource('events', App\Http\Controllers\Member\EventController::class)->names('member.events');
     Route::resource('entries', App\Http\Controllers\Member\EntryController::class)->names('member.entries');
 });
