@@ -10,9 +10,10 @@ export default {
     ArticleList,
     QRCodeVue3,
   },
-  props: ["member","features", "articles", "card_style"],
+  props: ["members","features", "forms", "articles", "card_style"],
   data() {
     return {
+      member:null,
       qrcode: "",
       interval: 0,
       features2: [
@@ -70,6 +71,7 @@ export default {
     };
   },
   created() {
+    this.member=this.members[0]
   },
   mounted() { },
   methods: {
@@ -123,7 +125,7 @@ export default {
                         <p class="text-gray-700 text-base pl-1">
                           {{ feature.intro }}
                         <ol class="list-disc">
-                          <li v-for="form in $page.props.current_organization.forms">
+                          <li v-for="form in forms">
                             <inertia-link :href="route('forms.show', form.id)">{{ form.title }}</inertia-link>
                           </li>
                         </ol>
@@ -243,17 +245,17 @@ export default {
                     class="text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded transition duration-150 ease-in font-medium text-sm text-center w-full py-3">Email</a>
                 </div>
                 <div class="w-full">
-                  <div v-if="member.organizations.length > 1">
+                  <div v-if="members.length > 1">
                     <h3 class="font-medium text-gray-900 text-left px-6">Your Organizations</h3>
                     <div class="mt-5 w-full flex flex-col items-center overflow-hidden text-sm">
-                      <template v-for="org in member.organizations">
+                      <template v-for="member in members">
                         <a href="#"
                           class="w-full border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
                           <img src="https://avatars0.githubusercontent.com/u/35900628?v=4" alt=""
                             class="rounded-full h-6 shadow-md inline-block mr-2" />
-                          {{ org.abbr }} - {{ org['name_'+$t('lang')] }}
-                          <span class="text-gray-500 text-xs float-right pr-2" v-if="member.organizations.length>1">
-                            <a @click="switchOrganization(org)">{{ $t('organization_switch') }}</a>
+                          {{ member.organization.abbr }} - {{ member.organization['name_'+$t('lang')] }}
+                          <span class="text-gray-500 text-xs float-right pr-2" v-if="members.length>1">
+                            <a @click="switchOrganization(member.organization)">{{ $t('organization_switch') }}</a>
                           </span>
 
                         </a>

@@ -39,11 +39,9 @@
               <img :src="record.avatar_url" width="60"/>
             </template>
             <template v-else-if="column.dataIndex == 'organization'">
-              <ol>
-                <li v-for="org in record.organizations">
-                  {{org.abbr}}
-                </li>
-              </ol>
+              <span v-if="record.organization">
+                {{record.organization.abbr}}
+              </span>
             </template>
             <template v-else>
               {{ record[column.dataIndex] }}
@@ -65,11 +63,9 @@
         :validate-messages="validateMessages"
         @finish="onFormFinish"
       >
-      {{modal.data}}
         <a-form-item :label="$t('organizations')" name="organization_ids">
           <a-select
-            v-model:value="modal.data.organization_ids"
-            mode="multiple"
+            v-model:value="modal.data.organization_id"
             show-search
             :filter-option="filterOption"
             :options="organizations"
@@ -229,7 +225,7 @@ export default {
     },
     createRecord() {
       this.modal.data = {};
-      this.modal.data.organization_ids = [];
+      //this.modal.data.organization_id = [];
       this.modal.mode = "CREATE";
       this.modal.title = "create";
       this.modal.isOpen = true;
@@ -237,7 +233,7 @@ export default {
     editRecord(record) {
       console.log(record.organizations)
       this.modal.data = { ...record };
-      this.modal.data.organization_ids = record.organizations.map((org) => org.id);
+      //this.modal.data.organization_ids = record.organizations.map((org) => org.id);
       this.modal.mode = "EDIT";
       this.modal.title = "edit";
       this.modal.isOpen = true;

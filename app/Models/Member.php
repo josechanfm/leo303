@@ -14,6 +14,7 @@ class Member extends Model
     use HasFactory;
     protected $fillable=[
         'user_id',
+        'organization_id',
         'given_name',
         'family_name',
         'middle_name',
@@ -60,7 +61,8 @@ class Member extends Model
     }
 
     public function ownedBy($organization=null){
-        return in_array($organization->id,$this->organizations()->get()->pluck('id')->toArray());
+        return $this->organization_id==$organization->id;
+        //return in_array($organization->id,$this->organizations()->get()->pluck('id')->toArray());
     }
 
     // public function hasUser()
@@ -68,8 +70,11 @@ class Member extends Model
     //     return $this->user()->exists();
     // }
 
-    public function organizations(){
-        return $this->belongsToMany(Organization::class);
+    // public function organizations(){
+    //     return $this->belongsToMany(Organization::class);
+    // }
+    public function organization(){
+        return $this->belongsTo(Organization::class);
     }
 
     public function belongsToOrganization($organization){

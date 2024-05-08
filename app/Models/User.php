@@ -78,8 +78,8 @@ class User extends Authenticatable
         return $this->password !== 'need-to-set';
     }
 
-    public function member() {
-        return $this->hasOne(Member::class);
+    public function members() {
+        return $this->hasMany(Member::class);
     }
 
     public function membership() : Attribute {

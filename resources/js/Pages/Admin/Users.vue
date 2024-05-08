@@ -73,7 +73,7 @@
             show-search
             :filter-option="filterOption"
             :options="organizations"
-            :fieldNames="{ value: 'id', label: 'full_name' }"
+            :fieldNames="{ value: 'id', label: 'name_zh' }"
           />
         </a-form-item>
         <a-row>

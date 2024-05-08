@@ -21,8 +21,8 @@ class MemberController extends Controller
     {
         //dd(Member::with('organizations')->with('user')->where('id','102')->get());
         return Inertia::render('Admin/Members',[
-            'members'=>Member::with('organizations')->with('user')->paginate($request->per_page),
-            'organizations'=>Organization::all(),
+            'members'=>Member::with('organization')->with('user')->paginate($request->per_page),
+            'organizations'=>Organization::where('status',true)->get(),
             'users'=>User::whereNotIn('id',Member::whereNotNull('user_id')->get()->pluck('user_id'))->get()
         ]);
     }
@@ -80,7 +80,6 @@ class MemberController extends Controller
     public function update(Request $request, Member $member)
     {
         $member->update($request->all());
-        $member->organizations()->sync($request->organization_ids);
         return redirect()->back();
     }
 

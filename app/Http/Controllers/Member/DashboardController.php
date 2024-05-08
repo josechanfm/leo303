@@ -7,21 +7,27 @@ use App\Models\Article;
 use Inertia\Inertia;
 use App\Models\Config;
 use App\Models\Feature;
+use App\Models\Organization;
 
 class DashboardController extends Controller
 {
     public function index()
     {
         
-        $member = Auth()->user()->member;
-        if (!$member) {
+        $members = Auth()->user()->members;
+        if (!$members) {
             return Inertia::render('Error', [
                 'message' => "You are not a register member."
             ]);
         }
-        $member->organizations;
+        foreach($members as $member){
+            $member->organization;
+        }
+
+        session(['organization'=>$members[0]->organization]);
+
         return Inertia::render('Member/Dashboard', [
-            'member' => $member,
+            'members' => $members,
             'features'=>Article::whereBelongsTo(session('organization'))->where('category_code','FEATURE')->orderBy('id','DESC')->limit(4)->get(),
             'articles' => Article::whereBelongsTo(session('organization'))->where('category_code','NEWS')->get(),
             'card_style' => Config::item('card_styles')[session('organization')->card_style],
