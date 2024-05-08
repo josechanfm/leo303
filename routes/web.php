@@ -125,9 +125,6 @@ Route::group([
     Route::resource('features', App\Http\Controllers\Admin\FeatureController::class)->names('admin.features');
     Route::post('feature/delete_image/{feature}', [App\Http\Controllers\Admin\FeatureController::class,'deleteImage'])->name('admin.feature.deleteImage');
     Route::resource('articles', App\Http\Controllers\Admin\ArticleController::class)->names('admin.articles');
-<<<<<<< HEAD
-    Route::resource('issues', App\Http\Controllers\Admin\IssueController::class)->names('admin.issues');
-=======
     Route::post('article/delete_image/{article}', [App\Http\Controllers\Admin\ArticleController::class,'deleteImage'])->name('admin.article.deleteImage');
->>>>>>> 3128536e78207feb026e03ee78fc4561e866905e
+    Route::resource('issues', App\Http\Controllers\Admin\IssueController::class)->names('admin.issues');
 });

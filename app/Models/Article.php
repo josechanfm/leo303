@@ -12,13 +12,8 @@ class Article extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-<<<<<<< HEAD
     protected $fillable=['uuid','organization_id','category_code','intro','title','content','valid_at','expire_at','url','reference','published','public','author','thumbnail','lang','user_id'];
-    protected $casts=['tags'=>'json'];
-=======
-    protected $fillable=['uuid','organization_id','category_code','title','content','tags','valid_at','expire_at','url','reference','published','public','author','thumbnail','lang','user_id'];
     protected $casts=['tags'=>'json','published'=>'boolean','public'=>'boolean'];
->>>>>>> 3128536e78207feb026e03ee78fc4561e866905e
 
     public static function boot(){
         parent::boot();
