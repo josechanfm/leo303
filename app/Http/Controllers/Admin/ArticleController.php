@@ -24,7 +24,11 @@ class ArticleController extends Controller
             // 'classifies'=>Classify::whereBelongsTo(session('organization'))->get(),
             'organizations'=>Organization::all(),
             'articleCategories'=>Config::item('article_categories'),
+<<<<<<< HEAD
             'articles'=>Article::paginate($request->per_page)
+=======
+            'articles'=>Article::with('organization')->paginate()
+>>>>>>> 3128536e78207feb026e03ee78fc4561e866905e
         ]);
     }
 
@@ -54,7 +58,17 @@ class ArticleController extends Controller
         $data=$request->all();
         $data['user_id']=auth()->user()->id;
         $data['author']=auth()->user()->name;
-        Article::create($data);
+        $article=Article::create($data);
+
+        if($request->file('thumbnail_upload')){
+            $file=$request->file('thumbnail_upload');
+            $fileName=$article->id.'_'.$file->getClientOriginalName();
+            $file->move(public_path('articles'), $fileName);
+            $article->thumbnail='/articles/'.$fileName;
+            $article->save();
+        }
+        
+
         return redirect()->route('admin.articles.index');
     }
 
@@ -113,9 +127,7 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        if(session('organization')->id==$article->organization_id){
-            $article->delete();
-        }
+        $article->delete();
         return redirect()->back();
     }
     public function deleteImage(Article $article){

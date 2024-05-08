@@ -71,9 +71,7 @@
               <a-form-item :label="$t('published')" name="published">
                 <a-switch
                   v-model:checked="article.published"
-                  :checkedValue="1"
-                  :unCheckedValue="0"
-                  @change="article.public = 0"
+                  @change="article.public = false"
                 />
               </a-form-item>
             </a-col>
@@ -81,50 +79,59 @@
               <a-form-item :label="$t('public')" name="public">
                 <a-switch
                   v-model:checked="article.public"
-                  :checkedValue="1"
-                  :unCheckedValue="0"
                 />
               </a-form-item>
             </a-col>
           </a-row>
           <a-form-item :label="$t('tag')">
-              <a-select v-model:value="article.tags" mode="tags" style="width: 100%" placeholder="Tags Mode"
-                :options="tagOptions"></a-select>
-            </a-form-item>
-
-          <a-form-item :label="$t('thumbnail')">
-            <template v-if="article.thumbnail">
-              <img :src="article.thumbnail" width="300px" />
-              <a @click="onDeleteImage(article)">Delete</a>
-            </template>
-            <template v-else>
-              <template v-if="previewImage">
-                <img :src="previewImage" class="w-64"/>
-                <a @click="onRemoveImage">Remove</a>
-              </template>
-              <template v-else>
-                <div class="flex items-center justify-center w-64">
-                  <label for="dropzone-file"
-                    class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                      <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                      </svg>
-                      <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                        <div v-html="$t('upload_drag_drop')"/>
-                      </p>
-                      <p class="text-xs text-gray-500 dark:text-gray-400">{{ $t('image_size_note') }}</p>
-                    </div>
-                    <input id="dropzone-file" type="file" @change="onSelectFile" accept="image/png, image/gif, image/jpeg" style="display:none" />
-                  </label>
-                </div>
-
-              </template>
-            </template>
+            <a-select v-model:value="article.tags" mode="tags" style="width: 100%" placeholder="Tags Mode"
+              :options="tagOptions"></a-select>
           </a-form-item>
-
+          <a-row>
+            <a-col :xs="{span:24}" :lg="{span:8}">
+              <a-form-item :label="$t('thumbnail')">
+                <template v-if="article.thumbnail">
+                  <img :src="article.thumbnail" width="300px" />
+                  <a @click="onDeleteImage(article)">Delete</a>
+                </template>
+                <template v-else>
+                  <template v-if="previewImage">
+                    <img :src="previewImage" class="w-64"/>
+                    <a @click="onRemoveImage">Remove</a>
+                  </template>
+                  <template v-else>
+                    <div class="flex items-center justify-center w-64">
+                      <label for="dropzone-file"
+                        class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                          <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                          </svg>
+                          <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                            <div v-html="$t('upload_drag_drop')"/>
+                          </p>
+                          <p class="text-xs text-gray-500 dark:text-gray-400">{{ $t('image_size_note') }}</p>
+                        </div>
+                        <input id="dropzone-file" type="file" @change="onSelectFile" accept="image/png, image/gif, image/jpeg" style="display:none" />
+                      </label>
+                    </div>
+                  </template>
+                </template>
+              </a-form-item>
+            </a-col>
+            <a-col :span="16">
+              <a-row type="flex">
+                <a-col :span="6" v-for="image in images">
+                  <div @click="setTemplateImage(image)">
+                    <img :src="image.path" class="w-24"/>
+                    {{ image.label }}
+                  </div>
+                </a-col>
+              </a-row>
+            </a-col>
+          </a-row>
           <div class="flex flex-row item-center justify-center">
             <a-button type="primary" html-type="submit">{{ $t("submit") }}</a-button>
           </div>
@@ -144,19 +151,18 @@
         with media library<br>
         comming soon...
         <ul>
-          <li v-for="media in medias" @click="selectMedia(media)">
-            {{ media.file_name }}
+          <li v-for="image in images" @click="selectImage(image)">
+            <img :src="image.path" class="w-24"/>
+            {{ image.label }}
           </li>
         </ul>
       </div>
       <div>
-        <div v-if="selectedMedia">
+        <div v-if="selectedImage">
           <img
-            v-if="selectedMedia.preview_url"
-            :src="selectedMedia.preview_url"
+            :src="selectedImage.path"
             width="100"
           />
-          <img v-else :src="selectedMedia.original_url" width="100" />
           <a-button @click="addToArticle">{{ $t("add") }}</a-button>
         </div>
       </div>
@@ -182,7 +188,7 @@ export default {
   props: ["organizations","classifies", "articleCategories", "article", "articles"],
   data() {
     return {
-      medias: [],
+      images:[],
       previewImage: null,
       selectedMedia: null,
       isDrawerVisible: false,
@@ -201,9 +207,9 @@ export default {
         // The configuration of the editor.
       },
       rules: {
+        organization_id: { required: true },
         category_code: { required: true },
-        classify_id: { required: true },
-        title_en: { required: true },
+        title: { required: true },
       },
       validateMessages: {
         required: "${label} is required!",
@@ -223,13 +229,16 @@ export default {
     };
   },
   created() {
+    this.article.public=false
+    this.article.published=false
     this.organizations.unshift({ id: 0, name_zh: "System default" });
   },
-  mounted() {},
+  mounted() {
+
+  },
   methods: {
     onSelectFile(event) {
       const file =event.target.files[0]
-
       if(file.size > 1024*1024*1){
         alert('oversize')
         return false
@@ -240,7 +249,7 @@ export default {
 
     },
     onRemoveImage() {
-      this.farticle.thumbial_upload = null
+      this.article.thumbial_upload = null
       this.previewImage = null
     },
     onDeleteImage(article) {
@@ -259,8 +268,7 @@ export default {
         return new UploadAdapter(loader);
       };
     },
-    onFinish(event) {
-      console.log(this.article);
+    onFinish() {
       if (this.article.id) {
         this.article._method='PATCH';
         this.$inertia.post(route("admin.articles.update", this.article.id), this.article, {
@@ -273,7 +281,7 @@ export default {
         });
       } else {
         console.log("create");
-        this.$inertia.post(route("admin.articles.store"), event, {
+        this.$inertia.post(route("admin.articles.store"), this.article, {
           onSuccess: (page) => {
             this.modal.data = {};
             this.modal.isOpen = false;
@@ -286,19 +294,17 @@ export default {
     },
     afterVisibleChange(bool) {
       if (bool) {
-        axios.get(route("admin.medias", 22)).then((response) => {
-          this.medias = response.data;
-        });
+        axios.get(route("api.config.item", { key: 'template_images' })).then((resp) => {
+          this.images=resp.data
+        })
+
       }
     },
-    selectMedia(media) {
-      this.selectedMedia = media;
-      console.log(this.selectedMedia);
+    selectImage(image) {
+      this.selectedImage = image
     },
     addToArticle(meida) {
       var selection = this.editor.view.state.selection;
-      console.log(selection);
-      console.log(this.selectedMedia);
     },
     ckEditorFocusOut(event) {
       console.log("focus out");

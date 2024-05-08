@@ -59,6 +59,7 @@ Route::group([
     Route::resource('profile', App\Http\Controllers\Member\ProfileController::class)->names('member.profile');
     Route::resource('professionals', App\Http\Controllers\Member\ProfessionalController::class)->names('member.professionals');
     Route::get('membership', [App\Http\Controllers\Member\MembershipController::class, 'index'])->name('member.membership');
+    Route::post('membership/switch/{organization}', [App\Http\Controllers\Member\MembershipController::class, 'switch'])->name('member.membership.switch');
     Route::resource('events', App\Http\Controllers\Member\EventController::class)->names('member.events');
     Route::resource('entries', App\Http\Controllers\Member\EntryController::class)->names('member.entries');
 });
@@ -124,5 +125,9 @@ Route::group([
     Route::resource('features', App\Http\Controllers\Admin\FeatureController::class)->names('admin.features');
     Route::post('feature/delete_image/{feature}', [App\Http\Controllers\Admin\FeatureController::class,'deleteImage'])->name('admin.feature.deleteImage');
     Route::resource('articles', App\Http\Controllers\Admin\ArticleController::class)->names('admin.articles');
+<<<<<<< HEAD
     Route::resource('issues', App\Http\Controllers\Admin\IssueController::class)->names('admin.issues');
+=======
+    Route::post('article/delete_image/{article}', [App\Http\Controllers\Admin\ArticleController::class,'deleteImage'])->name('admin.article.deleteImage');
+>>>>>>> 3128536e78207feb026e03ee78fc4561e866905e
 });
