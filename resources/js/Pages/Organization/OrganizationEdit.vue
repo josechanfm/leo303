@@ -147,7 +147,6 @@ export default {
     created() {
         axios.get(route("api.config.item", { key: 'card_styles' })).then((resp) => {
             Object.entries(resp.data).forEach(([key, card]) => {
-                console.log(card)
                 this.cardStyles.push({ value: key, label: card.name })
             })
         });

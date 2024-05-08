@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('members', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable();
+            $table->foreignId('organization_id')->nullable();
             $table->string('given_name')->nullable();
             $table->string('family_name')->nullable();
             $table->string('middle_name')->nullable();

@@ -21,6 +21,7 @@
           :rules="rules"
           :validate-messages="validateMessages"
           @finish="onFinish"
+          @finishFailed="onFinishFailed"
           enctype="multipart/form-data"
         >
           <a-form-item :label="$t('article_category')" name="category_code">
@@ -63,8 +64,6 @@
               <a-form-item :label="$t('published')" name="published">
                 <a-switch
                   v-model:checked="article.published"
-                  :checkedValue="1"
-                  :unCheckedValue="0"
                   @change="article.public = 0"
                 />
               </a-form-item>
@@ -73,8 +72,6 @@
               <a-form-item :label="$t('public')" name="public">
                 <a-switch
                   v-model:checked="article.public"
-                  :checkedValue="1"
-                  :unCheckedValue="0"
                 />
               </a-form-item>
             </a-col>
@@ -112,7 +109,6 @@
                     <input id="dropzone-file" type="file" @change="onSelectFile" accept="image/png, image/gif, image/jpeg" style="display:none" />
                   </label>
                 </div>
-
               </template>
             </template>
           </a-form-item>
@@ -163,6 +159,7 @@ import { defineComponent, reactive } from "vue";
 import CKEditor from "@ckeditor/ckeditor5-vue";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import UploadAdapter from "@/Components/ImageUploadAdapter.vue";
+import { message } from "ant-design-vue";
 
 export default {
   components: {
@@ -250,7 +247,6 @@ export default {
       };
     },
     onFinish(event) {
-      console.log(this.article);
       if (this.article.id) {
         this.article._method='PATCH';
         this.$inertia.post(route("manage.articles.update", this.article.id), this.article, {
@@ -273,6 +269,9 @@ export default {
           },
         });
       }
+    },
+    onFinishFailed({ values, errorFields, outOfDate }){
+      message.error("Some required fields are missing!");
     },
     afterVisibleChange(bool) {
       if (bool) {

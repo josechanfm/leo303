@@ -17,7 +17,7 @@ class EntryController extends Controller
     public function index()
     {
         return Inertia::render('Member/Entries',[
-            'entries'=>Entry::whereBelongsTo(auth()->user()->member)->with('records')->with('form')->get()
+            'entries'=>Entry::whereBelongsTo(session('member'))->with('records')->with('form')->get()
         ]);
     }
 

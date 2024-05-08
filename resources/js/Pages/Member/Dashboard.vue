@@ -10,10 +10,10 @@ export default {
     ArticleList,
     QRCodeVue3,
   },
-  props: ["members","features", "forms", "articles", "card_style"],
+  props: ["currentMember", "members", "features", "forms", "articles", "cardStyle"],
   data() {
     return {
-      member:null,
+      member: null,
       qrcode: "",
       interval: 0,
       features2: [
@@ -71,7 +71,7 @@ export default {
     };
   },
   created() {
-    this.member=this.members[0]
+    this.member = this.members[0]
   },
   mounted() { },
   methods: {
@@ -91,8 +91,9 @@ export default {
         clearInterval(this.interval);
       }
     },
-    switchOrganization(organization) {
-        this.$inertia.post(route('member.membership.switch', { organization: organization.id }))
+    switchOrganization(member) {
+      console.log(member);
+      this.$inertia.post(route('member.membership.switch', { member: member.id }))
     }
 
   },
@@ -113,22 +114,21 @@ export default {
           <!-- Feature Section -->
           <div class="container mx-auto mt-5 bg-white rounded-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 py-3 px-2">
+
               <template v-for="feature in features">
                 <a :href="feature.link">
                   <div class="gutter-row">
                     <div class="max-w rounded overflow-hidden shadow-lg">
                       <img class="w-full" alt="Use any sample image here..." :src="feature.thumbnail">
                       <div class="px-2 py-4 xs:h-64 lg:h-48">
-                        <inertia-link :href="feature.url">
-                        <div class="font-bold text-xl mb-2">{{ feature.title }}</div>
-                      </inertia-link>
+                        <inertia-link v-if="feature.url" :href="feature.url">
+                          <div class="font-bold text-xl mb-2">{{ feature.title }}</div>
+                        </inertia-link>
+                        <inertia-link v-else :href="route('article.item',{ t:feature.uuid})" target="_blank">
+                          <div class="font-bold text-xl mb-2">{{ feature.title }}</div>
+                        </inertia-link>
                         <p class="text-gray-700 text-base pl-1">
                           {{ feature.intro }}
-                        <ol class="list-disc">
-                          <li v-for="form in forms">
-                            <inertia-link :href="route('forms.show', form.id)">{{ form.title }}</inertia-link>
-                          </li>
-                        </ol>
                         </p>
                       </div>
                       <div class="px-6 py-4">
@@ -142,6 +142,12 @@ export default {
             </div>
           </div>
           <!-- Feature Section end-->
+
+          <ol class="list-disc">
+            <li v-for="form in forms">
+              <inertia-link :href="route('forms.show', form.id)">{{ form.title }}</inertia-link>
+            </li>
+          </ol>
 
           <!-- News Section-->
           <div class="container mx-auto pt-5">
@@ -159,7 +165,7 @@ export default {
               <!-- QRcode -->
               <div class="flex flex-col justify-center items-center" v-if="showQrcode">
                 <div>
-                  <QRCodeVue3 :key="qrcode" v-bind:value="qrcode" :image="'/images/' + card_style['logo']" :dotsOptions="{
+                  <QRCodeVue3 :key="qrcode" v-bind:value="qrcode" :image="'/images/' + cardStyle['logo']" :dotsOptions="{
           type: 'dots',
           color: '#26249a',
           gradient: {
@@ -180,22 +186,22 @@ export default {
               </div>
               <!-- card start -->
               <div class="mx-auto relative py-4 w-96 hover:scale-105 transform transition-transform mb-4">
-                <div :style="card_style['font_style']"
+                <div :style="cardStyle['font_style']"
                   class="absolute z-50 h-52 flex rounded-lg flex-col py-3 px-8 shadow-xl text-sm w-full"
                   @click="onShowQrcode">
                   <div class="flex flex-col w-xl">
                     <div class="flex justify-center">
-                      <div class="text-lg font-bold">{{ $page.props.current_organization['name_'+$t('lang')] }}...</div>
+                      <div class="text-lg font-bold">{{ currentMember.organization['name_' + $t('lang')] }}</div>
                     </div>
                     <div class="flex">
                       <div class="flex flex-col flex-auto gap-1">
                         <div class="">姓名：</div>
-                        <div class="mb-2">{{ member.family_name }}{{ member.given_name }}</div>
+                        <div class="mb-2">{{ currentMember.family_name }}{{ currentMember.given_name }}</div>
                         <div class="">會員編號：</div>
-                        <div class="font-sans mb-2">{{ member.member_number }}</div>
+                        <div class="font-sans mb-2">{{ currentMember.member_number }}</div>
                       </div>
                       <div class="flex text-right">
-                        <img v-if="member.avatar" class="w-20 h-20" :src="member.avatar" />
+                        <img v-if="currentMember.avatar" class="w-20 h-20" :src="currentMember.avatar" />
                         <img v-else class="w-20 h-20" src="/avatars/dummy-avatar.jpg" />
                       </div>
                     </div>
@@ -203,28 +209,28 @@ export default {
                   <div class="flex text-xs">
                     <div class="flex flex-col gap-1 flex-auto">
                       <div class="">發出日期：</div>
-                      <div class="font-sans text-base">{{ member.valid_at }}</div>
+                      <div class="font-sans text-base">{{ currentMember.valid_at }}</div>
                     </div>
                     <div class="flex flex-col gap-1 flex-auto">
                       <div class="">有效日期：</div>
-                      <div class="font-sans text-base">{{ member.expired_at }}</div>
+                      <div class="font-sans text-base">{{ currentMember.expired_at }}</div>
                     </div>
                   </div>
                 </div>
                 <img class="relative object-cover w-96 h-52 rounded-lg z-0"
-                  :src="'/images/' + card_style['background']" />
+                  :src="'/images/' + cardStyle['background']" />
               </div>
               <!-- card end -->
 
               <div class="mt-16">
                 <h1 class="font-bold text-center text-3xl text-gray-900">
-                  {{ member.display_name }}
+                  {{ currentMember.display_name }}
                 </h1>
                 <h1 class="font-bold text-center text-2xl text-gray-900">
-                  {{ member.family_name }}{{ member.given_name }}
+                  {{ currentMember.family_name }}{{ currentMember.given_name }}
                 </h1>
                 <p class="text-center text-sm text-gray-400 font-medium">
-                  {{ $page.props.current_organization['name_'+$t('lang')] }}
+                  {{ $page.props.current_organization['name_' + $t('lang')] }}
                 </p>
                 <p>
                   <span> </span>
@@ -232,7 +238,7 @@ export default {
                 <div class="my-5 px-6">
                   <a href="#"
                     class="text-gray-200 block rounded-lg text-center font-medium leading-6 px-6 py-3 bg-gray-900 hover:bg-black hover:text-white">Connect
-                    with <span class="font-bold">{{ member.email }}</span></a>
+                    with <span class="font-bold">{{ currentMember.email }}</span></a>
                 </div>
                 <div class="flex justify-between items-center my-5 px-6">
                   <a href=""
@@ -248,14 +254,15 @@ export default {
                   <div v-if="members.length > 1">
                     <h3 class="font-medium text-gray-900 text-left px-6">Your Organizations</h3>
                     <div class="mt-5 w-full flex flex-col items-center overflow-hidden text-sm">
+
                       <template v-for="member in members">
                         <a href="#"
                           class="w-full border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
                           <img src="https://avatars0.githubusercontent.com/u/35900628?v=4" alt=""
                             class="rounded-full h-6 shadow-md inline-block mr-2" />
-                          {{ member.organization.abbr }} - {{ member.organization['name_'+$t('lang')] }}
-                          <span class="text-gray-500 text-xs float-right pr-2" v-if="members.length>1">
-                            <a @click="switchOrganization(member.organization)">{{ $t('organization_switch') }}</a>
+                          {{ member.organization.abbr }} - {{ member.organization['name_' + $t('lang')] }}
+                          <span class="text-gray-500 text-xs float-right pr-2" v-if="members.length > 1">
+                            <a @click="switchOrganization(member)">{{ $t('organization_switch') }}</a>
                           </span>
 
                         </a>
@@ -265,7 +272,8 @@ export default {
 
                   <h3 class="font-medium text-gray-900 text-left px-6">Recent updates</h3>
                   <div class="mt-5 w-full flex flex-col items-center overflow-hidden text-sm">
-                    <template v-for="organization in member.organizations">
+
+                    <template v-for="organization in currentMember.organizations">
                       <a href="#"
                         class="w-full border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
                         <img src="https://avatars0.githubusercontent.com/u/35900628?v=4" alt=""
@@ -275,7 +283,7 @@ export default {
                       </a>
                     </template>
 
-                    <template v-for="portfolio in member.portfolios">
+                    <template v-for="portfolio in currentMember.portfolios">
                       <a href="#"
                         class="w-full border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
                         <img src="https://avatars0.githubusercontent.com/u/35900628?v=4" alt=""

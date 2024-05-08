@@ -20,8 +20,8 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $member = auth()->user()->member;
-        if($member==null){ return redirect()->back();};
+        if(empty(session('member'))){ return redirect()->back();};
+        $member=session('member');
         $member->positions;
         $member->athlete;
         return Inertia::render('Member/Profile', [

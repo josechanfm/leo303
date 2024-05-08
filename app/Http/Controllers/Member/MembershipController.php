@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
 use Inertia\Inertia;
-use App\Models\Organization;
+use App\Models\Member;
 
 class MembershipController extends Controller
 {
@@ -24,8 +24,9 @@ class MembershipController extends Controller
             'member'=>$member
         ]);
     }
-    public function switch(Organization $organization){
-        session(['organization'=>$organization]);
+    public function switch(Member $member){
+        $member->organization;
+        session(['member'=>$member]);
         return to_route('member.dashboard');
     }
 }

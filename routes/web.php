@@ -59,7 +59,7 @@ Route::group([
     Route::resource('profile', App\Http\Controllers\Member\ProfileController::class)->names('member.profile');
     Route::resource('professionals', App\Http\Controllers\Member\ProfessionalController::class)->names('member.professionals');
     Route::get('membership', [App\Http\Controllers\Member\MembershipController::class, 'index'])->name('member.membership');
-    Route::post('membership/switch/{organization}', [App\Http\Controllers\Member\MembershipController::class, 'switch'])->name('member.membership.switch');
+    Route::post('membership/switch/{member}', [App\Http\Controllers\Member\MembershipController::class, 'switch'])->name('member.membership.switch');
     Route::resource('events', App\Http\Controllers\Member\EventController::class)->names('member.events');
     Route::resource('entries', App\Http\Controllers\Member\EntryController::class)->names('member.entries');
 });
@@ -79,7 +79,6 @@ Route::group([
     Route::resource('organizations', App\Http\Controllers\Organization\OrganizationController::class)->names('manage.organizations');
     Route::post('organization/delete_logo/{organization}', [App\Http\Controllers\Organization\OrganizationController::class,'deleteLogo'])->name('manage.organization.deleteLogo');
     Route::get('/{organization}/medias', [App\Http\Controllers\Organization\MediaController::class, 'getMedias'])->name('manage.medias');
-    // Route::get('/select/{organization}', [App\Http\Controllers\Organization\DashboardController::class, 'select'])->name('manage.select');
     Route::resource('members', App\Http\Controllers\Organization\MemberController::class)->names('manage.members');
     Route::post('member/create/login/{member}', [App\Http\Controllers\Organization\MemberController::class, 'createLogin'])->name('manage.member.createLogin');
     Route::resource('forms', App\Http\Controllers\Organization\FormController::class)->names('manage.forms');

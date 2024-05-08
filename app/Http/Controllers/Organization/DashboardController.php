@@ -16,13 +16,6 @@ class DashboardController extends Controller
         $this->authorizeResource(Organization::class);
     }
 
-
-    public function select(Organization $organization){
-        $this->authorize('view',$organization);
-        session(['organization'=>$organization]);
-        return redirect()->route('manage');
-    }
-
     public function index(){
         $this->authorize('view',session('organization'));
         return Inertia::render('Organization/Dashboard',[

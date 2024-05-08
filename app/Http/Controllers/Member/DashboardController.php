@@ -6,14 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use Inertia\Inertia;
 use App\Models\Config;
-use App\Models\Feature;
+use App\Models\Member;
 use App\Models\Organization;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        
         $members = Auth()->user()->members;
         if (!$members) {
             return Inertia::render('Error', [
@@ -23,14 +22,15 @@ class DashboardController extends Controller
         foreach($members as $member){
             $member->organization;
         }
-
-        session(['organization'=>$members[0]->organization]);
-
+        if(empty(session('member'))){
+            session(['member'=>$members[0]]);
+        }
         return Inertia::render('Member/Dashboard', [
+            'currentMember'=>session('member'),
             'members' => $members,
-            'features'=>Article::whereBelongsTo(session('organization'))->where('category_code','FEATURE')->orderBy('id','DESC')->limit(4)->get(),
-            'articles' => Article::whereBelongsTo(session('organization'))->where('category_code','NEWS')->get(),
-            'card_style' => Config::item('card_styles')[session('organization')->card_style],
+            'features'=>Article::whereBelongsTo(session('member')->organization)->where('category_code','FEATURE')->orderBy('id','DESC')->limit(4)->get(),
+            'articles' => Article::whereBelongsTo(session('member')->organization)->where('category_code','NEWS')->get(),
+            'cardStyle' => Config::item('card_styles')[session('member')->organization->card_style],
         ]);
     }
     public function getQrcode()

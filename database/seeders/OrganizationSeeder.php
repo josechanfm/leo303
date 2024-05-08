@@ -53,12 +53,13 @@ class OrganizationSeeder extends Seeder
         $user=User::where('email','member1@example.com')->get();
         $organization->users()->attach($user);
 
-        $member=Member::find(1);
-        $organization->members()->attach($member);
-        $member=Member::find(2);
-        $organization->members()->attach($member);
-        $member=Member::find(3);
-        $organization->members()->attach($member);
+        Member::whereBetween('id',[1,3])->update(['organization_id'=>$organization->id]);
+        // $member=Member::find(1);
+        // $organization->members()->attach($member);
+        // $member=Member::find(2);
+        // $organization->members()->attach($member);
+        // $member=Member::find(3);
+        // $organization->members()->attach($member);
 
 
     }
