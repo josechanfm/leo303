@@ -1,41 +1,43 @@
 <template>
   <OrganizationLayout title="表格列表" :breadcrumb="breadcrumb">
-    {{ selectedDisplayName }}
-    <a :href="route('manage.entry.export', form.id)" class="ant-btn">滙出Excel</a>
-    <a-table
-      :dataSource="entries"
-      :columns="entryColumns"
-      :row-selection="{ onChange: onChangeSelection, selectedRowKeys: selectedItems }"
-      :rowKey="(record) => record.id"
-    >
-      <template #bodyCell="{ column, text, record, index }">
-        <template v-if="column.dataIndex == 'operation'">
-          <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
-          <a
-            :href="route('manage.form.entry.success', { form: form, entry: record.id })"
-            target="_blank"
-            class="ant-btn"
-            >{{ $t("receipt") }}</a
-          >
-          <a-popconfirm
-            :title="$t('confirm_delete_record')"
-            :ok-text="$t('yes')"
-            :cancel-text="$t('no')"
-            @confirm="deleteRecord(record)"
-          >
-            <a-button>{{ $t("delete") }}</a-button>
-          </a-popconfirm>
-        </template>
+    <div class="container mx-auto p-5">
+      <div class="flex-auto pb-3 text-right">
+        <a :href="route('manage.entry.export', form.id)" class="ant-btn">滙出Excel</a>
+      </div>
+      <a-table
+        :dataSource="entries"
+        :columns="entryColumns"
+        :row-selection="{ onChange: onChangeSelection, selectedRowKeys: selectedItems }"
+        :rowKey="(record) => record.id"
+      >
+        <template #bodyCell="{ column, text, record, index }">
+          <template v-if="column.dataIndex == 'operation'">
+            <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
+            <a
+              :href="route('manage.form.entry.success', { form: form, entry: record.id })"
+              target="_blank"
+              class="ant-btn"
+              >{{ $t("receipt") }}</a
+            >
+            <a-popconfirm
+              :title="$t('confirm_delete_record')"
+              :ok-text="$t('yes')"
+              :cancel-text="$t('no')"
+              @confirm="deleteRecord(record)"
+            >
+              <a-button>{{ $t("delete") }}</a-button>
+            </a-popconfirm>
+          </template>
 
-        <template v-else-if="column.dataIndex == 'created_at'">
-          {{ record[column.dataIndex] }}
+          <template v-else-if="column.dataIndex == 'created_at'">
+            {{ record[column.dataIndex] }}
+          </template>
+          <template v-else>
+            {{ record[column.dataIndex] }}
+          </template>
         </template>
-        <template v-else>
-          {{ record[column.dataIndex] }}
-        </template>
-      </template>
-    </a-table>
-
+      </a-table>
+    </div>
     <!-- Modal Start-->
     <a-modal v-model:visible="modal.isOpen" title="View Only" width="60%">
       <a-form

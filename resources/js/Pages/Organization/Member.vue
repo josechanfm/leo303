@@ -5,11 +5,14 @@
         {{$t('view_member_profile')}}
       </h2>
     </template>
+    <div class="container mx-auto p-5">
+
     <ol>
       <li v-for="(value, key) in member">
         <strong>{{ $t(key) }}: </strong>{{ value }}
       </li>
     </ol>
+    </div>
   </OrganizationLayout>
 </template>
 

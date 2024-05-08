@@ -1,45 +1,49 @@
 <template>
   <OrganizationLayout title="表格欄位" :breadcrumb="breadcrumb">
-    <button
-      @click="createRecord()"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3"
-    >
-      {{ $t('create_field') }}
-    </button>
-    <div class="ant-table">
-      <div class="ant-table-container">
-        <table style="table-layout: auto">
-          <thead class="ant-table-thead">
-            <tr>
-              <th v-for="column in columns">{{ $t(column.i18n) }}</th>
-            </tr>
-          </thead>
-          <draggable
-            tag="tbody"
-            class="dragArea list-group ant-table-tbody"
-            :list="fields"
-            @change="rowChange"
-          >
-            <transition-group v-for="(record, idx) in fields">
-              <tr class="ant-table-row ant-table-row-level-0" :key="record.id">
-                <td v-for="column in columns" class="ant-table-cell">
-                  {{ record[column.dataIndex] }}
-                </td>
-                <td>
-                  <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
-                  <a-button
-                    @click="deleteRecord(record)"
-                    :disabled="form.published == 1"
-                    >{{ $t("delete") }}</a-button
-                  >
-                </td>
-              </tr>
-            </transition-group>
-          </draggable>
-        </table>
+    <div class="container mx-auto p-5">
+      <div class="flex-auto pb-3 text-right">
+        <button
+          @click="createRecord()"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3"
+        >
+          {{ $t('create_field') }}
+        </button>
       </div>
+      <div class="ant-table">
+        <div class="ant-table-container">
+          <table style="table-layout: auto">
+            <thead class="ant-table-thead">
+              <tr>
+                <th v-for="column in columns">{{ $t(column.i18n) }}</th>
+              </tr>
+            </thead>
+            <draggable
+              tag="tbody"
+              class="dragArea list-group ant-table-tbody"
+              :list="fields"
+              @change="rowChange"
+            >
+              <transition-group v-for="(record, idx) in fields">
+                <tr class="ant-table-row ant-table-row-level-0" :key="record.id">
+                  <td v-for="column in columns" class="ant-table-cell">
+                    {{ record[column.dataIndex] }}
+                  </td>
+                  <td>
+                    <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
+                    <a-button
+                      @click="deleteRecord(record)"
+                      :disabled="form.published == 1"
+                      >{{ $t("delete") }}</a-button
+                    >
+                  </td>
+                </tr>
+              </transition-group>
+            </draggable>
+          </table>
+        </div>
+      </div>
+      <p></p>
     </div>
-    <p></p>
 
     <!-- Modal Start-->
     <a-modal

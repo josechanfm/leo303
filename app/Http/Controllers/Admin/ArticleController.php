@@ -24,7 +24,7 @@ class ArticleController extends Controller
             // 'classifies'=>Classify::whereBelongsTo(session('organization'))->get(),
             'organizations'=>Organization::all(),
             'articleCategories'=>Config::item('article_categories'),
-            'articles'=>Article::paginate()
+            'articles'=>Article::paginate($request->per_page)
         ]);
     }
 

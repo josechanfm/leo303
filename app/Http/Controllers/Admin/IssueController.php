@@ -1,16 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Organization;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Event;
-use App\Models\Config;
-use App\Models\Member;
-use App\Models\Organization;
+use App\Models\Issue;
 
-class EventController extends Controller
+class IssueController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,10 +16,9 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        return Inertia::render('Organization/Events',[
-            'events'=>Event::paginate($request->per_page),
-            'categories'=>Config::item('event_categories',session('organization'))
-        ]);
+        return Inertia::render('Admin/Issues',[
+            'issues'=>Issue::with('user')->paginate($request->page)
+        ]);        
     }
 
     /**
@@ -32,10 +28,7 @@ class EventController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Organization/Event',[
-            'event'=>new Event,
-            'categories'=>Config::item('event_categories',session('organization'))
-        ]);
+        //
     }
 
     /**
@@ -47,10 +40,9 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $data=$request->all();
-        $data['organization_id']=session('organization')->id;
-        Event::create($data);
-        return redirect()->route('manage.events.index');
-
+        $data['user_id']=auth()->user()->id;
+        Issue::create($data);
+        return redirect()->back();
     }
 
     /**
@@ -59,8 +51,9 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Event $event)
+    public function show($id)
     {
+        //
     }
 
     /**
@@ -69,12 +62,9 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Event $event)
+    public function edit($id)
     {
-        return Inertia::render('Organization/Event',[
-            'event'=>$event,
-            'categories'=>Config::item('event_categories',session('organization'))
-        ]);
+        //
     }
 
     /**
@@ -84,11 +74,9 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Event $event)
+    public function update(Request $request, Issue $issue)
     {
-        //dd($event);
-        //dd($request->all());
-        $event->update($request->all());
+        $issue->update($request->all());
         return redirect()->back();
     }
 
@@ -98,8 +86,9 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Issue $issue)
     {
-        //
+        $issue->delete();
+        return redirect()->back();
     }
 }

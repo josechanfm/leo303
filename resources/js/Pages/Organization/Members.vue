@@ -1,11 +1,11 @@
 <template>
   <OrganizationLayout :title="$t('members')" :breadcrumb="breadcrumb">
-    <div class="flex-auto pb-3 text-right">
-      <a-button type="primary" class="!rounded" @click="createRecord()">{{
-        $t("create_member")
-      }}</a-button>
-    </div>
-    <div class="container mx-auto pt-5">
+    <div class="container mx-auto p-5">
+      <div class="flex-auto pb-3 text-right">
+        <a-button type="primary" class="!rounded" @click="createRecord()">{{
+          $t("create_member")
+        }}</a-button>
+      </div>
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
         <a-table :dataSource="members" :columns="columns">
           <template #headerCell="{ column }">

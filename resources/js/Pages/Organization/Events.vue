@@ -1,19 +1,19 @@
 <template>
-  <OrganizationLayout title="Dashboard">
+  <OrganizationLayout :title="$t('events')">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         {{ $t("events") }}
       </h2>
     </template>
 
-    <div class="flex-auto pb-3 text-right">
-      <inertia-link
-        :href="route('manage.events.create')"
-        class="ant-btn ant-btn-primary"
-        >{{ $t("create_event") }}</inertia-link
-      >
-    </div>
-    <div class="container mx-auto pt-5">
+    <div class="container mx-auto p-5">
+      <div class="flex-auto pb-3 text-right">
+        <inertia-link
+          :href="route('manage.events.create')"
+          class="ant-btn ant-btn-primary"
+          >{{ $t("create_event") }}</inertia-link
+        >
+      </div>
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
         <a-table :dataSource="events.data" :columns="columns">
           <template #headerCell="{ column }">

@@ -1,17 +1,17 @@
 <template>
-  <OrganizationLayout title="Dashboard">
+  <OrganizationLayout :title="$t('article')">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("articles") }}
+        {{ $t("article") }}
       </h2>
     </template>
-    <div>
-      <a-button @click="isDrawerVisible = !isDrawerVisible" type="primary">{{
-        $t("Images")
-      }}</a-button>
-    </div>
     <!-- <a-button @click="getCursor()">{{ $t("cursor") }}</a-button> -->
-    <div class="container mx-auto pt-5">
+    <div class="container mx-auto p-5">
+      <div class="flex-auto pb-3 text-right pb-3">
+        <a-button @click="isDrawerVisible = !isDrawerVisible" type="primary">{{
+          $t("Images")
+        }}</a-button>
+      </div>
       <div class="bg-white relative shadow rounded-lg overflow-x-auto p-5">
         <a-form
           :model="article"
@@ -33,7 +33,7 @@
             <a-input v-model:value="article.title" />
           </a-form-item>
           <a-form-item :label="$t('intro')" name="intro">
-            <a-textarea v-model="article.content" :rows="5"/>
+            <a-textarea v-model:value="article.intro" :rows="5"/>
           </a-form-item>
 
           <a-form-item :label="$t('content')" name="content">
@@ -171,7 +171,7 @@ export default {
     UploadAdapter,
     //UploadAdapter
   },
-  props: ["classifies", "articleCategories", "article", "articles"],
+  props: ["classifies", "articleCategories", "article"],
   data() {
     return {
       medias: [],
@@ -194,8 +194,8 @@ export default {
       },
       rules: {
         category_code: { required: true },
-        classify_id: { required: true },
-        title_en: { required: true },
+        title: { required: true },
+        valid_at: { required: true },
       },
       validateMessages: {
         required: "${label} is required!",

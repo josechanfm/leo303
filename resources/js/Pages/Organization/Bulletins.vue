@@ -5,10 +5,10 @@
         Bulletins
       </h2>
     </template>
-      <div class="flex-auto pb-3 text-right">
-        <a-button type="primary" class="!rounded" @click="createRecord()">Create Buletin</a-button>
-      </div>
-      <div class="container mx-auto pt-5">
+      <div class="container mx-auto p-5">
+        <div class="flex-auto pb-3 text-right">
+          <a-button type="primary" class="!rounded" @click="createRecord()">Create Buletin</a-button>
+        </div>
         <div class="bg-white relative shadow rounded-lg overflow-x-auto">
           <a-table :dataSource="bulletins.data" :columns="columns" :pagination="pagination" @change="onPaginationChange"
             ref="dataTable">

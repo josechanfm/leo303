@@ -1,18 +1,18 @@
 <template>
-  <OrganizationLayout title="Dashboard">
+  <OrganizationLayout :title="$t('articles')">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         {{ $t("articles") }}
       </h2>
     </template>
-    <div class="flex-auto pb-3 text-right">
-      <inertia-link
-        :href="route('manage.articles.create')"
-        class="ant-btn ant-btn-primary"
-        >{{ $t("create_article") }}</inertia-link
-      >
-    </div>
-    <div class="container mx-auto pt-5">
+    <div class="container mx-auto p-5">
+      <div class="flex-auto pb-3 text-right pb-3">
+        <inertia-link
+          :href="route('manage.articles.create')"
+          class="ant-btn ant-btn-primary"
+          >{{ $t("create_article") }}</inertia-link
+        >
+      </div>
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
         <a-table :dataSource="articles" :columns="columns">
           <template #headerCell="{ column }">

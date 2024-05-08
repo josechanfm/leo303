@@ -5,7 +5,7 @@
         Create Event
       </h2>
     </template>
-    <div class="container mx-auto">
+    <div class="container mx-auto p-5">
       <div class="bg-white relative shadow rounded-lg p-5">
         <a-form :model="event" name="nest-messages" :validate-messages="validateMessages"
           layout="vertical" :rules="rules" @finish="onFinish">

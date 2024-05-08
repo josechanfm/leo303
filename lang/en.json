@@ -148,6 +148,7 @@
     "end_date": "End Date",
     "classification": "Categories",
     "content": "Content",
+    "article": "Article",
     "articles": "Articles",
     "article_category": "Article category",
     "events": "Events",

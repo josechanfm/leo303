@@ -1,6 +1,6 @@
 <template>
   <OrganizationLayout :title="form.id?'表格修改':'表格新增'" :breadcrumb="breadcrumb">
-    <div class="container mx-auto">
+    <div class="container mx-auto p-5">
       <div class="bg-white relative shadow  p-5 rounded-lg overflow-x-auto">
         <a-form
             ref="modalRef"
