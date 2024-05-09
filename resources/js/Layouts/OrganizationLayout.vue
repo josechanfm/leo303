@@ -6,7 +6,7 @@
         <inertia-link href="/">{{ $page.props.current_organization.abbr }}</inertia-link>
       </div>
       <div class="m-4 text-center text-lg" v-else>
-        <inertia-link :href="route('manage')">{{
+        <inertia-link :href="route('manage')" v-if="$page.props.current_organization">{{
           $page.props.current_organization['name_'+$t('lang')]
         }}</inertia-link>
       </div>

@@ -329,6 +329,7 @@ export default {
                 {{$t('account')}}
               </ResponsiveNavLink>
               <ResponsiveNavLink
+                as="a"
                 :href="route('manage')"
                 v-if="$page.props.user.roles.includes('organizer')"
               >

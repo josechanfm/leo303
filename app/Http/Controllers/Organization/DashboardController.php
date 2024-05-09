@@ -23,12 +23,10 @@ class DashboardController extends Controller
 
         $this->authorize('view',session('organization'));
         return Inertia::render('Organization/Dashboard',[
+            'current_organization'=>session('member')->organization,
             'organizations' => auth()->user()->organizations,
             'member'=>session('member'),
-            //'current_organization'=>session('organization')
         ]);
-        //return redirect()->route('manage.list');
-
     }
     
 }
