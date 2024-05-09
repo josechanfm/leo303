@@ -76,8 +76,8 @@ class FormController extends Controller
         if($request->file('thumbnail_upload')){
             $file=$request->file('thumbnail_upload');
             $fileName=$form->id.'_'.$file->getClientOriginalName();
-            $file->move(public_path('forms'), $fileName);
-            $form->thumbnail='/forms/'.$fileName;
+            $file->move(public_path('thumbnail/forms'), $fileName);
+            $form->thumbnail='/thumbnail/forms/'.$fileName;
             $form->save();
         }
         
@@ -138,8 +138,8 @@ class FormController extends Controller
         if($request->file('thumbnail_upload')){
             $file=$request->file('thumbnail_upload');
             $fileName=$form->id.'_'.$file->getClientOriginalName();
-            $file->move(public_path('forms'), $fileName);
-            $data['thumbnail']='/forms/'.$fileName;
+            $file->move(public_path('thumbnail/forms'), $fileName);
+            $data['thumbnail']='/thumbnail/forms/'.$fileName;
         }
         $form->update($data);
         // if($request->file('image')){
@@ -189,10 +189,6 @@ class FormController extends Controller
         $form->thumbnail=null;
         $form->save();
         return redirect()->back();
-    }
-
-    public function deleteMedia(Media $media){
-        $media->delete();
     }
 
 }

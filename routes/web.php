@@ -82,7 +82,6 @@ Route::group([
     Route::post('member/create/login/{member}', [App\Http\Controllers\Organization\MemberController::class, 'createLogin'])->name('manage.member.createLogin');
     Route::resource('forms', App\Http\Controllers\Organization\FormController::class)->names('manage.forms');
     Route::post('form/delete_image/{form}', [App\Http\Controllers\Organization\FormController::class,'deleteImage'])->name('manage.form.deleteImage');
-    Route::get('form/delete_media/{media}', [App\Http\Controllers\Organization\FormController::class, 'deleteMedia'])->name('manage.form.deleteMedia');
     Route::post('form/{form}/backup', [App\Http\Controllers\Organization\FormController::class, 'backup'])->name('manage.form.backup');
     Route::resource('form/{form}/fields', App\Http\Controllers\Organization\FormFieldController::class)->names('manage.form.fields');
     Route::post('form/{form}/fields_sequence', [App\Http\Controllers\Organization\FormFieldController::class, 'fieldsSequence'])->name('manage.form.fieldsSequence');

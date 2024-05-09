@@ -45,7 +45,14 @@ class FeatureController extends Controller
      */
     public function store(Request $request)
     {
-        Feature::create($request->all());
+        $feature=Feature::create($request->all());
+        if($request->file('image_upload')){
+            $file=$request->file('image_upload');
+            $fileName=$feature->id.'_'.$file->getClientOriginalName();
+            $file->move(public_path('thumbnail/features'), $fileName);
+            $feature->image='/thumbnail/features/'.$fileName;
+            $feature->save();
+        }
         return to_route('admin.features.index');
     }
 
@@ -87,8 +94,8 @@ class FeatureController extends Controller
         if($request->file('image_upload')){
             $file=$request->file('image_upload');
             $fileName=$feature->id.'_'.$file->getClientOriginalName();
-            $file->move(public_path('features'), $fileName);
-            $data['image']='/features/'.$fileName;
+            $file->move(public_path('thumbnail/features'), $fileName);
+            $data['image']='/thumbnail/features/'.$fileName;
         }
         $feature->update($data);
         return to_route('admin.features.index');

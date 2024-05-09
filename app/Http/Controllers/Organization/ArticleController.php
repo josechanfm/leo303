@@ -65,8 +65,8 @@ class ArticleController extends Controller
         if($request->file('thumbnail_upload')){
             $file=$request->file('thumbnail_upload');
             $fileName=$article->id.'_'.$file->getClientOriginalName();
-            $file->move(public_path('articles'), $fileName);
-            $article->thumbnail='/articles/'.$fileName;
+            $file->move(public_path('thumbnail/articles'), $fileName);
+            $article->thumbnail='/thumbnail/articles/'.$fileName;
             $article->save();
         }
 
@@ -113,8 +113,8 @@ class ArticleController extends Controller
         if($request->file('thumbnail_upload')){
             $file=$request->file('thumbnail_upload');
             $fileName=$article->id.'_'.$file->getClientOriginalName();
-            $file->move(public_path('articles'), $fileName);
-            $data['thumbnail']='/articles/'.$fileName;
+            $file->move(public_path('thumbnail/articles'), $fileName);
+            $data['thumbnail']='/thumbnail/articles/'.$fileName;
         }
         $article->update($data);
 
