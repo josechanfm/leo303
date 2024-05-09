@@ -1,5 +1,5 @@
 <template>
-  <OrganizationLayout title="表格欄位" :breadcrumb="breadcrumb">
+  <AdminLayout title="表格欄位" :breadcrumb="breadcrumb">
     <div class="container mx-auto p-5">
       <div class="flex-auto pb-3 text-right">
         <button
@@ -139,27 +139,27 @@
       </template>
     </a-modal>
     <!-- Modal End-->
-  </OrganizationLayout>
+  </AdminLayout>
 </template>
 
 <script>
-import OrganizationLayout from "@/Layouts/OrganizationLayout.vue";
+import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { defineComponent, reactive } from "vue";
 import { VueDraggableNext } from "vue-draggable-next";
 
 export default {
   components: {
-    OrganizationLayout,
+    AdminLayout,
     draggable: VueDraggableNext,
   },
-  props: ["templateOptions","form", "fields","fieldTypes"],
+  props: ["form", "fields","fieldTypes"],
   data() {
     return {
       breadcrumb: [
-        { label: "表格列表", url:route('manage.forms.index')},
+        { label: "表格列表", url:route('admin.forms.index')},
         { label: "表格欄位", url: null }
       ],
-      //templateOptions:[],
+      templateOptions:[],
       modal: {
         isOpen: false,
         data: {},
@@ -218,6 +218,9 @@ export default {
     };
   },
   created() {
+    axios.get(route("api.config.item", { key: 'template_options' })).then((resp) => {
+      this.templateOptions=resp.data
+    })
   },
   methods: {
     createRecord() {
@@ -256,7 +259,7 @@ export default {
     },
     storeRecord(data) {
           this.$inertia.post(
-            route("manage.form.fields.store", {
+            route("admin.form.fields.store", {
               form: data.form_id,
             }),
             data,
@@ -272,7 +275,7 @@ export default {
     },
     updateRecord(data) {
           this.$inertia.patch(
-            route("manage.form.fields.update", {
+            route("admin.form.fields.update", {
               form: data.form_id,
               field: data,
             }),
@@ -336,7 +339,7 @@ export default {
         data.push({ id: field.id, form_id: field.form_id, sequence: idx });
       });
       console.log(data);
-      this.$inertia.post(route("manage.form.fieldsSequence", this.form.id), data, {
+      this.$inertia.post(route("admin.form.fieldsSequence", this.form.id), data, {
         onSuccess: (page) => {
           console.log(page);
         },

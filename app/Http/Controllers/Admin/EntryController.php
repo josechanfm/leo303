@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Organization;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -31,7 +31,7 @@ class EntryController extends Controller
     {
         //$form=Form::with('fields')->find($form->id);
         $entries = $form->tableEntries();
-        return Inertia::render('Organization/FormEntries', [
+        return Inertia::render('Admin/FormEntries', [
             'organization' => session('organization'),
             'form' => $form,
             'entries' => $entries,

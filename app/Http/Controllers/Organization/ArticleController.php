@@ -35,10 +35,15 @@ class ArticleController extends Controller
      */
     public function create()
     {
+        $article=Article::make([
+            'organization_id'=>session('organization')->id,
+            'published'=>false,
+            'public'=>false
+        ]);
         return Inertia::render('Organization/Article',[
             'classifies'=>Classify::whereBelongsTo(session('organization'))->get(),
             'articleCategories'=>Config::item('article_categories'),
-            'article'=>new Article()
+            'article'=>$article
         ]);
 
     }
@@ -55,7 +60,16 @@ class ArticleController extends Controller
         $data['organization_id']=session('organization')->id;
         $data['user_id']=auth()->user()->id;
         $data['author']=auth()->user()->name;
-        Article::create($data);
+        $article=Article::create($data);
+
+        if($request->file('thumbnail_upload')){
+            $file=$request->file('thumbnail_upload');
+            $fileName=$article->id.'_'.$file->getClientOriginalName();
+            $file->move(public_path('articles'), $fileName);
+            $article->thumbnail='/articles/'.$fileName;
+            $article->save();
+        }
+
         return redirect()->route('manage.articles.index');
     }
 
@@ -95,6 +109,7 @@ class ArticleController extends Controller
     public function update(Request $request, Article $article)
     {
         $data=$request->all();
+        
         if($request->file('thumbnail_upload')){
             $file=$request->file('thumbnail_upload');
             $fileName=$article->id.'_'.$file->getClientOriginalName();

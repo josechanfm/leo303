@@ -21,7 +21,7 @@
                       <td>{{ record.form_field.field_label }}</td>
                       <td>
                         {{
-                          JSON.parse(record.form_field.options).find(
+                          record.form_field.options.find(
                             (x) => x.value == record.field_value
                           ).label
                         }}
@@ -33,7 +33,7 @@
                         {{
                           JSON.parse(record.field_value)
                             .map((x) => {
-                              return JSON.parse(record.form_field.options).find(
+                              return record.form_field.options.find(
                                 (y) => y.value == x
                               ).label;
                             })

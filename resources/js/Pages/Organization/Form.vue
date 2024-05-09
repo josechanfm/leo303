@@ -12,6 +12,7 @@
             :rules="rules"
             :validate-messages="validateMessages"
             @finish="onFinish"
+            @finishFailed="onFinishFailed"
         >
             <a-form-item :label="$t('form_name')" name="name">
                 <a-input v-model:value="form.name" />
@@ -35,11 +36,11 @@
                 />
             </a-form-item>
             <div class="text-right">
-                <a @click="form.openThankyou=!form.openThankyou">{{ $t('form_thankyou') }}</a>
+                <a @click="form.openThanks=!form.openThanks">{{ $t('form_thankyou') }}</a>
             </div>
-            <a-form-item :label="$t('form_thankyou')" name="thankyou" v-if="form.openThankyou">
+            <a-form-item :label="$t('form_thankyou')" name="thanks" v-if="form.openThanks">
                 <quill-editor
-                    v-model:value="form.thankyou"
+                    v-model:value="form.thanks"
                     style="min-height: 200px"
                 />
             </a-form-item>
@@ -90,52 +91,39 @@
                 />
                 <span class="pl-3">{{ $t("with_attendance_note") }}</span>
             </a-form-item>
-            <a-form-item :label="$t('banner_image')" name="banner_image">
-                <div v-if="form.media.length">
-                    <inertia-link
-                    :href="route('manage.form.deleteMedia', form.media[0].id)"
-                    class="float-right text-red-500"
-                    >
-                    <svg
-                        focusable="false"
-                        class=""
-                        data-icon="delete"
-                        width="1em"
-                        height="1em"
-                        fill="currentColor"
-                        aria-hidden="true"
-                        viewBox="64 64 896 896"
-                    >
-                        <path
-                        d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"
-                        ></path>
-                    </svg>
-                    </inertia-link>
-                    <img :src="form.media[0].preview_url" width="100" />
-                </div>
-                <div v-else>
-                    <a-upload
-                    v-model:file-list="form.image"
-                    :multiple="false"
-                    :max-count="1"
-                    list-type="picture-card"
-                    :beforeUpload="
-                        () => {
-                        return false;
-                        }
-                    "
-                    :show-upload-list="false"
-                    @change="uploadChange"
-                    >
-                    <img v-if="imageUrl" :src="imageUrl" alt="banner" />
-                    <div v-else>
-                        <loading-outlined v-if="loading"></loading-outlined>
-                        <plus-outlined v-else></plus-outlined>
-                        <div class="ant-upload-text">{{ $t("upload") }}</div>
-                    </div>
-                    </a-upload>
-                </div>
+            <!-- Thumbnail-->
+            <a-form-item :label="$t('thumbnail')">
+              <template v-if="form.thumbnail">
+                <img :src="form.thumbnail" width="300px" />
+                <a @click="onDeleteImage(form)">Delete</a>
+              </template>
+              <template v-else>
+                <template v-if="previewImage">
+                  <img :src="previewImage" class="w-64"/>
+                  <a @click="onRemoveImage">Remove</a>
+                </template>
+                <template v-else>
+                  <div class="flex items-center justify-center w-64">
+                    <label for="dropzone-file"
+                      class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                      <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                        </svg>
+                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                          <div v-html="$t('upload_drag_drop')"/>
+                        </p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $t('image_size_note') }}</p>
+                      </div>
+                      <input id="dropzone-file" type="file" @change="onSelectFile" accept="image/png, image/gif, image/jpeg" style="display:none" />
+                    </label>
+                  </div>
+                </template>
+              </template>
             </a-form-item>
+
             <a-form-item :wrapper-col="{ offset: 12, span: 10 }">
                 <a-button type="primary" html-type="submit">Submit</a-button>
             </a-form-item>
@@ -148,27 +136,16 @@
 
 <script>
 import OrganizationLayout from "@/Layouts/OrganizationLayout.vue";
-import {
-  UploadOutlined,
-  LoadingOutlined,
-  PlusOutlined,
-  InfoCircleFilled,
-} from "@ant-design/icons-vue";
-import Icon, { RestFilled } from "@ant-design/icons-vue";
 import { quillEditor, Quill } from "vue3-quill";
 import { message } from "ant-design-vue";
 
 export default {
   components: {
     OrganizationLayout,
-    UploadOutlined,
-    LoadingOutlined,
-    PlusOutlined,
-    RestFilled,
     quillEditor,
     message,
   },
-  props: ["organization", "form"],
+  props: ["form"],
   data() {
     return {
       breadcrumb: [
@@ -176,6 +153,8 @@ export default {
         { label: this.form.id?'表格修改':'表格新增', url: null }
       ],
       loading: false,
+      previewImage: null,
+      selectedMedia: null,
       imageUrl: null,
       rules: {
         name: { required: true },
@@ -201,70 +180,66 @@ export default {
   created() {
   },
   mounted() {
-    console.log(this.form)
   },
   methods: {
-    onFinish(){
-        console.log('on Finshed')
-        if(this.form.id){
-            console.log('Update')
-            this.updateRecord()
-        }else{
-            console.log('Create')
-            this.storeRecord()
-        }
+    onSelectFile(event) {
+      const file =event.target.files[0]
+
+      if(file.size > 1024*1024*1){
+        alert('oversize')
+        return false
+      }
+      this.form.thumbnail_upload = file
+      this.previewImage = URL.createObjectURL(file)
+
     },
-    storeRecord() {
-        this.$inertia.post(route("manage.forms.store"), this.form, {
+    onRemoveImage() {
+      this.form.thumbial_upload = null
+      this.previewImage = null
+    },
+    onDeleteImage(form) {
+      this.$inertia.post(route('manage.form.deleteImage', this.form), {
         onSuccess: (page) => {
-            this.imageUrl = null;
+          console.log(page)
         },
         onError: (err) => {
-            console.log(err);
+          console.log(err);
         },
-        });
-    },
-    updateRecord() {
-        this.form._method = "PATCH";
-        this.$inertia.post(
-            route("manage.forms.update", this.form.id),this.form,{
-                onSuccess: (page) => {
-                    console.log(page);
-                },
-                onError: (error) => {
-                    console.log(error);
-                },
-            }
-        );
-    },
-    uploadChange(info) {
-      console.log(info);
-      const isJpgOrPng =
-        info.file.type === "image/jpeg" || info.file.type === "image/png";
-      if (!isJpgOrPng) {
-        console.log("image format!");
-        message.error("You can only upload JPG/PNG file!");
-      }
-      const isLt2M = info.file.size / 1024 / 1024 < 0.2;
-      if (!isLt2M) {
-        console.log("image size");
-        message.error("Image must smaller than 2MB!");
-      }
+      })
 
-      if (isJpgOrPng && isLt2M) {
-        this.getBase64(info.file, (base64Url) => {
-          this.imageUrl = base64Url;
-          this.loading = true;
+    },
+    uploader(editor) {
+      editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+        return new UploadAdapter(loader);
+      };
+    },
+    onFinish(event) {
+      if (this.form.id) {
+        this.form._method='PATCH';
+        this.$inertia.post(route("manage.forms.update", this.form.id), this.form, {
+          onSuccess: (page) => {
+            console.log(page);
+          },
+          onError: (error) => {
+            console.log(error);
+          },
         });
       } else {
-        this.form.image = [];
+        this.$inertia.post(route("manage.forms.store"), this.form, {
+          onSuccess: (page) => {
+            // this.modal.data = {};
+            // this.modal.isOpen = false;
+          },
+          onError: (err) => {
+            console.log(err);
+          },
+        });
       }
     },
-    getBase64(img, callback) {
-      const reader = new FileReader();
-      reader.addEventListener("load", () => callback(reader.result));
-      reader.readAsDataURL(img);
+    onFinishFailed({ values, errorFields, outOfDate }){
+      message.error("Some required fields are missing!");
     },
+
   },
 };
 </script>

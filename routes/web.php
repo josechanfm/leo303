@@ -30,16 +30,15 @@ Route::get('/', function () {
         'articles' => Article::publics()
     ]);
 })->name('/');;
-Route::get('article', [\App\Http\Controllers\ArticleController::class, 'item'])->name('article.item');
-Route::get('registration', [\App\Http\Controllers\RegistrationController::class, 'create'])->name('registration');
-Route::post('registration', [\App\Http\Controllers\RegistrationController::class, 'store'])->name('registration.store');
+
 Route::get('/language/{language}', function ($language) {
-
     Session::put('applocale', $language);
-
     return Redirect::back();
 })->name('language');
 
+Route::get('registration', [\App\Http\Controllers\RegistrationController::class, 'create'])->name('registration');
+Route::post('registration', [\App\Http\Controllers\RegistrationController::class, 'store'])->name('registration.store');
+Route::get('article', [\App\Http\Controllers\ArticleController::class, 'item'])->name('article.item');
 Route::resource('forms', App\Http\Controllers\FormController::class)->names('forms');
 Route::get('form/{form}/entry/{entry}/success', [App\Http\Controllers\Organization\EntryController::class, 'entrySuccess'])->name('form.entry.success');
 Route::get('content', [App\Http\Controllers\ContentController::class,'page'])->name('content');
@@ -82,6 +81,7 @@ Route::group([
     Route::resource('members', App\Http\Controllers\Organization\MemberController::class)->names('manage.members');
     Route::post('member/create/login/{member}', [App\Http\Controllers\Organization\MemberController::class, 'createLogin'])->name('manage.member.createLogin');
     Route::resource('forms', App\Http\Controllers\Organization\FormController::class)->names('manage.forms');
+    Route::post('form/delete_image/{form}', [App\Http\Controllers\Organization\FormController::class,'deleteImage'])->name('manage.form.deleteImage');
     Route::get('form/delete_media/{media}', [App\Http\Controllers\Organization\FormController::class, 'deleteMedia'])->name('manage.form.deleteMedia');
     Route::post('form/{form}/backup', [App\Http\Controllers\Organization\FormController::class, 'backup'])->name('manage.form.backup');
     Route::resource('form/{form}/fields', App\Http\Controllers\Organization\FormFieldController::class)->names('manage.form.fields');
@@ -118,6 +118,8 @@ Route::group([
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
     Route::resource('organizations', App\Http\Controllers\Admin\OrganizationController::class)->names('admin.organizations');
     Route::get('organization/{organization}/members', [App\Http\Controllers\Admin\OrganizationController::class, 'members'])->name('admin.organization.members');
+    Route::post('organization/masquerade/{organization}', [App\Http\Controllers\Admin\OrganizationController::class,'masquerade'])->name('admin.organization.masquerade');
+
     Route::resource('members', App\Http\Controllers\Admin\MemberController::class)->names('admin.members');
     Route::resource('users', App\Http\Controllers\Admin\UserController::class)->names('admin.users');
     Route::resource('configs', App\Http\Controllers\Admin\ConfigController::class)->names('admin.configs');
@@ -126,4 +128,12 @@ Route::group([
     Route::resource('articles', App\Http\Controllers\Admin\ArticleController::class)->names('admin.articles');
     Route::post('article/delete_image/{article}', [App\Http\Controllers\Admin\ArticleController::class,'deleteImage'])->name('admin.article.deleteImage');
     Route::resource('issues', App\Http\Controllers\Admin\IssueController::class)->names('admin.issues');
+   
+
+    Route::resource('forms', App\Http\Controllers\Admin\FormController::class)->names('admin.forms');
+    Route::resource('form/{form}/fields', App\Http\Controllers\Admin\FormFieldController::class)->names('admin.form.fields');    
+    Route::resource('form/{form}/entries', App\Http\Controllers\Admin\EntryController::class)->names('admin.form.entries');
+    Route::get('entry/{form}/export', [App\Http\Controllers\Admin\EntryController::class, 'export'])->name('admin.entry.export');
+    Route::get('form/{form}/entry/{entry}/success', [App\Http\Controllers\Admin\EntryController::class, 'success'])->name('admin.form.entry.success');
+    Route::get('form/delete_media/{media}', [App\Http\Controllers\Admin\FormController::class, 'deleteMedia'])->name('admin.form.deleteMedia');
 });

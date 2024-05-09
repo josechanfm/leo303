@@ -29,7 +29,7 @@ class FormController extends Controller
             $organizationForms = Form::where('published', true)->where('require_login', false)->with('organization')->get();
             $forms = $forms->merge($organizationForms);
         }
-        return Inertia::render('Form/Form', [
+        return Inertia::render('Form/Forms', [
             'forms' => $forms
         ]);
     }
@@ -98,9 +98,12 @@ class FormController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Form $form)
+    public function show(Form $form, Request $request)
     {
-        if (!$form->published) {
+        
+        if($request->t!=$form->uuid){
+            return redirect()->back();
+        } elseif (!$form->published || empty($request->t)) {
             return redirect()->back();
         } elseif ($form->require_login && auth()->user() == null) {
             return redirect()->back();

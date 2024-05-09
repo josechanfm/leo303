@@ -110,7 +110,6 @@ export default {
     <div class="container mx-auto">
       <div class="flex flex-col-reverse md:flex-row gap-6">
         <div class="flex-auto">
-
           <!-- Feature Section -->
           <div class="container mx-auto mt-5 bg-white rounded-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 py-3 px-2">
@@ -124,7 +123,7 @@ export default {
                         <inertia-link v-if="feature.url" :href="feature.url">
                           <div class="font-bold text-xl mb-2">{{ feature.title }}</div>
                         </inertia-link>
-                        <inertia-link v-else :href="route('article.item',{ t:feature.uuid})" target="_blank">
+                        <inertia-link v-else :href="route('article.item', { t: feature.uuid })" target="_blank">
                           <div class="font-bold text-xl mb-2">{{ feature.title }}</div>
                         </inertia-link>
                         <p class="text-gray-700 text-base pl-1">
@@ -230,7 +229,7 @@ export default {
                   {{ currentMember.family_name }}{{ currentMember.given_name }}
                 </h1>
                 <p class="text-center text-sm text-gray-400 font-medium">
-                  {{ $page.props.current_organization['name_' + $t('lang')] }}
+                  {{ currentMember.organization['name_' + $t('lang')] }}
                 </p>
                 <p>
                   <span> </span>
@@ -257,7 +256,7 @@ export default {
 
                       <template v-for="member in members">
                         <a href="#"
-                          class="w-full border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
+                          class="w-full border-t bor  der-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150">
                           <img src="https://avatars0.githubusercontent.com/u/35900628?v=4" alt=""
                             class="rounded-full h-6 shadow-md inline-block mr-2" />
                           {{ member.organization.abbr }} - {{ member.organization['name_' + $t('lang')] }}

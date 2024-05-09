@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Form;
 use App\Models\Entry;
+use Illuminate\Support\Str;
 
 class FormSeeder extends Seeder
 {
@@ -18,6 +19,7 @@ class FormSeeder extends Seeder
     public function run()
     {
         $form=Form::create([
+            'uuid'=>Str::uuid(),
             'organization_id'=>1,
             'name'=>'first form',
             'title'=>'First form of title'
@@ -63,6 +65,7 @@ class FormSeeder extends Seeder
 
 
         $form=Form::create([
+            'uuid'=>Str::uuid(),
             'organization_id'=>1,
             'name'=>'second form',
             'title'=>'Second form of title',
@@ -77,6 +80,7 @@ class FormSeeder extends Seeder
         ]);
 
         $form=Form::create([
+            'uuid'=>Str::uuid(),
             'organization_id'=>11,
             'name'=>'（活動報名）慶祝六一兒童節填色比賽',
             'title'=>'（活動報名）慶祝六一兒童節填色比賽',
@@ -128,7 +132,7 @@ class FormSeeder extends Seeder
         foreach($form->fields as $field){
             $entry->records()->create([
                 'form_field_id'=>$field->id,
-                'field_value'=>'=='.$field->field_label.'==='
+                'field_value'=>'**'.$field->field_label.'**'
             ]);
     
         }

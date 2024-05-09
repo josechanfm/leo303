@@ -12,10 +12,16 @@
                 <a-table :dataSource="forms" :columns="columns">
                     <template #bodyCell="{column, text, record, index}">
                         <template v-if="column.dataIndex=='operation'">
-                            <a @click="toApply(record)">填寫</a>
+                            <inertia-link :href="route('forms.show',{form:record.id,t:record.uuid})">填寫</inertia-link>
                         </template>
                         <template v-else-if="column.dataIndex=='abbr'">
-                            {{record.organization.abbr}}
+                            <span v-if="record.organization">
+                                {{record.organization.abbr}}
+                            </span>
+                            <span>
+                                General From
+                            </span>
+                            
                         </template>
                         <template v-else-if="column.type=='yesno'">
                             <span v-if="record[column.dataIndex]==1">
@@ -112,13 +118,6 @@ export default {
     created(){
     },
     methods: {
-        toApply(record){
-            if(record.require_login==0 || this.$page.props.user){
-                Inertia.get(route('forms.show',record.id));
-            }else{
-                alert("login requierd");
-            }
-        }
     },
 }
 </script>

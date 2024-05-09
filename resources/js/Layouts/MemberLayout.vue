@@ -89,7 +89,7 @@ export default {
               <!-- Logo -->
               <div class="shrink-0 flex items-center">
                 <Link :href="route('member.dashboard')">
-                  <img v-if="this.$page.props.current_organization.logo" :src="this.$page.props.current_organization.logo" class="block h-14 w-auto" />
+                  <img v-if="this.$page.props.currentMember.organization.logo" :src="this.$page.props.currentMember.organization.logo" class="block h-14 w-auto" />
                   <img v-else src="/images/site_logo.png" class="block h-14 w-auto" />
                 </Link>
               </div>

@@ -71,7 +71,7 @@
               >
                 <a-radio-group v-model:value="formData[field.id]">
                   <a-radio
-                    v-for="option in JSON.parse(field.options)"
+                    v-for="option in field.options"
                     :key="option.id"
                     :style="field.direction == 'H' ? '' : verticalStyle"
                     :value="option.value"
@@ -88,7 +88,7 @@
               >
                 <a-checkbox-group v-model:value="formData[field.id]">
                   <a-checkbox
-                    v-for="option in JSON.parse(field.options)"
+                    v-for="option in field.options"
                     :key="option.id"
                     :style="field.direction == 'H' ? '' : verticalStyle"
                     :value="option.value"
@@ -105,7 +105,7 @@
               >
                 <a-select
                   v-model:value="formData[field.id]"
-                  :options="JSON.parse(field.options)"
+                  :options="field.options"
                 ></a-select>
               </a-form-item>
             </div>

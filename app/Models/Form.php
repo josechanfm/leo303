@@ -9,12 +9,26 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Support\Str;
+
 
 class Form extends Model implements HasMedia
 {
     use HasFactory;
     use InteractsWithMedia;
-    protected $fillable = ['organization_id', 'name', 'title', 'welcome', 'description', 'thankyou', 'require_login', 'for_member', 'published', 'with_attendance'];
+    protected $fillable = ['uuid','organization_id', 'name', 'title', 'description', 'welcome', 'thanks','thumbnail', 'require_login', 'for_member', 'published', 'with_attendance'];
+
+    public static function boot(){
+        parent::boot();
+        self::creating(function($model){
+            $model->uuid=Str::uuid();
+        });
+        static::updating(function ($model){
+            if(empty($model->uuid)){
+                $model->uuid=Str::uuid();
+            }
+        });
+    }
 
     public function registerMediaConversions(Media $media = null): void
     {
@@ -69,15 +83,15 @@ class Form extends Model implements HasMedia
                 $f = $entry->records->where('form_field_id', $field->id)->first();
                 if ($f) {
                     if ($field->type == 'radio') {
-                        $fieldOptions = json_decode($field->options);
+                        $fieldOptions = $field->options;
                         $value = array_filter($fieldOptions, function ($item) use ($f) {
-                            return $item->value == $f->field_value;
+                            return $item['value'] == $f->field_value;
                         });
                         $valueItem = reset($value);
                         $entry['extra_' . $field->id] = $valueItem->label ?? '';
                         // dd($entry);
                     } else if ($field->type == 'checkbox') {
-                        $fieldOptions = json_decode($field->options);
+                        $fieldOptions = $field->options;
                         $fieldValue = json_decode($f->field_value);
                         $value = array_filter($fieldOptions, function ($item) use ($fieldValue) {
                             return in_array($item->value, $fieldValue);
@@ -127,8 +141,8 @@ class Form extends Model implements HasMedia
                     return $item->form_field_id == $field->id;
                 })->first();
                 if ($field->type == 'radio') {
-                    $value = array_filter(json_decode($field->options), function ($item) use ($entry_record) {
-                        return $item->value === $entry_record?->field_value;
+                    $value = array_filter($field->options, function ($item) use ($entry_record) {
+                        return $item['value'] === $entry_record?->field_value;
                     });
                     // dd($value);
                     $table_data[$field->field_label] = reset($value)->label ?? '';

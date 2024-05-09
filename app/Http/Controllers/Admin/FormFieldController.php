@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Organization;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Config;
@@ -26,13 +26,7 @@ class FormFieldController extends Controller
     public function index(Form $form)
     {
         $this->authorize('view', $form);
-        $templates=Config::item('template_options');
-        $templates[]=[
-            'value'=>'organizations',
-            'label'=>'Organization',
-            'template'=>Organization::select('abbr as value','name_zh as label')->where('status',true)->get()->toArray()];
-        return Inertia::render('Organization/FormFields', [
-            'templateOptions'=>$templates,
+        return Inertia::render('Admin/FormFields', [
             'fieldTypes'=>Config::item('field_types'),
             'form' => $form,
             'fields' => $form->fields,

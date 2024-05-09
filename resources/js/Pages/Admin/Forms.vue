@@ -1,8 +1,8 @@
 <template>
-  <OrganizationLayout title="表格" :breadcrumb="breadcrumb">
+  <AdminLayout title="表格" :breadcrumb="breadcrumb">
     <div class="container mx-auto p-5">
       <div class="flex-auto pb-3 text-right">
-        <inertia-link :href="route('manage.forms.create')"
+        <inertia-link :href="route('admin.forms.create')"
           class="ant-btn ant-btn-primary !rounded">{{ $t("create_form") }}</inertia-link>
       </div>
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
@@ -12,13 +12,13 @@
           </template>
           <template #bodyCell="{ column, text, record, index }">
             <template v-if="column.dataIndex == 'operation'">
-              <inertia-link :href="route('manage.form.entries.index', { form: record.id })" class="ant-btn">{{
+              <inertia-link :href="route('admin.form.entries.index', { form: record.id })" class="ant-btn">{{
                 $t("applications") }}</inertia-link>
-              <a :href="route('manage.entry.export', { form: record.id })" class="ant-btn">{{ $t("export") }}</a>
-              <inertia-link :href="route('manage.form.fields.index', { form: record.id })" class="ant-btn">
+              <a :href="route('admin.entry.export', { form: record.id })" class="ant-btn">{{ $t("export") }}</a>
+              <inertia-link :href="route('admin.form.fields.index', { form: record.id })" class="ant-btn">
                 {{ $t("data_fields") }}
               </inertia-link>
-              <inertia-link :href="route('manage.forms.edit', record.id)" class="ant-btn">
+              <inertia-link :href="route('admin.forms.edit', record.id)" class="ant-btn">
                 {{ $t("edit") }}
               </inertia-link>
 
@@ -47,11 +47,11 @@
       </div>
       <p>From CAN NOT be delete, if Response is not empty.</p>
     </div>
-  </OrganizationLayout>
+  </AdminLayout>
 </template>
 
 <script>
-import OrganizationLayout from "@/Layouts/OrganizationLayout.vue";
+import AdminLayout from "@/Layouts/AdminLayout.vue";
 import {
   UploadOutlined,
   LoadingOutlined,
@@ -64,7 +64,7 @@ import { message } from "ant-design-vue";
 
 export default {
   components: {
-    OrganizationLayout,
+    AdminLayout,
     UploadOutlined,
     LoadingOutlined,
     PlusOutlined,
@@ -129,7 +129,7 @@ export default {
       deleteConfirmed(record) {
         console.log("delete");
         console.log(record);
-        this.$inertia.delete(route("manage.forms.destroy", { form: record.id }), {
+        this.$inertia.delete(route("admin.forms.destroy", { form: record.id }), {
           onSuccess: (page) => {
             console.log(page);
           },
@@ -140,7 +140,7 @@ export default {
       },
       backupRecords(record) {
         if (!confirm("Do you sure want to backup?")) return;
-        this.$inertia.post(route("manage.form.backup", record.id), {
+        this.$inertia.post(route("admin.form.backup", record.id), {
           onSuccess: (page) => {
             console.log(page);
           },

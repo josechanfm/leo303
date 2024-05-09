@@ -7,8 +7,15 @@
     </template>
     <div class="container mx-auto p-5">
       <div class="bg-white relative shadow rounded-lg p-5">
-        <a-form :model="event" name="nest-messages" :validate-messages="validateMessages"
-          layout="vertical" :rules="rules" @finish="onFinish">
+        <a-form 
+          :model="event" 
+          name="nest-messages" 
+          :validate-messages="validateMessages"
+          layout="vertical" 
+          :rules="rules" 
+          @finish="onFinish"
+          @finishFailed="onFinishFailed"
+        >
           <a-form-item :label="$t('event_title_en')" name="title_en">
             <a-input v-model:value="event.title_en" />
           </a-form-item>
@@ -56,13 +63,14 @@
 <script>
 import OrganizationLayout from "@/Layouts/OrganizationLayout.vue";
 import { quillEditor } from 'vue3-quill';
-import { callWithAsyncErrorHandling, defineComponent, reactive } from "vue";
+import { message } from "ant-design-vue";
 import dayjs from 'dayjs';
 
 export default {
   components: {
     OrganizationLayout,
     quillEditor,
+    message,
     dayjs,
   },
   props: ['event','categories'],
@@ -119,10 +127,13 @@ export default {
                 console.log(err);
             }
         });
-
       }
 
-    }
+    },
+    onFinishFailed({ values, errorFields, outOfDate }){
+      message.error("Some required fields are missing!");
+    },
+
   },
 };
 </script>

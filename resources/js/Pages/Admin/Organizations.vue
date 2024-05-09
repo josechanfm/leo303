@@ -30,6 +30,8 @@
               >
                 <a-button>{{ $t("delete") }}</a-button>
               </a-popconfirm>
+              <a-button @click="masqueradeOrganization(record)" class="ant-btn">{{ $t('masquerade') }}..</a-button>
+
             </template>
             <template v-else-if="column.dataIndex == 'parish'">
               {{ getOptionLabel(parishes,text) }}
@@ -305,7 +307,11 @@ export default {
         return option?option['label_'+this.$t('lang')]:null
       }
       return '--'
-    }
+    },
+    masqueradeOrganization(organization){
+            this.$inertia.post(route('admin.organization.masquerade',{organization:organization.id}))
+        }
+
   },
 };
 </script>

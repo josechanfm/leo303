@@ -15,7 +15,8 @@ class Organization extends Model implements HasMedia
     use HasFactory, InteractsWithMedia;
 
     protected $fillable=['parish','territory','abbr','name_zh','name_en','name_pt','email','phone','address','country','href','title','avatar','description','content','president','registration_code','card_style','logo','status'];
-
+    protected $casts=['status'=>'boolean'];
+    
     public function registerMediaConversions(Media $media = null): void
     {
         $this

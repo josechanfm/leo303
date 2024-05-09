@@ -1,8 +1,8 @@
 <template>
-  <OrganizationLayout title="表格列表" :breadcrumb="breadcrumb">
+  <AdminLayout title="表格列表" :breadcrumb="breadcrumb">
     <div class="container mx-auto p-5">
       <div class="flex-auto pb-3 text-right">
-        <a :href="route('manage.entry.export', form.id)" class="ant-btn">滙出Excel</a>
+        <a :href="route('admin.entry.export', form.id)" class="ant-btn">滙出Excel</a>
       </div>
       <a-table
         :dataSource="entries"
@@ -14,7 +14,7 @@
           <template v-if="column.dataIndex == 'operation'">
             <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
             <a
-              :href="route('manage.form.entry.success', { form: form, entry: record.id })"
+              :href="route('admin.form.entry.success', { form: form, entry: record.id })"
               target="_blank"
               class="ant-btn"
               >{{ $t("receipt") }}</a
@@ -223,18 +223,18 @@
       </template>
     </a-modal>
     <!-- Modal End-->
-  </OrganizationLayout>
+  </AdminLayout>
 </template>
 
 <script>
-import OrganizationLayout from "@/Layouts/OrganizationLayout.vue";
+import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { message } from "ant-design-vue";
 import CropperModal from "@/Components/Member/CropperModal.vue";
 import { quillEditor } from 'vue3-quill';
 
 export default {
   components: {
-    OrganizationLayout,
+    AdminLayout,
     CropperModal,
     quillEditor
   },
@@ -242,7 +242,7 @@ export default {
   data() {
     return {
       breadcrumb: [
-        { label: "表格列表", url:route('manage.forms.index')},
+        { label: "表格列表", url:route('admin.forms.index')},
         { label: "表格報名", url: null }
       ],
       dateFormat: "YYYY-MM-DD",
@@ -290,7 +290,7 @@ export default {
           }
         }
       });
-      this.$inertia.post(route("manage.form.createEventAttendees", this.form.id), data, {
+      this.$inertia.post(route("admin.form.createEventAttendees", this.form.id), data, {
         onSuccess: (page) => {
           this.modal.isOpen = false;
           this.imageUrl = null;
@@ -313,7 +313,7 @@ export default {
     updateRecord() {
       console.log(this.formData);
       this.$inertia.patch(
-        route("manage.form.entries.update", { form: this.form, entry: this.modal.data }),
+        route("admin.form.entries.update", { form: this.form, entry: this.modal.data }),
         { fields: this.formData },
         {
           onSuccess: (page) => {
@@ -342,7 +342,7 @@ export default {
     },
     deleteRecord(record) {
       this.$inertia.delete(
-        route("manage.form.entries.destroy", { form: this.form, entry: record }),
+        route("admin.form.entries.destroy", { form: this.form, entry: record }),
         {
           onSuccess: (page) => {
             message.success(this.$t("delete_success"));

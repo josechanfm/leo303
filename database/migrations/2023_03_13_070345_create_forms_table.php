@@ -15,10 +15,14 @@ return new class extends Migration
     {
         Schema::create('forms', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->nullable()->unique();
             $table->foreignId('organization_id');
             $table->string('name');
             $table->string('title')->nullable();
             $table->text('description')->nullable();
+            $table->text('welcome')->nullable();
+            $table->text('thanks')->nullable();
+            $table->string('thumbnail')->nullable();
             $table->boolean('require_login')->default(false);
             $table->boolean('for_member')->default(false);
             $table->boolean('published')->default(false);

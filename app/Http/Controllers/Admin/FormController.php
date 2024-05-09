@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Organization;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
@@ -32,9 +32,8 @@ class FormController extends Controller
         // echo ($form);
         //dd(Organization::find(session('organization')->id)->forms);
         //$this->authorize('view',$organization);
-        return Inertia::render('Organization/Forms',[
-            //'organization' => Organization::find(session('organization')->id),
-            'forms'=>Organization::find(session('organization')->id)->forms
+        return Inertia::render('Admin/Forms',[
+            'forms'=>Form::all()
         ]);
     }
 
@@ -46,15 +45,16 @@ class FormController extends Controller
     public function create()
     {
         $form=Form::make([
-            'organization_id'=>session('organization')->id,
+            'organization_id'=>null,
             'require_login'=>false,
             'for_member'=>false,
             'published'=>false
         ]);
         $form->media;
-        return Inertia::render('Organization/Form',[
+        return Inertia::render('Admin/Form',[
             //'organization' => Organization::find(session('organization')->id),
             //'forms'=>Organization::find(session('organization')->id)->forms
+            'organizations' => Organization::where('status',true)->get(),
             'form'=>$form
         ]);
     }
@@ -72,20 +72,19 @@ class FormController extends Controller
             'name'=>'required',
             'title'=>'required',
         ]);
-        $form=Form::create($request->all());
-        if($request->file('thumbnail_upload')){
-            $file=$request->file('thumbnail_upload');
-            $fileName=$form->id.'_'.$file->getClientOriginalName();
-            $file->move(public_path('forms'), $fileName);
-            $form->thumbnail='/forms/'.$fileName;
-            $form->save();
-        }
-        
-        // if($request->file('image')){
-        //     $form->addMedia($request->file('image')[0]['originFileObj'])->toMediaCollection('form_banner');
-        // }
-
-        return to_route('manage.forms.index');
+        $organization = Organization::find($request->organization_id);
+        Form::create($request->all());
+        // $form=new Form();
+        // $form->organization_id=$request->organization_id;
+        // $form->name=$request->name;
+        // $form->title=$request->title;
+        // $form->description=$request->description;
+        // $form->require_login=$request->require_login;
+        // $form->for_member=$request->for_member;
+        // $form->published=$request->published;
+        // $form->save();
+        return to_route('admin.forms.index');
+        return redirect()->back();
     }
 
     /**
@@ -112,9 +111,10 @@ class FormController extends Controller
     {
         //dd(Organization::find($form->organization_id));
         $form->media;
-        return Inertia::render('Organization/Form',[
+        return Inertia::render('Admin/Form',[
             //'organization' => Organization::find(session('organization')->id),
             //'forms'=>Organization::find(session('organization')->id)->forms
+            'organizations' => Organization::where('status',true)->get(),
             'form'=>$form
         ]);
         
@@ -134,18 +134,19 @@ class FormController extends Controller
             'name'=>'required',
             'title'=>'required',
         ]);
-        $data=$request->all();
-        if($request->file('thumbnail_upload')){
-            $file=$request->file('thumbnail_upload');
-            $fileName=$form->id.'_'.$file->getClientOriginalName();
-            $file->move(public_path('forms'), $fileName);
-            $data['thumbnail']='/forms/'.$fileName;
+        $form->update($request->all());
+        // $form->name=$request->name;
+        // $form->title=$request->title;
+        // $form->description=$request->description;
+        // $form->require_login=$request->require_login;
+        // $form->for_member=$request->for_member;
+        // $form->published=$request->published;
+        // $form->save();
+        //dd($request->file('image'));
+        if($request->file('image')){
+                $form->addMedia($request->file('image')[0]['originFileObj'])->toMediaCollection('form_banner');
         }
-        $form->update($data);
-        // if($request->file('image')){
-        //     $form->addMedia($request->file('image')[0]['originFileObj'])->toMediaCollection('form_banner');
-        // }
-        return to_route('manage.forms.index');
+        return to_route('admin.forms.index');
     }
 
     /**
@@ -182,13 +183,6 @@ class FormController extends Controller
             Entry::where('form_id',$data->form->id)->delete();
         }
         return response()->json($data);
-    }
-
-    public function deleteImage(Form $form){
-        unlink(public_path($form->thumbnail));
-        $form->thumbnail=null;
-        $form->save();
-        return redirect()->back();
     }
 
     public function deleteMedia(Media $media){

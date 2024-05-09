@@ -12,7 +12,7 @@ class Article extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable=['uuid','organization_id','category_code','intro','title','content','valid_at','expire_at','url','reference','published','public','author','thumbnail','lang','user_id'];
+    protected $fillable=['uuid','organization_id','category_code','intro','title','content','tags','valid_at','expire_at','url','reference','published','public','author','thumbnail','lang','user_id'];
     protected $casts=['tags'=>'json','published'=>'boolean','public'=>'boolean'];
 
     public static function boot(){

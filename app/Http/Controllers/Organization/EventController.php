@@ -49,7 +49,7 @@ class EventController extends Controller
         $data=$request->all();
         $data['organization_id']=session('organization')->id;
         Event::create($data);
-        return redirect()->route('manage.events.index');
+        return to_route('manage.events.index');
 
     }
 
@@ -89,7 +89,7 @@ class EventController extends Controller
         //dd($event);
         //dd($request->all());
         $event->update($request->all());
-        return redirect()->back();
+        return to_route('manage.events.index');
     }
 
     /**
