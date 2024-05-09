@@ -115,12 +115,13 @@ class FormFieldController extends Controller
             'field_label' => 'required',
             'type' => 'required',
         ]);
+        $form->update($request->all);
         $field = FormField::find($request->id);
         $field->form_id = $request->form_id;
         $field->field_name = $request->field_name;
         $field->field_label = $request->field_label;
         $field->type = $request->type;
-        $field->options = json_encode($request->options);
+        $field->options = $request->options;
         $field->direction = isset($request->direction) ? $request->direction : 'H';
         $field->required = isset($request->required) ? $request->required : false;
         $field->in_column = isset($request->in_column) ? $request->in_column : false;
