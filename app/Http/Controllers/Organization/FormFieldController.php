@@ -115,7 +115,6 @@ class FormFieldController extends Controller
             'field_label' => 'required',
             'type' => 'required',
         ]);
-        $form->update($request->all);
         $field = FormField::find($request->id);
         $field->form_id = $request->form_id;
         $field->field_name = $request->field_name;
