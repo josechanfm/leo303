@@ -48,7 +48,7 @@
                 :name="field.id"
                 :rules="[{ required: field.required }]"
               >
-                <a-textarea v-model:value="formData[field.id]" />
+                <a-textarea v-model:value="formData[field.id]" :rows="field.options"/>
               </a-form-item>
             </div>
             <div v-else-if="field.type == 'richtext'">
