@@ -14,7 +14,7 @@ class DashboardController extends Controller
     public function index()
     {
         $members = Auth()->user()->members;
-        if (!$members) {
+        if ($members->count()==0) {
             return Inertia::render('Error', [
                 'message' => "You are not a register member."
             ]);

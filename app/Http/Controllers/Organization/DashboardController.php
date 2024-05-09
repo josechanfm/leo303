@@ -18,6 +18,11 @@ class DashboardController extends Controller
 
     public function index(){
         if(empty(session('organization'))){
+            if(empty(session('member'))){
+                return Inertia::render('Error', [
+                    'message' => "You are not a organization manager."
+                ]);
+            };
             session(['organization'=>session('member')->organization]);
         }
 
