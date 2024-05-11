@@ -21,6 +21,7 @@ class LoginResponse implements LoginResponseContract
     {
         // dd(Auth()->user()->member);
         // $member= Member::where('user_id',auth()->user()->id)->with('guardian')->first();
+        session_unset();
         $members=Auth()->user()->members;
 
         if(Auth()->user()->hasRole('admin')){

@@ -53,8 +53,10 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
-        $member= Member::create($request->all());
-        $member->organizations()->attach(session('organization')->id);
+        $data=$request->all();
+        $data['organization_id']=session('organization')->id;
+        $member= Member::create($data);
+        //$member->organization()->attach(session('organization')->id);
         return redirect()->back();
     }
 

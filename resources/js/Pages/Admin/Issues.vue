@@ -197,7 +197,7 @@ export default {
         });
     },
     updateRecord(data) {
-      data.value=JSON.parse(data.value);
+      //data.value=JSON.parse(data.value);
       this.$inertia.patch(
         route("admin.issues.update", data.id),data,
         {

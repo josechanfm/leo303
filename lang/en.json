@@ -34,6 +34,7 @@
     "user": "User",
     "users": "Users",
     "configs": "Configs",
+    "issues":"Issues",
     "update_success": "Update Success",
     "delete_success": "Delete Success",
     "delete_photo": "Delete Photo",
