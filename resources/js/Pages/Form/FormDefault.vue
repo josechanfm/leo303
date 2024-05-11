@@ -48,7 +48,7 @@
                 :name="field.id"
                 :rules="[{ required: field.required }]"
               >
-                <a-textarea v-model:value="formData[field.id]" :rows="field.options"/>
+                <a-textarea v-model:value="formData[field.id]" :rows="field?parseInt(field.options):3"/>
               </a-form-item>
             </div>
             <div v-else-if="field.type == 'richtext'">
@@ -64,7 +64,6 @@
               </a-form-item>
             </div>
             <div v-else-if="field.type == 'radio'">
-              {{field.options}}
               <a-form-item
                 :label="field.field_label"
                 :name="field.id"
