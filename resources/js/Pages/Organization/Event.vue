@@ -5,7 +5,7 @@
         Create Event
       </h2>
     </template>
-    <div class="container mx-auto p-5">
+    
       <div class="bg-white relative shadow rounded-lg p-5">
         <a-form 
           :model="event" 
@@ -56,7 +56,7 @@
           </div>
         </a-form>
       </div>
-    </div>
+    
   </OrganizationLayout>
 </template>
 

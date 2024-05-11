@@ -1,6 +1,6 @@
 <template>
   <OrganizationLayout title="表格" :breadcrumb="breadcrumb">
-    <div class="container mx-auto p-5">
+    
       <div class="flex-auto pb-3 text-right">
         <inertia-link :href="route('manage.forms.create')"
           class="ant-btn ant-btn-primary !rounded">{{ $t("create_form") }}</inertia-link>
@@ -46,7 +46,7 @@
         </a-table>
       </div>
       <p>From CAN NOT be delete, if Response is not empty.</p>
-    </div>
+    
   </OrganizationLayout>
 </template>
 

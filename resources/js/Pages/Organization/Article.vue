@@ -6,7 +6,7 @@
       </h2>
     </template>
     <!-- <a-button @click="getCursor()">{{ $t("cursor") }}</a-button> -->
-    <div class="container mx-auto p-5">
+    
       <div class="flex-auto pb-3 text-right pb-3">
         <a-button @click="isDrawerVisible = !isDrawerVisible" type="primary">{{
           $t("Images")
@@ -119,7 +119,8 @@
         </a-form>
       </div>
       <p>Article CAN NOT be delete if published.</p>
-    </div>
+    
+
     <a-drawer
       v-model:visible="isDrawerVisible"
       class="custom-class"

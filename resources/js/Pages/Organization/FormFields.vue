@@ -1,6 +1,6 @@
 <template>
   <OrganizationLayout title="表格欄位" :breadcrumb="breadcrumb">
-    <div class="container mx-auto p-5">
+    
       <div class="flex-auto pb-3 text-right">
         <button
           @click="createRecord()"
@@ -44,8 +44,6 @@
             </div>
           </div>
         </div>
-      <p></p>
-    </div>
 
     <!-- Modal Start-->
     <a-modal

@@ -1,6 +1,6 @@
 <template>
   <OrganizationLayout :title="$t('members')" :breadcrumb="breadcrumb">
-    <div class="container mx-auto p-5">
+    
       <div class="flex-auto pb-3 text-right">
         <a-button type="primary" class="!rounded" @click="createRecord()">{{
           $t("create_member")
@@ -33,7 +33,7 @@
           </template>
         </a-table>
       </div>
-    </div>
+    
 
     <!-- Modal Start-->
     <a-modal v-model:visible="modal.isOpen" :title="$t(modal.title)" width="60%">

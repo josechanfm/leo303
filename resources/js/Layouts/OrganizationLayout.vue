@@ -106,7 +106,9 @@
         </header>
 
           <main>
-            <slot />
+            <div class="p-5">
+              <slot />
+            </div>
           </main>
 
       </a-layout-content>

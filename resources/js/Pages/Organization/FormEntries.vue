@@ -1,6 +1,6 @@
 <template>
   <OrganizationLayout title="表格列表" :breadcrumb="breadcrumb">
-    <div class="container mx-auto p-5">
+    
       <div class="flex-auto pb-3 text-right">
         <a :href="route('manage.entry.export', form.id)" class="ant-btn">滙出Excel</a>
       </div>
@@ -39,7 +39,7 @@
             </template>
           </a-table>
         </div>
-    </div>
+    
     <!-- Modal Start-->
     <a-modal v-model:visible="modal.isOpen" title="View Only" width="60%">
       <a-form

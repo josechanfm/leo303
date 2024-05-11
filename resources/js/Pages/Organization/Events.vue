@@ -6,7 +6,7 @@
       </h2>
     </template>
 
-    <div class="container mx-auto p-5">
+    
       <div class="flex-auto pb-3 text-right">
         <inertia-link
           :href="route('manage.events.create')"
@@ -33,7 +33,7 @@
           </template>
         </a-table>
       </div>
-    </div>
+    
   </OrganizationLayout>
 </template>
 

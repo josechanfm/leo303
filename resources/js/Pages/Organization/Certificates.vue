@@ -5,7 +5,7 @@
         {{ $t("certificates") }}
       </h2>
     </template>
-    <div class="container mx-auto p-5">
+    
       <div class="flex-auto pb-3 text-right">
         <a-button type="primary" class="!rounded" @click="createRecord()">{{
           $t("create_certificate")
@@ -34,7 +34,7 @@
           </template>
         </a-table>
       </div>
-    </div>
+    
     <!-- Modal Start-->
     <a-modal
       v-model:visible="modal.isOpen"

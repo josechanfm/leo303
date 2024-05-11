@@ -5,7 +5,7 @@
         {{ $t("articles") }}
       </h2>
     </template>
-    <div class="container mx-auto p-5">
+    
       <div class="flex-auto pb-3 text-right pb-3">
         <inertia-link
           :href="route('manage.articles.create')"
@@ -45,7 +45,7 @@
         </a-table>
       </div>
       <p>Article CAN NOT be delete if published.</p>
-    </div>
+    
     <!-- Modal Start-->
     <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="100%">
       <a-form
