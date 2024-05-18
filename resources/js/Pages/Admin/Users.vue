@@ -102,7 +102,7 @@
 
           </a-col>
         </a-row>
-        <a-form-item :label="$t('password')" name="password">
+        <a-form-item :label="$t('password')" name="password" v-if="modal.mode == 'EDIT'">
           <a-input v-model:value="modal.data.password" />
         </a-form-item>
 

@@ -118,6 +118,9 @@
           </div>
         </a-form>
       </div>
+      <a :href="route('article.item',{t:article.uuid})" target="_blank">{{ route('article.item',{t:article.uuid}) }}</a>
+      
+      
       <p>Article CAN NOT be delete if published.</p>
     
 
