@@ -155,7 +155,6 @@ export default {
             </div>
           </div>
           <!-- News Section end-->
-
         </div>
 
         <div class="flex-none w-[400px]">
