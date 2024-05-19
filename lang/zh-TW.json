@@ -9,6 +9,8 @@
     "feature":"特點",
     "upload":"上傳",
     "url_link":"網址",
+    "copy_to_clipboard":"複製到剪貼簿",
+    "dragger_sort":"拖拽排序",
     "upload_drag_drop":"<span class='font-semibold'>點選上傳</span>或拖曳",
     "logo_size_note":"PNG、JPG 或 GIF（最大 800x400px）",
     "image_size_note":"PNG、JPG 或 GIF（最大 800x400 像素）",

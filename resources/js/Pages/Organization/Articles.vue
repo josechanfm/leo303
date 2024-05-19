@@ -13,6 +13,48 @@
         >
       </div>
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
+       
+
+        <div class="ant-table">
+            <div class="ant-table-container">
+              <table style="table-layout: auto">
+                <thead class="ant-table-thead">
+                  <tr>
+                    <th v-for="column in columns">{{ $t(column.i18n) }}</th>
+                  </tr>
+                </thead>
+                <draggable
+                  tag="tbody"
+                  class="dragArea list-group ant-table-tbody"
+                  :list="articles.data"
+                  @change="rowChange"
+                >
+                  <transition-group v-for="(record, idx) in articles.data">
+                    <tr class="ant-table-row ant-table-row-level-0" :key="record.id">
+                      <td v-for="column in columns" class="ant-table-cell">
+                        <template v-if="column.dataIndex=='operation'">
+                          <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
+                        </template>
+                        <template v-else-if="column.dataIndex=='dragger'">
+                          <holder-outlined />
+                          {{record.id}} - {{ record.sequence }}
+                        </template>
+                        <template v-else-if="column.dataIndex == 'published'">
+                          {{ record.published ? $t("yes") : $t("no") }}
+                        </template>
+                        <template v-else>
+                          {{ record[column.dataIndex] }}
+                        </template>
+                      </td>
+                    </tr>
+                  </transition-group>
+                </draggable>
+              </table>
+            </div>
+          </div>
+
+
+
         <a-table :dataSource="articles.data" :columns="columns" :pagination="pagination" @change="onPaginationChange">
           <template #headerCell="{ column }">
             {{ column.i18n ? $t(column.i18n) : column.title }}
@@ -139,6 +181,7 @@ import CKEditor from "@ckeditor/ckeditor5-vue";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import UploadAdapter from "@/Components/ImageUploadAdapter.vue";
 import { VueDraggableNext } from "vue-draggable-next";
+import { HolderOutlined } from '@ant-design/icons-vue';
 
 export default {
   components: {
@@ -146,6 +189,7 @@ export default {
     ckeditor: CKEditor.component,
     UploadAdapter,
     draggable: VueDraggableNext,
+    HolderOutlined
     //UploadAdapter
   },
   props: ["classifies", "articleCategories", "articles"],
@@ -177,31 +221,30 @@ export default {
       },
       columns: [
         {
+          title: "Dragger",
+          i18n: "dragger_sort",
+          dataIndex: "dragger",
+        },{
           title: "Category",
           i18n: "category",
           dataIndex: "category_code",
-        },
-        {
+        },{
           title: "Title",
           i18n: "title",
           dataIndex: "title",
-        },
-        {
+        },{
           title: "Validated at",
           i18n: "valid_at",
           dataIndex: "valid_at",
-        },
-        {
+        },{
           title: "Expired at",
           i18n: "expired_at",
           dataIndex: "expired_at",
-        },
-        {
+        },{
           title: "Published",
           i18n: "published",
           dataIndex: "published",
-        },
-        {
+        },{
           title: "Operation",
           i18n: "operation",
           dataIndex: "operation",
@@ -238,6 +281,35 @@ export default {
         page: page.current,
         per_page: page.pageSize,
       });
+    },
+    rowChange(event) {
+      //未知點做
+      console.log(event.moved)
+      const startSequence=this.articles.data[0].sequence
+      if((event.moved.oldIndex-event.moved.newIndex)>0){
+        console.log('move up');
+      }else{
+        const step=event.moved.newIndex-event.moved.oldIndex
+        // var from=this.article.data[event.moved.oldIndex];
+        console.log('move down')
+        console.log(step);
+        //本來想一個個swarp, 但應該要用recursive
+        for(let i=0; i<step; i++){
+          let idx=event.moved.oldIndex+i
+          let seq=this.articles.data[idx].sequence
+          this.articles.data[idx].sequence=this.articles.data[idx+1].sequence
+          this.articles.data[idx+1].sequence=seq
+        }
+      }
+      console.log(this.articles.data)
+      // this.$inertia.post(route("manage.article.sequence"), data, {
+      //   onSuccess: (page) => {
+      //     console.log(page);
+      //   },
+      //   onError: (error) => {
+      //     console.log(error);
+      //   },
+      // });
     },
     createRecord() {
       this.modal.data = {};

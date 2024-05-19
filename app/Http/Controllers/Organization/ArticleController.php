@@ -140,5 +140,10 @@ class ArticleController extends Controller
         $article->save();
         return redirect()->back();
     }
-
+    public function sequence(Request $request){
+        foreach($request->all() as $row){
+            Article::where('id',$row['id'])->update(['sequence'=>$row['sequence']]);
+        }
+        return redirect()->back();
+    }
 }

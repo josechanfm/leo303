@@ -12,13 +12,16 @@ class Article extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable=['uuid','organization_id','category_code','intro','title','content','tags','valid_at','expire_at','url','reference','published','public','author','thumbnail','lang','user_id'];
+    protected $fillable=['uuid','organization_id','sequence','category_code','intro','title','content','tags','valid_at','expire_at','url','reference','published','public','author','thumbnail','lang','user_id'];
     protected $casts=['tags'=>'json','published'=>'boolean','public'=>'boolean'];
 
     public static function boot(){
         parent::boot();
         self::creating(function($model){
-            $model->uuid=Str::uuid();
+            $model->uuid=Str::uuid();            
+        });
+        static::created(function ($model){
+            $model->sequence=$model->id;
         });
         static::updating(function ($model){
             if(empty($model->uuid)){
