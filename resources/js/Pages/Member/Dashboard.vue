@@ -68,10 +68,16 @@ export default {
         },
       ],
       showQrcode: false,
+      qrcodeLogo:'/images/site_logo.png'
     };
   },
   created() {
     this.member = this.members[0]
+    if(this.cardStyle.logo){
+      this.qrcodeLogo='/images/'+this.cardStyle.logo
+    }else if(this.$page.props.currentMember.organization.logo){
+      this.qrcodeLogo=this.$page.props.currentMember.organization.logo
+    }
   },
   mounted() { },
   methods: {
@@ -113,7 +119,6 @@ export default {
           <!-- Feature Section -->
           <div class="container mx-auto mt-5 bg-white rounded-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 py-3 px-2">
-
               <template v-for="feature in features">
                 <a :href="feature.link">
                   <div class="gutter-row">
@@ -163,7 +168,7 @@ export default {
               <!-- QRcode -->
               <div class="flex flex-col justify-center items-center" v-if="showQrcode">
                 <div>
-                  <QRCodeVue3 :key="qrcode" v-bind:value="qrcode" :image="'/images/' + cardStyle['logo']" :dotsOptions="{
+                  <QRCodeVue3 :key="qrcode" v-bind:value="qrcode" :image="qrcodeLogo" :dotsOptions="{
           type: 'dots',
           color: '#26249a',
           gradient: {

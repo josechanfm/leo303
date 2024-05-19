@@ -24,9 +24,7 @@ export default {
   },
   props: ["title"],
   setup(props) {
-    console.log(props);
     const showingNavigationDropdown = ref(false);
-
     const switchToTeam = (team) => {
       Inertia.put(
         route("current-team.update"),
@@ -49,31 +47,12 @@ export default {
       loadLanguageAsync,
     };
   },
-  mounted() {
-    console.log()
+  created(){
     this.loadLanguageAsync(this.$page.props.lang);
   },
+  mounted() {
+  },
 };
-// defineProps({
-//     title: String,
-// });
-
-// const showingNavigationDropdown = ref(false);
-
-// const switchToTeam = (team) => {
-//     Inertia.put(route('current-team.update'), {
-//         team_id: team.id,
-//     }, {
-//         preserveState: false,
-//     });
-// };
-
-// const logout = () => {
-//     Inertia.post(route('logout'));
-// };
-// onMounted(() => {
-//   console.log('mounted')
-// })
 </script>
 
 <template>
@@ -89,11 +68,10 @@ export default {
               <!-- Logo -->
               <div class="shrink-0 flex items-center">
                 <Link :href="route('member.dashboard')">
-                  <img v-if="this.$page.props.currentMember.organization.logo" :src="this.$page.props.currentMember.organization.logo" class="block h-14 w-auto" />
+                  <img v-if="$page.props.currentMember.organization.logo" :src="$page.props.currentMember.organization.logo" class="block h-14 w-auto" />
                   <img v-else src="/images/site_logo.png" class="block h-14 w-auto" />
                 </Link>
               </div>
-
               <!-- Navigation Links -->
               <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                 <NavLink

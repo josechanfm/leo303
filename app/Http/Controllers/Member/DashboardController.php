@@ -37,7 +37,7 @@ class DashboardController extends Controller
     {
         $userId = auth()->user()->id;
         $memberId = auth()->user()->id;
-        $organizationId = session('organization')->id;
+        $organizationId = session('member')->organization->id;
         $time = time();
         $text = $organizationId . ',' . $memberId . ',' . $time;
         return $text . ',' . hash('crc32', $text);
