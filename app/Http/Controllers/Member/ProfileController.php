@@ -10,6 +10,7 @@ use App\Models\Portfolio;
 use App\Models\Member;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -94,8 +95,12 @@ class ProfileController extends Controller
             // $path = Storage::putFile('public/images/avatars', $file);
             $data['avatar']='/avatars/'.$fileName;
         }
+        //dd($data);
         $member->update($data);
-        return to_route('member.dashboard');
+        $member->organization;
+        session(['member'=>$member]);
+        return redirect()->back();
+        //return to_route('member.dashboard');
         //return redirect()->back()->with('message',$data['avatar']);
     }
 
@@ -110,5 +115,20 @@ class ProfileController extends Controller
         //
     }
 
+    public function changePassword(Request $request){
+        $member=Member::find($request->id);
+        if($member->doesntExist() || $member->user->doesntExist()){
+            return Inertia::render('Error',[
+                'message'=>'Illigal Operation'
+            ]);
+        }
+        if(Hash::check($request->old, $member->user->password) && $request->new == $request->confirm ){
+            $member->user->password=Hash::make($request->new);
+            $member->user->save();
+            return redirect()->back();
+        }else{
+            return redirect()->back()->withErrors(['message'=>'old password incorrect']);
+        }
+    }
 
 }

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('mobile')->nullable();
             $table->string('country')->nullable();
+            $table->string('city')->nullable();
             $table->string('nationality')->nullable();
             $table->string('address')->nullable();
             $table->string('avatar')->nullable();
@@ -34,7 +35,6 @@ return new class extends Migration
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      *

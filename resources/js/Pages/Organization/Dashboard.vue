@@ -14,7 +14,7 @@
                             class="ant-btn">{{ $t('member_dashboard') }}</inertia-link>
                     </div>
                 </div>
-                <div class="flex-none w-[400px]">
+                <div class="flex-none ">
                     <div class="container mx-auto pt-5">
                         <div class="bg-white relative shadow rounded-lg">
 

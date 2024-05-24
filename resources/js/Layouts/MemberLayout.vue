@@ -207,7 +207,7 @@ export default {
                       {{ $t("manage_account") }}
                     </div>
 
-                    <DropdownLink :href="route('profile.show')">
+                    <DropdownLink :href="route('member.profile.index')">
                       {{ $t("account") }}
                     </DropdownLink>
 

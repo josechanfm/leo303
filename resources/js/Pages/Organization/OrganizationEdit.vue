@@ -5,11 +5,16 @@
                 課程規劃
             </h2>
         </template>
-        <div class="container mx-auto">
             <div class="bg-white relative shadow rounded-lg p-5">
-                <a-form :model="organization" v-bind="layout" :rules="rules" :validate-messages="validateMessages"
-                    @finish="onFinish" enctype="multipart/form-data">
-                    <a-row :gutter="10">
+                <a-form 
+                    :model="organization" 
+                    layout="vertical" 
+                    :rules="rules" 
+                    :validate-messages="validateMessages"
+                    @finish="onFinish" 
+                    enctype="multipart/form-data"
+                >
+                    <a-row :gutter="5">
                         <a-col :span="8">
                             <a-form-item label="Abbr" name="abbr" :labelCol="{ span: 9 }">
                                 <a-input v-model:value="organization.abbr" />
@@ -21,7 +26,7 @@
                             </a-form-item>
                         </a-col>
                     </a-row>
-                    <a-row :gutter="10">
+                    <a-row :gutter="5">
                         <a-col :span="8">
                             <a-form-item :label="$t('email')" name="email" :labelCol="{ span: 9 }">
                                 <a-input v-model:value="organization.email" />
@@ -101,7 +106,6 @@
                     </div>
                 </a-form>
             </div>
-        </div>
     </OrganizationLayout>
 </template>
 
@@ -132,14 +136,6 @@ export default {
                 },
                 number: {
                     range: '${label} must be between ${min} and ${max}',
-                },
-            },
-            layout: {
-                labelCol: {
-                    span: 4,
-                },
-                wrapperCol: {
-                    span: 20,
                 },
             },
         }

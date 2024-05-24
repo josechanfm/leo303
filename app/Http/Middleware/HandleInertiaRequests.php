@@ -49,7 +49,8 @@ class HandleInertiaRequests extends Middleware
             'user.roles' => $request->user() ? $request->user()->roles->pluck('name') : [],
             //'user.permissions' => $request->user() ? $request->user()->getPermissionsViaRoles()->pluck('name') : [],
             'user.permissions' => $permissions,
-            'current_organization' => session('organization'),
+            'currentMember' => session('member'),
+            'currentOrganization' => session('organization'),
             'by_guardian' => session('guardian'),
             'lang' => session('applocale'),
             'lt'=>$request->session()->get('lt')

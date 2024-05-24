@@ -56,6 +56,7 @@ Route::group([
     Route::get('get_qrcode', [\App\Http\Controllers\Member\DashboardController::class, 'getQrcode'])->name('member.getQrcode');
     Route::resource('portfolios', App\Http\Controllers\Member\PortfolioController::class)->names('member.portfolios');
     Route::resource('profile', App\Http\Controllers\Member\ProfileController::class)->names('member.profile');
+    Route::post('profile/change_password', [App\Http\Controllers\Member\ProfileController::class,'changePassword'])->name('member.profile.changePassword');
     Route::resource('professionals', App\Http\Controllers\Member\ProfessionalController::class)->names('member.professionals');
     Route::get('membership', [App\Http\Controllers\Member\MembershipController::class, 'index'])->name('member.membership');
     Route::post('membership/switch/{member}', [App\Http\Controllers\Member\MembershipController::class, 'switch'])->name('member.membership.switch');

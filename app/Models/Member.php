@@ -24,13 +24,12 @@ class Member extends Model
         'email',
         'mobile',
         'country',
-        'nationality',
         'city',
-        'street',
-        'zip',
-        'vat',
+        'nationality',
         'address',
-        'club',
+        'avatar',
+        'valid_at',
+        'expired_at',
         'avatar'
     ];
 

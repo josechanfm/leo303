@@ -15,7 +15,7 @@
             autocomplete="off"
             v-bind="layout"
             :model="member"
-            layout="vertical"
+            layout="horizontal"
             :rules="rules"
             :validate-messages="validateMessages"
             enctype="multipart/form-data"
@@ -54,17 +54,14 @@
                     <a-form-item :label="$t('country')" name="country">
                       <a-input v-model:value="member.country" />
                     </a-form-item>
-                    <a-form-item :label="$t('street')" name="street">
-                      <a-input v-model:value="member.street" />
+                    <a-form-item :label="$t('nationality')" name="nationality">
+                      <a-input v-model:value="member.nationality" />
                     </a-form-item>
-                    <a-form-item :label="$t('zip')" name="zip">
-                      <a-input v-model:value="member.zip" />
+                    <a-form-item :label="$t('address')" name="address">
+                      <a-input v-model:value="member.address" />
                     </a-form-item>
                     <a-form-item :label="$t('email')" name="email">
                       <a-input v-model:value="member.email" />
-                    </a-form-item>
-                    <a-form-item :label="$t('nationality')" name="nationality">
-                      <a-input v-model:value="member.nationality" />
                     </a-form-item>
                   </a-col>
                   <a-col :span="12">
@@ -74,14 +71,8 @@
                         <a-radio-button value="F">{{$t('female')}}</a-radio-button>
                       </a-radio-group>
                     </a-form-item>
-                    <a-form-item :label="$t('club')" name="club">
-                      <a-input v-model:value="member.club" />
-                    </a-form-item>
                     <a-form-item :label="$t('city')" name="city">
                       <a-input v-model:value="member.city" />
-                    </a-form-item>
-                    <a-form-item :label="$t('vat')" name="vat">
-                      <a-input v-model:value="member.vat" />
                     </a-form-item>
                     <a-form-item :label="$t('mobile_number')" name="mobile">
                       <a-input v-model:value="member.mobile" />
@@ -89,7 +80,7 @@
                   </a-col>
                 </a-row>
               </a-collapse-panel>
-              <a-collapse-panel key="9" :header="$t('picture_title')">
+              <a-collapse-panel key="3" :header="$t('picture_title')">
                 <div v-if="member.avatar">
                   <img :src="member.avatar"/>
                 </div>
@@ -108,6 +99,48 @@
                     </div>
                   </div>
                 </div>
+              </a-collapse-panel>
+              <a-collapse-panel key="3" :header="$t('change_password')">
+                <a-form>
+                    <a-form
+                      :model="password"
+                      name="Change Password"
+                      layout="horizontal"
+                      :label-col="{ span: 4 }"
+                      :wrapper-col="{ span: 8 }"
+                      autocomplete="off"
+                      @finish="onFinish"
+                      @finishFailed="onFinishFailed"
+                    >
+                      <a-form-item
+                        label="Old Password"
+                        name="old"
+                        :rules="[{ required: true, message: 'Please input your password!' }]"
+                      >
+                        <a-input-password v-model:value="password.old" />
+                      </a-form-item>
+                      <a-form-item
+                        label="New Password"
+                        name="new"
+                        :rules="[{ required: true, message: 'Please input your password!' }]"
+                      >
+                        <a-input-password v-model:value="password.new" />
+                      </a-form-item>
+
+                      <a-form-item
+                        label="Confirm Password"
+                        name="confirm"
+                        :rules="[{ required: true, message: 'Please input your password!' }]"
+                      >
+                        <a-input-password v-model:value="password.confirm" />
+                      </a-form-item>
+
+
+                      <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+                        <a-button type="primary" html-type="submit">Submit</a-button>
+                      </a-form-item>
+                    </a-form>
+                </a-form>
               </a-collapse-panel>
             </a-collapse>
             <a-form-item
@@ -149,6 +182,7 @@ export default {
       avatarData: null,
       activeKey: ["1", "3", "4", "5", "6", "7", "8", "9"],
       loading: false,
+      password:{},
       modal: {
         isOpen: false,
         data: {},
@@ -216,6 +250,21 @@ export default {
         },
       });
     },
+    onFinish(){
+      console.log('change password')
+      this.password.id=this.member.id
+      this.$inertia.post(route('member.profile.changePassword'),this.password,{
+        onSuccess: (page) => {
+          console.log(page);
+        },
+        onError: (err) => {
+          console.log(err);
+        },
+      })
+    },
+    onFinishFailed(){
+      console.log('change password failed')
+    }
   },
 };
 </script>

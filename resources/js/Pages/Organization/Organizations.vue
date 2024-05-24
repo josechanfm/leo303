@@ -5,6 +5,7 @@
                 Club Managemnet
             </h2>
         </template>
+        <div class="bg-white relative shadow rounded-lg overflow-x-auto">
             <a-table :dataSource="organizations" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
@@ -18,6 +19,7 @@
                     </template>
                 </template>
             </a-table>
+        </div>
 
     </OrganizationLayout>
 
