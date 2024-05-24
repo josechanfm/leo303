@@ -18,13 +18,13 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //dd(session('organization'));
+        //dd(session('member'));
         return Inertia::render('Organization/Articles',[
             'classifies'=>Classify::whereBelongsTo(session('organization'))->get(),
             'articleCategories'=>Config::item('article_categories'),
-            'articles'=>Article::whereBelongsTo(session('organization'))->get()
+            'articles'=>Article::whereBelongsTo(session('organization'))->paginate($request->per_page)
         ]);
     }
 
@@ -140,5 +140,10 @@ class ArticleController extends Controller
         $article->save();
         return redirect()->back();
     }
-
+    public function sequence(Request $request){
+        foreach($request->all() as $row){
+            Article::where('id',$row['id'])->update(['sequence'=>$row['sequence']]);
+        }
+        return redirect()->back();
+    }
 }

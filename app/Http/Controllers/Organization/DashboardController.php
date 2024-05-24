@@ -28,7 +28,7 @@ class DashboardController extends Controller
 
         $this->authorize('view',session('organization'));
         return Inertia::render('Organization/Dashboard',[
-            'current_organization'=>session('organization'),
+            'currentOrganization'=>session('organization'),
             'organizations' => auth()->user()->organizations,
             'member'=>session('member'),
         ]);

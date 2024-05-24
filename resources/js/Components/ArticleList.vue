@@ -11,9 +11,10 @@ const props = defineProps({
   <div v-for="article in articles" class="container mx-auto pt-5">
     <div class="bg-white relative shadow rounded-lg pl-5">
       <div class="flex flex-col md:flex-row items-center">
-        <img v-if="article.thumbmail" :src="article.thumbmail" alt="Thumbnail" class="w-30 h-30 mr-4">
-        <img src="/images/site_logo.png" alt="Thumnail" class="w-30 h-30 mr-4"/>
-          
+        <div  class="w-32 h-32 mr-4">
+          <img v-if="article.thumbnail" :src="article.thumbnail" alt="thumbnail">
+          <img v-else src="/images/site_logo.png" alt="Thumnail"/>
+        </div>
         <div>
           <a :href="route('article.item', { t: article.uuid })" target="_blank">
             <h2 class="text-xl font-bold">{{ article.title }}</h2>
@@ -23,12 +24,15 @@ const props = defineProps({
           </div>
           <p class="mt-2 text-gray-600">
             <div v-if="article.intro">
-              {{ article.intro_en }}
+              {{ article.intro }}
             </div>
             <div v-else>
               {{ article.content.replace(/<[^>]+>/g, '').substring(0, 100) }} ...
             </div>
-            <a :href="article.url" target="_blank">{{ $t('url_link') }}</a>
+            <div v-if="article.url">
+              <a :href="article.url" target="_blank">{{ $t('url_link') }}</a>
+            </div>
+            
           </p>
         </div>
       </div>

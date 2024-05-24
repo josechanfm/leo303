@@ -55,7 +55,7 @@ class UserController extends Controller
         $user=User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make('password'),
+            'password' => Hash::make($request->password),
         ]);
         //$user->assignRole('organizer');
         $user->ownedTeams()->save(Team::forceCreate([

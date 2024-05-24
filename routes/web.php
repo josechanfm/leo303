@@ -99,6 +99,7 @@ Route::group([
     Route::resource('certificate/{certificate}/members', App\Http\Controllers\Organization\CertificateMemberController::class)->names('manage.certificate.members');
 
     Route::resource('articles', App\Http\Controllers\Organization\ArticleController::class)->names('manage.articles');
+    Route::post('article/sequence', [App\Http\Controllers\Organization\ArticleController::class,'sequence'])->name('manage.article.sequence');
     Route::post('article/delete_image/{article}', [App\Http\Controllers\Organization\ArticleController::class,'deleteImage'])->name('manage.article.deleteImage');
     Route::resource('events', App\Http\Controllers\Organization\EventController::class)->names('manage.events');
     Route::resource('configs', App\Http\Controllers\Organization\ConfigController::class)->names('manage.configs');

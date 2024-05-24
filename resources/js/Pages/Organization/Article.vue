@@ -118,6 +118,8 @@
           </div>
         </a-form>
       </div>
+      <a :href="route('article.item',{t:article.uuid})" target="_blank" ref="articleUrl">{{ route('article.item',{t:article.uuid}) }}</a>
+      <a-button @click="copyUrl">{{ $t('copy_to_clipboard') }}</a-button>
       <p>Article CAN NOT be delete if published.</p>
     
 
@@ -288,6 +290,9 @@ export default {
     },
     ckEditorFocusOut(event) {
     },
+    copyUrl(){
+      navigator.clipboard.writeText(this.$refs.articleUrl.href)
+    }
   },
 };
 </script>

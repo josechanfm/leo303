@@ -6,7 +6,6 @@
             </h2>
         </template>
         <div class="py-12">
-                            
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-5 h-64">
                     <a-table :dataSource="entries" :columns="columns">
@@ -119,13 +118,11 @@ export default {
             this.modal.isOpen = true;
         },
         updateRecord() {
-            console.log(this.modal.data);
             this.$refs.modalRef.validateFields().then(() => {
                 this.modal.data._method = 'PATCH';
                 this.$inertia.post(route('member.porfolios.update', this.modal.data.id), this.modal.data, {
                     onSuccess: (page) => {
                         this.modal.isOpen = false;
-                        console.log(page);
                     },
                     onError: (error) => {
                         console.log(error);
