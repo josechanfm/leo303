@@ -24,7 +24,7 @@ class ArticleController extends Controller
         return Inertia::render('Organization/Articles',[
             'classifies'=>Classify::whereBelongsTo(session('organization'))->get(),
             'articleCategories'=>Config::item('article_categories'),
-            'articles'=>Article::whereBelongsTo(session('organization'))->paginate($request->per_page)
+            'articles'=>Article::whereBelongsTo(session('organization'))->orderBy('sequence','DESC')->paginate($request->per_page)
         ]);
     }
 
@@ -141,6 +141,7 @@ class ArticleController extends Controller
         return redirect()->back();
     }
     public function sequence(Request $request){
+        // dd($request->all());
         foreach($request->all() as $row){
             Article::where('id',$row['id'])->update(['sequence'=>$row['sequence']]);
         }
