@@ -20,7 +20,8 @@ defineProps({
   <WebLayout title="Dashboard">
     <div class="lg:h-96 bg-gradient-to-tr bg-[#0081C8] rounded-md flex items-center">
       <div class="ml-5 lg:ml-20 lg:w-4/5 py-5">
-        <h2 class="text-white text-4xl">{{ welcomeMessage.title }}</h2>
+        <h2 class="text-white text-4xl"  v-if="welcomeMessage">{{ welcomeMessage.title }}</h2>
+        <h2 class="text-white text-4xl"  v-else="welcomeMessage">{{ $t('welcome_message') }}</h2>
         <p class="lg:text-lg text-indigo-100 mr-4 capitalize font-thick tracking-wider leading-7">
           <div v-if="welcomeMessage">
             {{ welcomeMessage.intro  }}

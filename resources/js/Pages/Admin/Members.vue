@@ -82,6 +82,9 @@
         <a-form-item :label="$t('family_name')" name="family_name">
           <a-input v-model:value="modal.data.family_name" />
         </a-form-item>
+        <a-form-item :label="$t('display_name')" name="display_name">
+          <a-input v-model:value="modal.data.display_name" />
+        </a-form-item>
 
         <a-row :span="24">
           <a-col :span="18">
@@ -102,7 +105,7 @@
                 :valueFormat="dateFormat"
               />
             </a-form-item>
-            <template v-if="modal.data.user_id">
+            <template v-if="modal.data.user">
               <a-form-item :label="$t('users')" :label-col="{span: 4}" name="user_id">
                 <p>{{ modal.data.user.email }}</p>
               </a-form-item>
