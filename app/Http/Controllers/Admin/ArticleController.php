@@ -38,7 +38,7 @@ class ArticleController extends Controller
         return Inertia::render('Admin/Article',[
             'organizations'=>Organization::all(),
             'articleCategories'=>Config::item('article_categories'),
-            'article'=>new Article()
+            'article'=>(object)[],
         ]);
 
     }

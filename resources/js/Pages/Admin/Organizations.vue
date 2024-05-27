@@ -237,6 +237,7 @@ export default {
     },
     createRecord() {
       this.modal.data = {};
+      this.modal.data.members=[];
       this.modal.mode = "CREATE";
       this.modal.title = "Create Record";
       this.modal.isOpen = true;
@@ -268,7 +269,7 @@ export default {
     storeRecord() {
           this.$inertia.post(route("admin.organizations.store"), this.modal.data, {
             onSuccess: (page) => {
-              this.modal.data = {};
+              //this.modal.data = {};
               this.modal.isOpen = false;
             },
             onError: (err) => {

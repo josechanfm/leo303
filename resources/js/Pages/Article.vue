@@ -38,7 +38,7 @@ export default {
                 {{ article.title}}</h2>
             <div v-html="article.content"/>
             <div class="text-center pt-10">
-            <inertia-link v-if="article.url" :href="article.url">Link</inertia-link>
+            <a v-if="article.url" :href="article.url" target="_blank">Link</a>
             </div>
         </div>
         

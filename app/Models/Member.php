@@ -29,8 +29,7 @@ class Member extends Model
         'address',
         'avatar',
         'valid_at',
-        'expired_at',
-        'avatar'
+        'expired_at'
     ];
 
     protected $appends=['avatar_url','member_number'];

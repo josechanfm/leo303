@@ -137,6 +137,9 @@
           </div>
         </a-form>
       </div>
+              <a :href="route('article.item',{t:article.uuid})" target="_blank" ref="articleUrl">{{ route('article.item',{t:article.uuid}) }}</a>
+         <a-button @click="copyUrl">{{ $t('copy_to_clipboard') }}</a-button>
+
       <p>Article CAN NOT be delete if published.</p>
     </div>
     <a-drawer
@@ -163,6 +166,8 @@
             :src="selectedImage.path"
             width="100"
           />
+
+
           <a-button @click="addToArticle">{{ $t("add") }}</a-button>
         </div>
       </div>
@@ -281,6 +286,8 @@ export default {
         });
       } else {
         console.log("create");
+        console.log(this.article)
+
         this.$inertia.post(route("admin.articles.store"), this.article, {
           onSuccess: (page) => {
             this.modal.data = {};
@@ -310,6 +317,10 @@ export default {
       console.log("focus out");
       console.log(event);
     },
+    copyUrl(){
+      navigator.clipboard.writeText(this.$refs.articleUrl.href)
+    }
+
     // getCursor() {
     //   var content = this.$refs.editorRef.modelValue;
     //   console.log(content);

@@ -180,6 +180,7 @@ export default {
         title: "Modal",
         mode: "",
       },
+      originSequences:[],
       pagination: {
         total: this.articles.total,
         current: this.articles.current_page,
@@ -269,37 +270,17 @@ export default {
       this.pagination.pageSize=pageSize
     },
     rowChange(event) {
-      this.articles.data.map((a,i)=>{
-        a.sequence=this.originalSequences[i]
-        console.log(a)
-      })
-      // //未知點做
-      // console.log(event.moved)
-      // const startSequence=this.articles.data[0].sequence
-      // if((event.moved.oldIndex-event.moved.newIndex)>0){
-      //   console.log('move up');
-      // }else{
-      //   const step=event.moved.newIndex-event.moved.oldIndex
-      //   // var from=this.article.data[event.moved.oldIndex];
-      //   console.log('move down')
-      //   console.log(step);
-      //   //本來想一個個swarp, 但應該要用recursive
-      //   for(let i=0; i<step; i++){
-      //     let idx=event.moved.oldIndex+i
-      //     let seq=this.articles.data[idx].sequence
-      //     this.articles.data[idx].sequence=this.articles.data[idx+1].sequence
-      //     this.articles.data[idx+1].sequence=seq
-      //   }
-      // }
-      console.log(this.articles.data)
+      
+      this.articles.data.map((d,i)=>{d.sequence =this.originalSequences[i]})
+
       this.$inertia.post(route("manage.article.sequence"), this.articles.data, {
-        onSuccess: (page) => {
-          console.log(page);
-        },
-        onError: (error) => {
-          console.log(error);
-        },
-      });
+         onSuccess: (page) => {
+           console.log(page);
+         },
+         onError: (error) => {
+           console.log(error);
+         },
+       });
     },
     createRecord() {
       this.modal.data = {};

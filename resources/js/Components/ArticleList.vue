@@ -30,7 +30,7 @@ const props = defineProps({
               {{ article.content.replace(/<[^>]+>/g, '').substring(0, 100) }} ...
             </div>
             <div v-if="article.url">
-              <a :href="article.url" target="_blank">{{ $t('url_link') }}</a>
+              <inertia-link :href="article.url" target="_blank">{{ $t('url_link') }}</inertia-link>
             </div>
             
           </p>

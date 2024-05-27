@@ -20,11 +20,16 @@ defineProps({
   <WebLayout title="Dashboard">
     <div class="lg:h-96 bg-gradient-to-tr bg-[#0081C8] rounded-md flex items-center">
       <div class="ml-5 lg:ml-20 lg:w-4/5 py-5">
-        <h2 class="text-white text-4xl">{{ $t('welcome_message') }}</h2>
+        <h2 class="text-white text-4xl">{{ welcomeMessage.title }}</h2>
         <p class="lg:text-lg text-indigo-100 mr-4 capitalize font-thick tracking-wider leading-7">
           <div v-if="welcomeMessage">
             {{ welcomeMessage.intro  }}
-            <a-button>{{ $t('readmore') }}</a-button>
+            <div v-if="welcomeMessage.url">
+                <a-button :href="welcomeMessage.url">{{ $t('readmore') }}</a-button>
+            </div>
+            <div v-else-if="welcomeMessage.content">
+              <a-button href="http://localhost:8000/article?t=697fc611-afb9-4892-856b-27e77f422a0b">{{ $t('readmore') }}</a-button>
+            </div>
           </div>
           <div v-else>
             「公務人員聯合總會網首頁」是一個提供公務人員相關資訊和服務的網站。該網站結合了屬會和友會的功能，為公務人員提供一個資信平台，方便他們獲取所需的資訊和進行交流。
