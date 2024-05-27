@@ -14,7 +14,6 @@
       </div>
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
        
-
         <div class="ant-table">
             <div class="ant-table-container">
               <table style="table-layout: auto">
@@ -51,39 +50,18 @@
                 </draggable>
               </table>
             </div>
-          </div>
-
-
-
-        <a-table :dataSource="articles.data" :columns="columns" :pagination="pagination" @change="onPaginationChange">
-          <template #headerCell="{ column }">
-            {{ column.i18n ? $t(column.i18n) : column.title }}
-          </template>
-          <template #bodyCell="{ column, text, record, index }">
-            <template v-if="column.dataIndex == 'operation'">
-              <inertia-link
-                :href="route('manage.articles.edit', record.id)"
-                class="ant-btn"
-                >{{ $t("edit") }}</inertia-link
-              >
-              <a-popconfirm
-                :title="$t('confirm_delete_record')"
-                :ok-text="$t('yes')"
-                :cancel-text="$t('no')"
-                @confirm="deleteConfirmed(record)"
-                :disabled="record.published == 1"
-              >
-                <a-button :disabled="record.published == 1">{{ $t("delete") }}</a-button>
-              </a-popconfirm>
-            </template>
-            <template v-else-if="column.dataIndex == 'published'">
-              {{ record.published ? $t("yes") : $t("no") }}
-            </template>
-            <template v-else>
-              {{ record[column.dataIndex] }}
-            </template>
-          </template>
-        </a-table>
+        </div>
+        <div class="float-right py-5 px-5">
+          <a-pagination
+            v-model:current="pagination.current"
+            v-model:pageSize="pagination.pageSize"
+            show-size-changer
+            :total="pagination.total"
+            @showSizeChange="onShowSizeChange"
+            @change="onPaginationChange"
+          />
+        </div>
+        
       </div>
       <p>Article CAN NOT be delete if published.</p>
     
@@ -207,6 +185,7 @@ export default {
         current: this.articles.current_page,
         pageSize: this.articles.per_page,
       },
+      originalSequences:[],
       editor: ClassicEditor,
       editorData: "<p>Content of the editor.</p>",
       editorConfig: {
@@ -273,43 +252,54 @@ export default {
       },
     };
   },
-  created() {},
+  created() {
+    this.originalSequences=this.articles.data.map(a=>a.sequence)
+    console.log(this.originalSequences)
+  },
   mounted() {},
   methods: {
     onPaginationChange(page, filters, sorter) {
+      console.log(page)
       this.$inertia.get(route("manage.articles.index"), {
-        page: page.current,
-        per_page: page.pageSize,
+        page: page,
+        per_page: this.pagination.pageSize,
       });
     },
+    onShowSizeChange(current, pageSize){
+      this.pagination.pageSize=pageSize
+    },
     rowChange(event) {
-      //未知點做
-      console.log(event.moved)
-      const startSequence=this.articles.data[0].sequence
-      if((event.moved.oldIndex-event.moved.newIndex)>0){
-        console.log('move up');
-      }else{
-        const step=event.moved.newIndex-event.moved.oldIndex
-        // var from=this.article.data[event.moved.oldIndex];
-        console.log('move down')
-        console.log(step);
-        //本來想一個個swarp, 但應該要用recursive
-        for(let i=0; i<step; i++){
-          let idx=event.moved.oldIndex+i
-          let seq=this.articles.data[idx].sequence
-          this.articles.data[idx].sequence=this.articles.data[idx+1].sequence
-          this.articles.data[idx+1].sequence=seq
-        }
-      }
+      this.articles.data.map((a,i)=>{
+        a.sequence=this.originalSequences[i]
+        console.log(a)
+      })
+      // //未知點做
+      // console.log(event.moved)
+      // const startSequence=this.articles.data[0].sequence
+      // if((event.moved.oldIndex-event.moved.newIndex)>0){
+      //   console.log('move up');
+      // }else{
+      //   const step=event.moved.newIndex-event.moved.oldIndex
+      //   // var from=this.article.data[event.moved.oldIndex];
+      //   console.log('move down')
+      //   console.log(step);
+      //   //本來想一個個swarp, 但應該要用recursive
+      //   for(let i=0; i<step; i++){
+      //     let idx=event.moved.oldIndex+i
+      //     let seq=this.articles.data[idx].sequence
+      //     this.articles.data[idx].sequence=this.articles.data[idx+1].sequence
+      //     this.articles.data[idx+1].sequence=seq
+      //   }
+      // }
       console.log(this.articles.data)
-      // this.$inertia.post(route("manage.article.sequence"), data, {
-      //   onSuccess: (page) => {
-      //     console.log(page);
-      //   },
-      //   onError: (error) => {
-      //     console.log(error);
-      //   },
-      // });
+      this.$inertia.post(route("manage.article.sequence"), this.articles.data, {
+        onSuccess: (page) => {
+          console.log(page);
+        },
+        onError: (error) => {
+          console.log(error);
+        },
+      });
     },
     createRecord() {
       this.modal.data = {};
