@@ -36,7 +36,7 @@
                         </template>
                         <template v-else-if="column.dataIndex=='dragger'">
                           <holder-outlined />
-                          {{record.id}} - {{ record.sequence }}
+                          {{record.id}}
                         </template>
                         <template v-else-if="column.dataIndex == 'published'">
                           {{ record.published ? $t("yes") : $t("no") }}

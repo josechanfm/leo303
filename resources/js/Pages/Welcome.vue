@@ -28,7 +28,7 @@ defineProps({
                 <a-button :href="welcomeMessage.url">{{ $t('readmore') }}</a-button>
             </div>
             <div v-else-if="welcomeMessage.content">
-              <a-button href="http://localhost:8000/article?t=697fc611-afb9-4892-856b-27e77f422a0b">{{ $t('readmore') }}</a-button>
+              <a-button :href="route('article.item',{t:welcomeMessage.uuid})">{{ $t('readmore') }}</a-button>
             </div>
           </div>
           <div v-else>
