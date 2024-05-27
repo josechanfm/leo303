@@ -69,7 +69,7 @@ class FormFieldController extends Controller
         $field->field_name = $request->field_name;
         $field->field_label = $request->field_label;
         $field->type = $request->type;
-        $field->options = json_encode($request->options);
+        $field->options = $request->options;
         $field->required = isset($request->required) ? $request->required : false;
         $field->in_column = isset($request->in_column) ? $request->in_column : false;
         $field->direction = isset($request->direction) ? $request->direction : 'H';

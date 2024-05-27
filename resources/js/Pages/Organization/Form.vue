@@ -94,12 +94,12 @@
             <a-form-item :label="$t('thumbnail')">
               <template v-if="form.thumbnail">
                 <img :src="form.thumbnail" width="300px" />
-                <a @click="onDeleteImage(form)">Delete</a>
+                <a @click="onDeleteImage(form)">{{ $t('delete_photo') }}</a>
               </template>
               <template v-else>
                 <template v-if="previewImage">
                   <img :src="previewImage" class="w-64"/>
-                  <a @click="onRemoveImage">Remove</a>
+                  <a @click="onRemoveImage">{{ $t('remove_photo') }}</a>
                 </template>
                 <template v-else>
                   <div class="flex items-center justify-center w-64">
@@ -124,7 +124,7 @@
             </a-form-item>
 
             <a-form-item :wrapper-col="{ offset: 12, span: 10 }">
-                <a-button type="primary" html-type="submit">Submit</a-button>
+                <a-button type="primary" html-type="submit">{{ $t('submit') }}</a-button>
             </a-form-item>
         </a-form>
       </div>

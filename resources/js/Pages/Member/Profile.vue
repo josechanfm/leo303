@@ -100,7 +100,7 @@
                   </div>
                 </div>
               </a-collapse-panel>
-              <a-collapse-panel key="3" :header="$t('change_password')">
+              <a-collapse-panel key="4" :header="$t('change_password')">
                 <a-form>
                     <a-form
                       :model="password"
@@ -137,7 +137,7 @@
 
 
                       <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-                        <a-button type="primary" html-type="submit">Submit</a-button>
+                        <a-button danger html-type="submit"> {{ $t('confirm') }}</a-button>
                       </a-form-item>
                     </a-form>
                 </a-form>
@@ -180,7 +180,7 @@ export default {
       showCropModal: false,
       avatarPreview: null,
       avatarData: null,
-      activeKey: ["1", "3", "4", "5", "6", "7", "8", "9"],
+      activeKey: ["1"],
       loading: false,
       password:{},
       modal: {

@@ -93,20 +93,20 @@
                   <a-input v-model:value="option.label" />
                 </a-radio>
               </template>
-              <a-radio @click="addOptionItem"> Add option</a-radio>
+              <a-radio @click="addOptionItem">{{ $t('add_option') }}</a-radio>
             </a-radio-group>
           </a-form-item>
           <a-form-item :label="$t('template')" name="optionTemplate">
             <a-select :options="templateOptions" @change="onChangeOptionTemplate" />
           </a-form-item>
           <a-form-item
-            :label="$t('template')"
+            :label="$t('layout_direction')"
             name="optionTemplate"
             v-if="['radio', 'checkbox'].includes(modal.data.type)"
           >
             <a-radio-group v-model:value="modal.data.direction">
               <a-radio value="H">{{$t('horizontal')}}</a-radio>
-              <a-radio value="V">{{$t('virtical')}}</a-radio>
+              <a-radio value="V">{{$t('vertical')}}</a-radio>
             </a-radio-group>
           </a-form-item>
         </template>

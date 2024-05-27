@@ -168,23 +168,25 @@ export default {
               <!-- QRcode -->
               <div class="flex flex-col justify-center items-center" v-if="showQrcode">
                 <div>
-                  <QRCodeVue3 :key="qrcode" v-bind:value="qrcode" :image="qrcodeLogo" :dotsOptions="{
-          type: 'dots',
-          color: '#26249a',
-          gradient: {
-            type: 'linear',
-            rotation: 0,
-            colorStops: [
-              { offset: 0, color: '#26249a' },
-              { offset: 1, color: '#26249a' },
-            ],
-          },
-        }" :cornersSquareOptions="{
-          type: 'square',
-          color: '#e00404'
-        }" :cornersDotOptions="{
-          color: '#e00404'
-        }" />
+                  <QRCodeVue3 :key="qrcode" v-bind:value="qrcode" :image="qrcodeLogo" 
+                    :dotsOptions="{
+                      type: 'dots',
+                      color: '#26249a',
+                      gradient: {
+                        type: 'linear',
+                        rotation: 0,
+                        colorStops: [
+                          { offset: 0, color: '#26249a' },
+                          { offset: 1, color: '#26249a' },
+                        ],
+                      },
+                    }" :cornersSquareOptions="{
+                      type: 'square',
+                      color: '#e00404'
+                    }" :cornersDotOptions="{
+                      color: '#e00404'
+                    }" 
+                  />
                 </div>
               </div>
               <!-- card start -->
@@ -227,10 +229,10 @@ export default {
 
               <div class="mt-16">
                 <h1 class="font-bold text-center text-3xl text-gray-900">
-                  {{ currentMember.display_name }}
+                  {{ currentMember.family_name }}{{ currentMember.given_name }}
                 </h1>
                 <h1 class="font-bold text-center text-2xl text-gray-900">
-                  {{ currentMember.family_name }}{{ currentMember.given_name }}
+                  {{ currentMember.display_name }}
                 </h1>
                 <p class="text-center text-sm text-gray-400 font-medium">
                   {{ currentMember.organization['name_' + $t('lang')] }}
