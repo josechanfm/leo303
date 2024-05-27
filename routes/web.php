@@ -27,7 +27,8 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
         'isMember' => Auth()->user() ? Auth()->user()->member : false,
         'isOrganizer' => Auth()->user() ? Auth()->user()->hasRole('organizer') : false,
-        'articles' => Article::publics()
+        'articles' => Article::publics(),
+        'welcomeMessage'=>Article::where('category_code','WELCOME')->where('organization_id',0)->first()
     ]);
 })->name('/');;
 

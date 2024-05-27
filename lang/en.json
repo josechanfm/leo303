@@ -1,5 +1,7 @@
 {
     "lang":"en",
+    "welcome_message":"Welcome Message",
+    "readmore":"Read More",
     "english": "English",
     "chinese": "Chinese",
     "portuguese": "Protuguese",

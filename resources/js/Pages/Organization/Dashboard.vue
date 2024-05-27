@@ -6,7 +6,7 @@
 
             </h2>
         </template>
-        <div class="container mx-auto pl-4 pr-4">
+        <div class="container mx-auto">
             <div class="flex flex-col-reverse md:flex-row gap-6">
                 <div class="flex-auto">
                     <div class="container mx-auto mt-5 bg-white rounded-lg p-2 h-full">

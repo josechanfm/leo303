@@ -106,7 +106,7 @@
         </header>
 
           <main>
-            <div class="p-5">
+            <div class="xs:p-2 p-4">
               <slot />
             </div>
           </main>

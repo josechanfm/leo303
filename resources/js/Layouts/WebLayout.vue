@@ -136,7 +136,7 @@ const showingNavigationDropdown = ref(false);
               :href="route('member.dashboard')"
               :active="route().current('member.dashboard')"
             >
-              {{ $t("memberDashboard") }}
+              {{ $t("member_dashboard") }}
             </ResponsiveNavLink>
             <!-- Authentication -->
             <template v-if="$page.props.user.id">

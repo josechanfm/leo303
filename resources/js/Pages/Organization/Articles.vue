@@ -32,7 +32,7 @@
                     <tr class="ant-table-row ant-table-row-level-0" :key="record.id">
                       <td v-for="column in columns" class="ant-table-cell">
                         <template v-if="column.dataIndex=='operation'">
-                          <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
+                          <inertia-link :href="route('manage.articles.edit',record.id)" class="ant-btn">{{  $t("edit") }}</inertia-link>
                         </template>
                         <template v-else-if="column.dataIndex=='dragger'">
                           <holder-outlined />
