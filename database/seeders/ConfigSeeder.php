@@ -110,7 +110,6 @@ class ConfigSeeder extends Seeder
                 '[
                     { "value": "input", "label_zh": "單行文字","label_en":"Text","label_pt":"Text"},
                     { "value": "textarea", "label_zh": "多行文字","label_en":"Multi Text","label_pt":"Multi Text" },
-                    { "value": "largetext", "label_zh": "長編文字" ,"label_en":"Long Text","label_pt":"Long Text"},
                     { "value": "richtext", "label_zh": "格式文字" ,"label_en":"Rich Text","label_pt":"Rich Text"},
                     { "value": "radio", "label_zh": "單項選擇" ,"label_en":"Radio","label_pt":"Radio"},
                     { "value": "checkbox", "label_zh": "多項選擇" ,"label_en":"Checkbox","label_pt":"Checkbox"},

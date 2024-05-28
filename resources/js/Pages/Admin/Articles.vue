@@ -36,7 +36,6 @@
                         </template>
                         <template v-else-if="column.dataIndex=='dragger'">
                           <holder-outlined />
-                          {{record.id}}
                         </template>
                         <template v-else-if="column.dataIndex == 'published'">
                           {{ record.published ? $t("yes") : $t("no") }}
@@ -255,12 +254,10 @@ export default {
   },
   created() {
     this.originalSequences=this.articles.data.map(a=>a.sequence)
-    console.log(this.originalSequences)
   },
   mounted() {},
   methods: {
     onPaginationChange(page, filters, sorter) {
-      console.log(page)
       this.$inertia.get(route("admin.articles.index"), {
         page: page,
         per_page: this.pagination.pageSize,
@@ -270,9 +267,7 @@ export default {
       this.pagination.pageSize=pageSize
     },
     rowChange(event) {
-      
       this.articles.data.map((d,i)=>{d.sequence =this.originalSequences[i]})
-
       this.$inertia.post(route("admin.article.sequence"), this.articles.data, {
          onSuccess: (page) => {
            console.log(page);
