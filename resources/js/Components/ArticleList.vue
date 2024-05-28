@@ -1,46 +1,52 @@
 <script setup>
-import { UserOutlined } from '@ant-design/icons-vue';
+import { UserOutlined } from "@ant-design/icons-vue";
 
 const props = defineProps({
-  articles: Object
+  articles: Object,
 });
 </script>
 
 <template>
-
-  <div v-for="article in articles" class="container mx-auto pt-5">
-    <div class="bg-white relative shadow rounded-lg pl-5">
+  <div v-for="article in articles" :key="article.id" class="container mx-auto pt-5">
+    <div class="bg-white relative shadow rounded-lg md:pl-5">
       <div class="flex flex-col md:flex-row items-center">
-        <div  class="w-full sm:max-w[300px] mr-4">
-          <img v-if="article.thumbnail" :src="article.thumbnail" alt="thumbnail">
-          <img v-else src="/images/site_logo.png" alt="Thumnail"/>
+        <div class="md:w-[14vw] md:mr-4 shrink-0">
+          <img
+            v-if="article.thumbnail"
+            :src="article.thumbnail"
+            class="object-cover"
+            alt="thumbnail"
+          />
+          <img v-else src="/images/site_logo.png" alt="Thumnail" />
         </div>
-        <div>
+        <div class="pt-2 md:pt-0">
           <a :href="route('article.item', { t: article.uuid })" target="_blank">
             <h2 class="text-xl font-bold">{{ article.title }}</h2>
           </a>
           <div class="flex items-center mt-2">
-            <span class="bg-gray-200 text-gray-700 py-1 px-2 rounded-full text-sm">{{ article.category_code }}</span>
+            <span class="bg-gray-200 text-gray-700 py-1 px-2 rounded-full text-sm">{{
+              article.category_code
+            }}</span>
           </div>
-          <p class="mt-2 text-gray-600">
+          <div class="mt-2 text-gray-600">
             <div v-if="article.intro">
               {{ article.intro }}
             </div>
             <div v-else>
-              {{ article.content.replace(/<[^>]+>/g, '').substring(0, 100) }} ...
+              {{ article.content.replace(/<[^>]+>/g, "").substring(0, 100) }} ...
             </div>
             <div v-if="article.url">
-              <inertia-link :href="article.url" target="_blank">{{ $t('url_link') }}</inertia-link>
+              <inertia-link :href="article.url" target="_blank">{{
+                $t("url_link")
+              }}</inertia-link>
             </div>
-            
-          </p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-
-<!-- 
+  <!-- 
   <a-list item-layout="horizontal" :data-source="articles">
     <template #renderItem="{ item }">
       <a-list-item>
@@ -73,6 +79,4 @@ const props = defineProps({
       </a-list-item>
     </template>
   </a-list>
--->
-
-</template>
+--></template>

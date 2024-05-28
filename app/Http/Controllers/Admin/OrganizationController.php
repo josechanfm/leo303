@@ -106,6 +106,7 @@ class OrganizationController extends Controller
     }
     public function createLogin(Member $member){
 
+        dd($member);
         if (!$member->hasUser()) {
             $user = $member->createUser();
         } else {
