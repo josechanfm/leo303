@@ -168,7 +168,7 @@ const showingNavigationDropdown = ref(false);
     <!-- section hero -->
     <section>
       <div
-        class="bg-gray-100 sm:grid grid-cols-5 grid-rows-1 px-4 py-4 min-h-full lg:min-h-screen space-y-6 sm:space-y-0 sm:gap-4"
+        class="bg-gray-100 sm:grid grid-cols-5 grid-rows-1 p-0 lg:p-4 pt-2 min-h-full lg:min-h-screen space-y-6 sm:space-y-0 sm:gap-4"
       >
         <div class="col-span-4">
           <!-- Page Content -->

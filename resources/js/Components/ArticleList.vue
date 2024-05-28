@@ -7,9 +7,9 @@ const props = defineProps({
 </script>
 
 <template>
-  <div v-for="article in articles" :key="article.id" class="container mx-auto pt-5">
+  <div v-for="article in articles" :key="article.id" class="container mx-auto pt-2">
     <div class="bg-white relative shadow rounded-lg md:pl-5">
-      <div class="flex flex-col md:flex-row items-center">
+      <div class="flex flex-col md:flex-row items-justify">
         <div class="md:w-[14vw] md:mr-4 shrink-0">
           <img
             v-if="article.thumbnail"
@@ -19,7 +19,7 @@ const props = defineProps({
           />
           <img v-else src="/images/site_logo.png" alt="Thumnail" />
         </div>
-        <div class="pt-2 md:pt-0">
+        <div class="p-2">
           <a :href="route('article.item', { t: article.uuid })" target="_blank">
             <h2 class="text-xl font-bold">{{ article.title }}</h2>
           </a>
@@ -29,7 +29,7 @@ const props = defineProps({
             }}</span>
           </div>
           <div class="mt-2 text-gray-600">
-            <div v-if="article.intro">
+            <div v-if="article.intro" class="text-justify">
               {{ article.intro }}
             </div>
             <div v-else>
