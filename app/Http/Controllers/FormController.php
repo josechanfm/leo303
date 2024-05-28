@@ -19,15 +19,16 @@ class FormController extends Controller
      */
     public function index()
     {
+        // dd(session('organization'));
+        //dd(auth()->user()->members->count()>0);
         $forms = Form::where('published', true)->where('for_member', false)->with('organization')->get();
-        if (auth()->user()) {
-            if (auth()->user()->member) {
-                $orgIds = auth()->user()->member->organizations->pluck('id')->toArray();
-                $memberForms = Form::whereIn('organization_id', $orgIds)->where('published', true)->where('require_login', true)->with('organization')->get();
+        if (session()->has('member')) {
+                //for own members
+                $memberForms=Form::where('published',true)->where('for_member',true)->where('organization_id',session('organization')->id)->get();
+                //for those who as account, might not belongs to same organziation
+                $userForms=Form::where('published',true)->where('require_login',true)->where('for_member',false)->get();
                 $forms = $forms->merge($memberForms);
-            }
-            $organizationForms = Form::where('published', true)->where('require_login', false)->with('organization')->get();
-            $forms = $forms->merge($organizationForms);
+                $forms = $forms->merge($userForms);
         }
         return Inertia::render('Form/Forms', [
             'forms' => $forms
@@ -100,28 +101,19 @@ class FormController extends Controller
      */
     public function show(Form $form, Request $request)
     {
-        
-        if($request->t!=$form->uuid){
-            return redirect()->back();
-        } elseif (!$form->published || empty($request->t)) {
-            return redirect()->back();
-        } elseif ($form->require_login && auth()->user() == null) {
-            return redirect()->back();
-        } elseif ($form->for_member) {
-            if (auth()->user()->member == null) {
-                return redirect()->back();
-            }
-            $orgIds = auth()->user()->member->organizations->pluck('id')->toArray();
-            if (!in_array($form->organization_id, $orgIds)) {
-                return redirect()->back();
+        if($request->t!=$form->uuid){ //uuid not correct
+            return redirect('forms');
+        }elseif ($form->published==false) { //not yet publish
+            return redirect('forms');
+        }elseif ($form->require_login && empty(auth()->user()) ) {
+            return redirect('forms');
+        }elseif ($form->for_member) {
+            if (session('member')->organization->id != $form->organization_id) {
+                dd('member false');
+                return redirect('forms');
             }
         };
-
-        //$form=Form::with('fields')->find($id);
         $form->fields;
-        if ($form->require_login == 1 && !Auth()->user()) {
-            return redirect('forms');
-        }
         return Inertia::render('Form/FormDefault', [
             'form' => $form,
         ]);
