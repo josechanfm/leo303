@@ -1,49 +1,58 @@
 <template>
   <OrganizationLayout :title="$t('members')" :breadcrumb="breadcrumb">
-    
-      <div class="flex-auto pb-3 text-right">
-        <a-button type="primary" class="!rounded" @click="createRecord()">{{
-          $t("create_member")
-        }}</a-button>
-      </div>
-      <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-        <a-table :dataSource="members" :columns="columns">
-          <template #headerCell="{ column }">
-            {{ column.i18n ? $t(column.i18n) : column.title }}
+    <div class="flex-auto pb-3 text-right">
+      <a-button type="primary" class="!rounded" @click="createRecord()">{{
+        $t("create_member")
+      }}</a-button>
+    </div>
+    <div class="bg-white relative shadow rounded-lg overflow-x-auto">
+      <a-table :dataSource="members" :columns="columns">
+        <template #headerCell="{ column }">
+          {{ column.i18n ? $t(column.i18n) : column.title }}
+        </template>
+        <template #bodyCell="{ column, text, record, index }">
+          <template v-if="column.dataIndex == 'operation'">
+            <inertia-link
+              :href="route('manage.members.show', record.id)"
+              class="ant-btn"
+              >{{ $t("view") }}</inertia-link
+            >
+            <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
+            <a-popconfirm
+              :title="$t('confirm_delete_record')"
+              :ok-text="$t('yes')"
+              :cancel-text="$t('no')"
+              @confirm="deleteConfirmed(record.id)"
+            >
+              <a-button>{{ $t("delete") }}</a-button>
+            </a-popconfirm>
+            <a-button @click="createLogin(record.id)" :disabled="record.user != null">{{
+              $t("create_login")
+            }}</a-button>
           </template>
-          <template #bodyCell="{ column, text, record, index }">
-            <template v-if="column.dataIndex == 'operation'">
-              <inertia-link :href="route('manage.members.show', record.id)" class="ant-btn">{{ $t("view")
-              }}</inertia-link>
-              <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
-              <a-popconfirm :title="$t('confirm_delete_record')" :ok-text="$t('yes')" :cancel-text="$t('no')"
-                @confirm="deleteConfirmed(record.id)">
-                <a-button>{{ $t("delete") }}</a-button>
-              </a-popconfirm>
-              <a-button @click="createLogin(record.id)" :disabled="record.user != null">{{
-                $t("create_login")
-              }}</a-button>
-            </template>
-            <template v-else-if="column.dataIndex == 'avatar'">
-              <img :src="record.avatar_url" width="60" />
-            </template>
-            <template v-else>
-              {{ record[column.dataIndex] }}
-            </template>
+          <template v-else-if="column.dataIndex == 'avatar'">
+            <img :src="record.avatar_url" width="60" />
           </template>
-        </a-table>
-      </div>
-    
+          <template v-else>
+            {{ record[column.dataIndex] }}
+          </template>
+        </template>
+      </a-table>
+    </div>
 
     <!-- Modal Start-->
     <a-modal v-model:visible="modal.isOpen" :title="$t(modal.title)" width="60%">
-      <a-form ref="modalRef" :model="modal.data"  :label-col="{ span: 4 }" 
-        autocomplete="off" :rules="rules" :validate-messages="validateMessages">
+      <a-form
+        ref="modalRef"
+        :model="modal.data"
+        :label-col="{ span: 4 }"
+        autocomplete="off"
+        :rules="rules"
+        :validate-messages="validateMessages"
+      >
         <a-row :span="24">
-          <a-col :span="8">
-          </a-col>
-          <a-col :span="8">
-          </a-col>
+          <a-col :span="8"> </a-col>
+          <a-col :span="8"> </a-col>
           <a-col :span="8">
             <img :src="modal.data.avatar_url" width="200" />
           </a-col>
@@ -53,12 +62,20 @@
         </a-form-item>
         <a-row :span="24">
           <a-col :span="12">
-            <a-form-item :label="$t('middle_name')" name="middle_name" :label-col="{ span: 8 }">
+            <a-form-item
+              :label="$t('middle_name')"
+              name="middle_name"
+              :label-col="{ span: 8 }"
+            >
               <a-input v-model:value="modal.data.middle_name" />
             </a-form-item>
           </a-col>
           <a-col :span="12">
-            <a-form-item :label="$t('family_name')" name="family_name" :label-col="{ span: 6 }">
+            <a-form-item
+              :label="$t('family_name')"
+              name="family_name"
+              :label-col="{ span: 6 }"
+            >
               <a-input v-model:value="modal.data.family_name" />
             </a-form-item>
           </a-col>
@@ -77,18 +94,31 @@
           </a-col>
           <a-col :span="12">
             <a-form-item :label="$t('dob')" name="dob" :label-col="{ span: 8 }">
-              <a-date-picker v-model:value="modal.data.dob" :format="dateFormat" :valueFormat="dateFormat" />
+              <a-date-picker
+                v-model:value="modal.data.dob"
+                :format="dateFormat"
+                :valueFormat="dateFormat"
+              />
             </a-form-item>
           </a-col>
         </a-row>
         <a-row :span="24">
           <a-col :span="12">
-            <a-form-item :label="$t('email')" name="email" :label-col="{ span: 8 }" :wrapper-col="{ span: 14, offset: 0 }">
+            <a-form-item
+              :label="$t('email')"
+              name="email"
+              :label-col="{ span: 8 }"
+              :wrapper-col="{ span: 14, offset: 0 }"
+            >
               <a-input v-model:value="modal.data.email" />
             </a-form-item>
           </a-col>
           <a-col :span="12">
-            <a-form-item :label="$t('mobile_number')" name="mobile" :label-col="{ span: 8 }">
+            <a-form-item
+              :label="$t('mobile_number')"
+              name="mobile"
+              :label-col="{ span: 8 }"
+            >
               <a-input v-model:value="modal.data.mobile" />
             </a-form-item>
           </a-col>
@@ -97,10 +127,20 @@
       <template #footer>
         <a-button key="back" @click="onCancelModal">返回</a-button>
 
-        <a-button v-if="modal.mode == 'EDIT'" key="Update" type="primary" @click="updateRecord()">{{ $t("update")
-        }}</a-button>
-        <a-button v-if="modal.mode == 'CREATE'" key="Store" type="primary" @click="storeRecord()">{{ $t("add")
-        }}</a-button>
+        <a-button
+          v-if="modal.mode == 'EDIT'"
+          key="Update"
+          type="primary"
+          @click="updateRecord()"
+          >{{ $t("update") }}</a-button
+        >
+        <a-button
+          v-if="modal.mode == 'CREATE'"
+          key="Store"
+          type="primary"
+          @click="storeRecord()"
+          >{{ $t("add") }}</a-button
+        >
       </template>
     </a-modal>
     <!-- Modal End-->
@@ -120,9 +160,7 @@ export default {
   props: ["members"],
   data() {
     return {
-      breadcrumb:[
-          {label:"會員列表" ,url:null},
-      ],
+      breadcrumb: [{ label: "會員列表", url: null }],
       dateFormat: "YYYY-MM-DD",
       modal: {
         isOpen: false,
@@ -136,27 +174,33 @@ export default {
           dataIndex: "given_name",
           i18n: "given_name",
           responsive: ["md"],
-        }, {
+        },
+        {
           title: "Family name",
           dataIndex: "family_name",
           i18n: "family_name",
-        }, {
+        },
+        {
           title: "Gender",
           dataIndex: "gender",
           i18n: "gender",
-        }, {
+        },
+        {
           title: "Date of birth",
           dataIndex: "dob",
           i18n: "dob",
-        }, {
+        },
+        {
           title: "State",
           dataIndex: "state",
           i18n: "state",
-        }, {
+        },
+        {
           title: "Avatar",
           dataIndex: "avatar",
           i18n: "avatar",
-        }, {
+        },
+        {
           title: "Operation",
           dataIndex: "operation",
           key: "operation",
@@ -188,11 +232,11 @@ export default {
       },
     };
   },
-  created() { },
+  created() {},
   methods: {
     onCancelModal() {
-      this.modal.data = {}
-      this.modal.isOpen = false
+      this.modal.data = {};
+      this.modal.isOpen = false;
     },
     createRecord() {
       this.modal.data = {};

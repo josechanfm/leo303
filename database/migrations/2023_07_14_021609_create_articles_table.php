@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->nullable()->unique();
             $table->foreignId('organization_id');
-            $table->bigInteger('sequrence')->unsigned()->nullable();
+            $table->bigInteger('sequence')->unsigned()->nullable();
             $table->string('category_code',10);
             $table->string('title');
             $table->text('intro')->nullable();
