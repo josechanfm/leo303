@@ -59,9 +59,12 @@ class Form extends Model implements HasMedia
         return $this->hasMany(FormField::class)->where('in_column', 1);
     }
     //entry table column headers, for frontend table view and export to excel
-    public function entry_columns()
+    public function entryColumns()
     {
         $columns[] = (object)['title' => '#', 'dataIndex' => 'uid'];
+        if($this->for_member || $this->require_login){
+            $columns[] = (object)['title' => 'Username', 'dataIndex' => 'username'];
+        }
         foreach ($this->in_column_fields as $column) {
             $columns[] = (object)['title' => $column->field_name, 'dataIndex' => 'extra_' . $column->id];
         }
@@ -80,6 +83,7 @@ class Form extends Model implements HasMedia
         $entries = $this->entries;
         $fields = $this->in_column_fields;
         foreach ($entries as $entry) {
+            $entry->member;
             foreach ($fields as $field) {
                 $f = $entry->records->where('form_field_id', $field->id)->first();
                 if ($f) {

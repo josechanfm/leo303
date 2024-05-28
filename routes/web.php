@@ -43,7 +43,7 @@ Route::get('registration', [\App\Http\Controllers\RegistrationController::class,
 Route::post('registration', [\App\Http\Controllers\RegistrationController::class, 'store'])->name('registration.store');
 Route::get('article', [\App\Http\Controllers\ArticleController::class, 'item'])->name('article.item');
 Route::resource('forms', App\Http\Controllers\FormController::class)->names('forms');
-Route::get('form/{form}/entry/{entry}/success', [App\Http\Controllers\Organization\EntryController::class, 'entrySuccess'])->name('form.entry.success');
+Route::get('form/{entry}/receipt', [App\Http\Controllers\FormController::class, 'receipt'])->name('form.receipt');
 Route::get('content', [App\Http\Controllers\ContentController::class,'page'])->name('content');
 
 //Member

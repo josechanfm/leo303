@@ -15,7 +15,7 @@
               <template v-if="column.dataIndex == 'operation'">
                 <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
                 <a
-                  :href="route('manage.form.entry.success', { form: form, entry: record.id })"
+                  :href="route('form.receipt',  record)"
                   target="_blank"
                   class="ant-btn"
                   >{{ $t("receipt") }}</a
@@ -29,7 +29,9 @@
                   <a-button>{{ $t("delete") }}</a-button>
                 </a-popconfirm>
               </template>
-
+              <template v-else-if="column.dataIndex == 'username' && record.member">
+                {{ record.member.family_name }}{{ record.member.given_name }}
+              </template>
               <template v-else-if="column.dataIndex == 'created_at'">
                 {{ record[column.dataIndex] }}
               </template>

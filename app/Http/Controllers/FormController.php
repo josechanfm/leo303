@@ -53,17 +53,22 @@ class FormController extends Controller
      */
     public function store(Request $request)
     {
-
-        $entry = new Entry();
-        if ($request->form['for_member']) {
-            $member = auth()->user()->member;
-            if (empty($member)) {
-                return Inertia::render('Error', [
-                    'message' => "This form is for member only."
-                ]);
-                return redirect()->back();
+        $form=Form::find($request->form['id']);
+        if ($form->published==false) { //not yet publish
+            return redirect('forms');
+        }elseif ($form->require_login && empty(auth()->user()) ) {
+            return redirect('forms');
+        }elseif ($form->for_member) {
+            if (session('member')->organization->id != $form->organization_id) {
+                return redirect('forms');
             }
-            $entry->member_id = $member->id;
+        };
+        $entry = new Entry();
+        if ($form->for_member) {
+            if(!session()->has('member')){
+                return redirect('forms');
+            }
+            $entry->member_id = session('member')->id;
         }
         $entry->form_id = $request->form['id'];
         $entry->save();
@@ -109,7 +114,6 @@ class FormController extends Controller
             return redirect('forms');
         }elseif ($form->for_member) {
             if (session('member')->organization->id != $form->organization_id) {
-                dd('member false');
                 return redirect('forms');
             }
         };
@@ -151,5 +155,8 @@ class FormController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function receipt(Entry $entry){
+        echo ('comming soon.');
     }
 }

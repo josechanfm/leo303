@@ -36,7 +36,7 @@ class EntryController extends Controller
             'form' => $form,
             'entries' => $entries,
             'fields' => $form->fields,
-            'entryColumns' => $form->entry_columns()
+            'entryColumns' => $form->entryColumns()
         ]);
     }
     /**

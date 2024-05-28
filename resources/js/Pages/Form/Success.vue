@@ -55,11 +55,9 @@
           <div>
             <a :href="route('/')">返回主頁</a>
           </div>
-          <div>
-            <a :href="'/form/' + form.id + '/entry/' + entry.id + '/success?format=pdf'"
-              >打印表格</a
-            >
-          </div>
+          <!-- <div>
+            <inertia-link :href="route('form.receipt',entry)">打印表格</inertia-link>
+          </div> -->
           <div>
             <a :href="route('forms.index')">活動列表</a>
           </div>
