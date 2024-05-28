@@ -220,7 +220,7 @@ export default {
     onSelectFile(event) {
       const file =event.target.files[0]
 
-      if(file.size > 1024*1024*1){
+      if(file.size > 1024*1024*5){
         alert('oversize')
         return false
       }
