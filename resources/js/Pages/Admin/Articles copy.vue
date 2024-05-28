@@ -1,70 +1,60 @@
 <template>
-  <AdminLayout :title="$t('articles')">
+  <AdminLayout title="Dashboard">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         {{ $t("articles") }}
       </h2>
     </template>
-      <div class="flex-auto pb-3 text-right pb-3">
-        <inertia-link
-          :href="route('admin.articles.create')"
-          class="ant-btn ant-btn-primary"
-          >{{ $t("create_article") }}</inertia-link
-        >
-      </div>
+    <div class="flex-auto pb-3 text-right">
+      <inertia-link
+        :href="route('admin.articles.create')"
+        class="ant-btn ant-btn-primary"
+        >{{ $t("create_article") }}</inertia-link
+      >
+    </div>
+    <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-       
-        <div class="ant-table">
-            <div class="ant-table-container">
-              <table style="table-layout: auto">
-                <thead class="ant-table-thead">
-                  <tr>
-                    <th v-for="column in columns">{{ $t(column.i18n) }}</th>
-                  </tr>
-                </thead>
-                <draggable
-                  tag="tbody"
-                  class="dragArea list-group ant-table-tbody"
-                  :list="articles.data"
-                  @change="rowChange"
-                >
-                  <transition-group v-for="(record, idx) in articles.data">
-                    <tr class="ant-table-row ant-table-row-level-0" :key="record.id">
-                      <td v-for="column in columns" class="ant-table-cell">
-                        <template v-if="column.dataIndex=='operation'">
-                          <inertia-link :href="route('admin.articles.edit',record.id)" class="ant-btn">{{  $t("edit") }}</inertia-link>
-                        </template>
-                        <template v-else-if="column.dataIndex=='dragger'">
-                          <holder-outlined />
-                          {{record.id}}
-                        </template>
-                        <template v-else-if="column.dataIndex == 'published'">
-                          {{ record.published ? $t("yes") : $t("no") }}
-                        </template>
-                        <template v-else>
-                          {{ record[column.dataIndex] }}
-                        </template>
-                      </td>
-                    </tr>
-                  </transition-group>
-                </draggable>
-              </table>
-            </div>
-        </div>
-        <div class="float-right py-5 px-5">
-          <a-pagination
-            v-model:current="pagination.current"
-            v-model:pageSize="pagination.pageSize"
-            show-size-changer
-            :total="pagination.total"
-            @showSizeChange="onShowSizeChange"
-            @change="onPaginationChange"
-          />
-        </div>
-        
+        <a-table :dataSource="articles.data" :columns="columns" :pagination="pagination" @change="onPaginationChange">
+          <template #headerCell="{ column }">
+            {{ column.i18n ? $t(column.i18n) : column.title }}
+          </template>
+          <template #bodyCell="{ column, text, record, index }">
+            <template v-if="column.dataIndex == 'operation'">
+              <inertia-link
+                :href="route('admin.articles.edit', record.id)"
+                class="ant-btn"
+                >{{ $t("edit") }}</inertia-link
+              >
+              <a-popconfirm
+                :title="$t('confirm_delete_record')"
+                :ok-text="$t('yes')"
+                :cancel-text="$t('no')"
+                @confirm="deleteConfirmed(record)"
+                :disabled="record.published == 1"
+              >
+                <a-button :disabled="record.published == 1">{{ $t("delete") }}</a-button>
+              </a-popconfirm>
+              <a-button @click="onClone(record)">Clone</a-button>
+            </template>
+            <template v-else-if="column.dataIndex == 'published'">
+              {{ record.published ? $t("yes") : $t("no") }}
+            </template>
+            <template v-else-if="column.dataIndex=='organization_id'">
+              <span v-if="record.organization">
+                {{ record.organization.abbr }}
+              </span>
+              <span v-else>
+                Template
+              </span>
+            </template>
+            <template v-else>
+              {{ record[column.dataIndex] }}
+            </template>
+          </template>
+        </a-table>
       </div>
       <p>Article CAN NOT be delete if published.</p>
-    
+    </div>
     <!-- Modal Start-->
     <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="100%">
       <a-form
@@ -158,19 +148,15 @@ import { defineComponent, reactive } from "vue";
 import CKEditor from "@ckeditor/ckeditor5-vue";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import UploadAdapter from "@/Components/ImageUploadAdapter.vue";
-import { VueDraggableNext } from "vue-draggable-next";
-import { HolderOutlined } from '@ant-design/icons-vue';
 
 export default {
   components: {
     AdminLayout,
     ckeditor: CKEditor.component,
     UploadAdapter,
-    draggable: VueDraggableNext,
-    HolderOutlined
     //UploadAdapter
   },
-  props: ["classifies", "articleCategories", "articles"],
+  props: ["organizations","classifies", "articleCategories", "articles"],
   data() {
     return {
       dateFormat: "YYYY-MM-DD",
@@ -180,13 +166,11 @@ export default {
         title: "Modal",
         mode: "",
       },
-      originSequences:[],
       pagination: {
         total: this.articles.total,
         current: this.articles.current_page,
         pageSize: this.articles.per_page,
       },
-      originalSequences:[],
       editor: ClassicEditor,
       editorData: "<p>Content of the editor.</p>",
       editorConfig: {
@@ -201,9 +185,9 @@ export default {
       },
       columns: [
         {
-          title: "Dragger",
-          i18n: "dragger_sort",
-          dataIndex: "dragger",
+          title: "Organization",
+          i18n: "organization",
+          dataIndex: "organization_id",
         },{
           title: "Category",
           i18n: "category",
@@ -253,34 +237,14 @@ export default {
       },
     };
   },
-  created() {
-    this.originalSequences=this.articles.data.map(a=>a.sequence)
-    console.log(this.originalSequences)
-  },
+  created() {},
   mounted() {},
   methods: {
     onPaginationChange(page, filters, sorter) {
-      console.log(page)
       this.$inertia.get(route("admin.articles.index"), {
-        page: page,
-        per_page: this.pagination.pageSize,
+        page: page.current,
+        per_page: page.pageSize,
       });
-    },
-    onShowSizeChange(current, pageSize){
-      this.pagination.pageSize=pageSize
-    },
-    rowChange(event) {
-      
-      this.articles.data.map((d,i)=>{d.sequence =this.originalSequences[i]})
-
-      this.$inertia.post(route("admin.article.sequence"), this.articles.data, {
-         onSuccess: (page) => {
-           console.log(page);
-         },
-         onError: (error) => {
-           console.log(error);
-         },
-       });
     },
     createRecord() {
       this.modal.data = {};
@@ -349,7 +313,7 @@ export default {
     },
     //deleteRecord(recordId) {
     //if (!confirm('Are you sure want to remove?')) return;
-    // this.$inertia.delete(route('admin.articles.destroy', recordId), {
+    // this.$inertia.delete(route('manage.articles.destroy', recordId), {
     //     onSuccess: (page) => {
     //         console.log(page);
     //     },
@@ -366,6 +330,22 @@ export default {
         return new UploadAdapter(loader);
       };
     },
+    onClone(record){
+      let article={...record};
+      article.id=null
+      article.uuid=null
+      article.user_id=null
+      article.thumbnail=null
+      this.$inertia.post(route("admin.articles.store"), article, {
+          onSuccess: (page) => {
+            console.log(page.data)
+          },
+          onError: (err) => {
+            console.log(err);
+          },
+        });
+
+    }
   },
 };
 </script>

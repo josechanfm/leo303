@@ -102,7 +102,6 @@ Route::group([
     Route::resource('certificate/{certificate}/members', App\Http\Controllers\Organization\CertificateMemberController::class)->names('manage.certificate.members');
 
     Route::resource('articles', App\Http\Controllers\Organization\ArticleController::class)->names('manage.articles');
-    Route::post('article/sequence', [App\Http\Controllers\Organization\ArticleController::class,'sequence'])->name('manage.article.sequence');
     Route::post('article/delete_image/{article}', [App\Http\Controllers\Organization\ArticleController::class,'deleteImage'])->name('manage.article.deleteImage');
     Route::resource('events', App\Http\Controllers\Organization\EventController::class)->names('manage.events');
     Route::resource('configs', App\Http\Controllers\Organization\ConfigController::class)->names('manage.configs');
@@ -130,6 +129,7 @@ Route::group([
     Route::resource('features', App\Http\Controllers\Admin\FeatureController::class)->names('admin.features');
     Route::post('feature/delete_image/{feature}', [App\Http\Controllers\Admin\FeatureController::class,'deleteImage'])->name('admin.feature.deleteImage');
     Route::resource('articles', App\Http\Controllers\Admin\ArticleController::class)->names('admin.articles');
+    Route::post('article/sequence', [App\Http\Controllers\Admin\ArticleController::class,'sequence'])->name('admin.article.sequence');
     Route::post('article/delete_image/{article}', [App\Http\Controllers\Admin\ArticleController::class,'deleteImage'])->name('admin.article.deleteImage');
     Route::resource('issues', App\Http\Controllers\Admin\IssueController::class)->names('admin.issues');
    

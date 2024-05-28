@@ -1,5 +1,5 @@
 <template>
-  <AdminLayout :title="$t('articles')">
+  <OrganizationLayout :title="$t('articles')">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         {{ $t("articles") }}
@@ -7,7 +7,7 @@
     </template>
       <div class="flex-auto pb-3 text-right pb-3">
         <inertia-link
-          :href="route('admin.articles.create')"
+          :href="route('manage.articles.create')"
           class="ant-btn ant-btn-primary"
           >{{ $t("create_article") }}</inertia-link
         >
@@ -22,21 +22,12 @@
                     <th v-for="column in columns">{{ $t(column.i18n) }}</th>
                   </tr>
                 </thead>
-                <draggable
-                  tag="tbody"
-                  class="dragArea list-group ant-table-tbody"
-                  :list="articles.data"
-                  @change="rowChange"
-                >
-                  <transition-group v-for="(record, idx) in articles.data">
-                    <tr class="ant-table-row ant-table-row-level-0" :key="record.id">
+                <tbody>
+                  <template v-for="(record, idx) in articles.data">
+                    <tr class="ant-table-row ant-table-row-level-0">
                       <td v-for="column in columns" class="ant-table-cell">
                         <template v-if="column.dataIndex=='operation'">
-                          <inertia-link :href="route('admin.articles.edit',record.id)" class="ant-btn">{{  $t("edit") }}</inertia-link>
-                        </template>
-                        <template v-else-if="column.dataIndex=='dragger'">
-                          <holder-outlined />
-                          {{record.id}}
+                          <inertia-link :href="route('manage.articles.edit',record.id)" class="ant-btn">{{  $t("edit") }}</inertia-link>
                         </template>
                         <template v-else-if="column.dataIndex == 'published'">
                           {{ record.published ? $t("yes") : $t("no") }}
@@ -46,8 +37,8 @@
                         </template>
                       </td>
                     </tr>
-                  </transition-group>
-                </draggable>
+                  </template>
+                </tbody>
               </table>
             </div>
         </div>
@@ -148,11 +139,11 @@
       </template>
     </a-modal>
     <!-- Modal End-->
-  </AdminLayout>
+  </OrganizationLayout>
 </template>
 
 <script>
-import AdminLayout from "@/Layouts/AdminLayout.vue";
+import OrganizationLayout from "@/Layouts/OrganizationLayout.vue";
 import { defineComponent, reactive } from "vue";
 //import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import CKEditor from "@ckeditor/ckeditor5-vue";
@@ -163,7 +154,7 @@ import { HolderOutlined } from '@ant-design/icons-vue';
 
 export default {
   components: {
-    AdminLayout,
+    OrganizationLayout,
     ckeditor: CKEditor.component,
     UploadAdapter,
     draggable: VueDraggableNext,
@@ -201,10 +192,6 @@ export default {
       },
       columns: [
         {
-          title: "Dragger",
-          i18n: "dragger_sort",
-          dataIndex: "dragger",
-        },{
           title: "Category",
           i18n: "category",
           dataIndex: "category_code",
@@ -261,7 +248,7 @@ export default {
   methods: {
     onPaginationChange(page, filters, sorter) {
       console.log(page)
-      this.$inertia.get(route("admin.articles.index"), {
+      this.$inertia.get(route("manage.articles.index"), {
         page: page,
         per_page: this.pagination.pageSize,
       });
@@ -273,7 +260,7 @@ export default {
       
       this.articles.data.map((d,i)=>{d.sequence =this.originalSequences[i]})
 
-      this.$inertia.post(route("admin.article.sequence"), this.articles.data, {
+      this.$inertia.post(route("manage.article.sequence"), this.articles.data, {
          onSuccess: (page) => {
            console.log(page);
          },
@@ -299,7 +286,7 @@ export default {
       this.$refs.modalRef
         .validateFields()
         .then(() => {
-          this.$inertia.post(route("admin.articles.store"), this.modal.data, {
+          this.$inertia.post(route("manage.articles.store"), this.modal.data, {
             onSuccess: (page) => {
               this.modal.data = {};
               this.modal.isOpen = false;
@@ -319,7 +306,7 @@ export default {
         .validateFields()
         .then(() => {
           this.$inertia.put(
-            route("admin.articles.update", this.modal.data.id),
+            route("manage.articles.update", this.modal.data.id),
             this.modal.data,
             {
               onSuccess: (page) => {
@@ -338,7 +325,7 @@ export default {
         });
     },
     deleteConfirmed(record) {
-      this.$inertia.delete(route("admin.articles.destroy", record.id), {
+      this.$inertia.delete(route("manage.articles.destroy", record.id), {
         onSuccess: (page) => {
           console.log(page);
         },
@@ -349,7 +336,7 @@ export default {
     },
     //deleteRecord(recordId) {
     //if (!confirm('Are you sure want to remove?')) return;
-    // this.$inertia.delete(route('admin.articles.destroy', recordId), {
+    // this.$inertia.delete(route('manage.articles.destroy', recordId), {
     //     onSuccess: (page) => {
     //         console.log(page);
     //     },

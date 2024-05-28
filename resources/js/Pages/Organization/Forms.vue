@@ -124,7 +124,7 @@ export default {
         ]
       }
     },
-      created() { },
+    created() { },
     methods: {
       deleteConfirmed(record) {
         console.log("delete");

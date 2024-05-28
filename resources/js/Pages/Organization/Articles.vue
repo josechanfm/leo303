@@ -14,53 +14,38 @@
       </div>
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
        
-        <div class="ant-table">
-            <div class="ant-table-container">
-              <table style="table-layout: auto">
-                <thead class="ant-table-thead">
-                  <tr>
-                    <th v-for="column in columns">{{ $t(column.i18n) }}</th>
-                  </tr>
-                </thead>
-                <draggable
-                  tag="tbody"
-                  class="dragArea list-group ant-table-tbody"
-                  :list="articles.data"
-                  @change="rowChange"
-                >
-                  <transition-group v-for="(record, idx) in articles.data">
-                    <tr class="ant-table-row ant-table-row-level-0" :key="record.id">
-                      <td v-for="column in columns" class="ant-table-cell">
-                        <template v-if="column.dataIndex=='operation'">
-                          <inertia-link :href="route('manage.articles.edit',record.id)" class="ant-btn">{{  $t("edit") }}</inertia-link>
-                        </template>
-                        <template v-else-if="column.dataIndex=='dragger'">
-                          <holder-outlined />
-                          {{record.id}}
-                        </template>
-                        <template v-else-if="column.dataIndex == 'published'">
-                          {{ record.published ? $t("yes") : $t("no") }}
-                        </template>
-                        <template v-else>
-                          {{ record[column.dataIndex] }}
-                        </template>
-                      </td>
-                    </tr>
-                  </transition-group>
-                </draggable>
-              </table>
-            </div>
-        </div>
-        <div class="float-right py-5 px-5">
-          <a-pagination
-            v-model:current="pagination.current"
-            v-model:pageSize="pagination.pageSize"
-            show-size-changer
-            :total="pagination.total"
-            @showSizeChange="onShowSizeChange"
-            @change="onPaginationChange"
-          />
-        </div>
+
+        <a-table :dataSource="articles.data" :columns="columns" :pagination="pagination" @change="onPaginationChange">
+          <template #headerCell="{ column }">
+            {{ column.i18n ? $t(column.i18n) : column.title }}
+          </template>
+          <template #bodyCell="{ column, text, record, index }">
+            <template v-if="column.dataIndex == 'operation'">
+              <inertia-link
+                :href="route('manage.articles.edit', record.id)"
+                class="ant-btn"
+                >{{ $t("edit") }}</inertia-link
+              >
+              <a-popconfirm
+                :title="$t('confirm_delete_record')"
+                :ok-text="$t('yes')"
+                :cancel-text="$t('no')"
+                @confirm="deleteConfirmed(record)"
+                :disabled="record.published == 1"
+              >
+                <a-button :disabled="record.published == 1">{{ $t("delete") }}</a-button>
+              </a-popconfirm>
+            </template>
+            <template v-else-if="column.dataIndex == 'published'">
+              {{ record.published ? $t("yes") : $t("no") }}
+            </template>
+            <template v-else>
+              {{ record[column.dataIndex] }}
+            </template>
+          </template>
+        </a-table>
+
+
         
       </div>
       <p>Article CAN NOT be delete if published.</p>
@@ -169,6 +154,7 @@ export default {
     draggable: VueDraggableNext,
     HolderOutlined
     //UploadAdapter
+
   },
   props: ["classifies", "articleCategories", "articles"],
   data() {
@@ -186,7 +172,6 @@ export default {
         current: this.articles.current_page,
         pageSize: this.articles.per_page,
       },
-      originalSequences:[],
       editor: ClassicEditor,
       editorData: "<p>Content of the editor.</p>",
       editorConfig: {
@@ -201,11 +186,7 @@ export default {
       },
       columns: [
         {
-          title: "Dragger",
-          i18n: "dragger_sort",
-          dataIndex: "dragger",
-        },{
-          title: "Category",
+          title: 'Category',
           i18n: "category",
           dataIndex: "category_code",
         },{
@@ -254,10 +235,11 @@ export default {
     };
   },
   created() {
-    this.originalSequences=this.articles.data.map(a=>a.sequence)
-    console.log(this.originalSequences)
   },
-  mounted() {},
+  mounted() {
+    
+    //loadLanguageAsync(page.props.value.lang);
+  },
   methods: {
     onPaginationChange(page, filters, sorter) {
       console.log(page)
@@ -268,19 +250,6 @@ export default {
     },
     onShowSizeChange(current, pageSize){
       this.pagination.pageSize=pageSize
-    },
-    rowChange(event) {
-      
-      this.articles.data.map((d,i)=>{d.sequence =this.originalSequences[i]})
-
-      this.$inertia.post(route("manage.article.sequence"), this.articles.data, {
-         onSuccess: (page) => {
-           console.log(page);
-         },
-         onError: (error) => {
-           console.log(error);
-         },
-       });
     },
     createRecord() {
       this.modal.data = {};
