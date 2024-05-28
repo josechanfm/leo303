@@ -279,8 +279,6 @@ export default {
       console.log(this.formData);
     },
     storeRecord() {
-      console.log(this.form);
-      console.log(this.formData);
       this.$refs.formRef
         .validateFields()
         .then(() => {

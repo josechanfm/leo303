@@ -23,8 +23,8 @@ class FormController extends Controller
         //dd(auth()->user()->members->count()>0);
         $forms = Form::where('published', true)->where('for_member', false)->with('organization')->orderBy('created_at','DESC')->get();
         if (session()->has('member')) {
-                //for own members
-                $memberForms=Form::where('published',true)->where('for_member',true)->where('organization_id',session('organization')->id)->orderBy('created_at','DESC')->get();
+                //for own memberslogin
+                $memberForms=Form::where('published',true)->where('for_member',true)->where('organization_id',session('member')->organization->id)->orderBy('created_at','DESC')->get();
                 //for those who as account, might not belongs to same organziation
                 $userForms=Form::where('published',true)->where('require_login',true)->where('for_member',false)->orderBy('created_at','DESC')->get();
                 $forms = $forms->merge($memberForms);
