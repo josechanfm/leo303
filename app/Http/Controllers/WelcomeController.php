@@ -11,6 +11,7 @@ use App\Models\Article;
 class WelcomeController extends Controller
 {
     public function dashboard(){
+        
         return Inertia::render('Welcome', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),

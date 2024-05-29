@@ -106,9 +106,39 @@
                         </p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">{{ $t('image_size_note') }}</p>
                       </div>
+                      <div>
                       <input id="dropzone-file" type="file" @change="onSelectFile" accept="image/png, image/gif, image/jpeg" style="display:none" />
+                      </div>
                     </label>
                   </div>
+                  <div>
+                    <a-upload
+                      name="file"
+                      :multiple="false"
+                      :beforeUpload="beforeUpload"
+                      :showUploadList="false"
+                    >
+                      <template v-if="previewImage">
+                        <img :src="previewImage" alt="Preview" style="max-width: 200px" />
+                      </template>
+                      <template v-else>
+                        <a-button>
+                          <upload-outlined></upload-outlined>
+                          Click to Upload
+                        </a-button>
+                      </template>
+                    </a-upload>
+                  </div>
+
+
+                  <file-uploader
+                    data-field="thumbnailUpload"
+                    :accepted-file-types="['image/jpeg', 'image/png', 'image/gif']"
+                    :max-file-size="2 * 1024 * 1024" 
+                  ></file-uploader>
+
+
+
                 </template>
               </template>
             </a-form-item>
@@ -163,18 +193,23 @@ import CKEditor from "@ckeditor/ckeditor5-vue";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import UploadAdapter from "@/Components/ImageUploadAdapter.vue";
 import { message } from "ant-design-vue";
+import { UploadOutlined } from '@ant-design/icons-vue'
+import FileUploader from '@/Components/FileUploader.vue'
 
 export default {
   components: {
     OrganizationLayout,
     ckeditor: CKEditor.component,
     UploadAdapter,
+    UploadOutlined,
+    FileUploader
     //UploadAdapter
   },
   props: ["classifies", "articleCategories", "article"],
   data() {
     return {
       medias: [],
+      thumbnailUpload:null,
       previewImage: null,
       selectedMedia: null,
       isDrawerVisible: false,
@@ -215,19 +250,88 @@ export default {
     };
   },
   created() {},
-  mounted() {},
+  mounted() {
+
+  },
   methods: {
+    async beforeUpload(file){
+      console.log('beforeupload')
+      const isAcceptedType = this.isAcceptedFileType(file)
+      if (!isAcceptedType) {
+        message.error(`The file type "${file.type}" is not accepted.`)
+        return false
+      }
+
+      const isImageFile = file.type.includes('image')
+      if (isImageFile) {
+        const resizedFile = await this.resizeImage(file)
+        this.previewImage = URL.createObjectURL(resizedFile)
+        // this.thumbnailUpload= URL.createObjectURL(resizedFile)
+        //this.previewImage = resizedFile
+        this.thumbnailUpload= resizedFile
+        return resizedFile
+      }
+      return true
+    },
+    isAcceptedFileType(file) {
+      const acceptedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'image/jpeg', 'image/png', 'image/gif']
+      return acceptedTypes.includes(file.type)
+    },
+    resizeImage(file){
+      return new Promise((resolve, reject) => {
+        const maxSize = 2 * 1024 * 1024 // 2MB
+        if (file.size > maxSize) {
+          const canvas = document.createElement('canvas')
+          const context = canvas.getContext('2d')
+          const img = new Image()
+          img.src = URL.createObjectURL(file)
+
+          img.onload = () => {
+            let width = img.width
+            let height = img.height
+
+            if (width > height) {
+              if (width > 1024) {
+                height *= 1024 / width
+                width = 1024
+              }
+            } else {
+              if (height > 1024) {
+                width *= 1024 / height
+                height = 1024
+              }
+            }
+
+            canvas.width = width
+            canvas.height = height
+            context.drawImage(img, 0, 0, width, height)
+
+            // const resizedImageDataUrl = canvas.toDataURL(file.type, 0.9); // Adjust the quality as needed
+            // resolve(resizedImageDataUrl);
+
+            canvas.toBlob(
+              (blob) => {
+                resolve(blob);
+              },
+              file.type,
+              0.9
+            )
+          }
+        } else {
+          resolve(file)
+        }
+      })
+    },
+
     onSelectFile(event) {
       const file =event.target.files[0]
-
-      if(file.size > 1024*1024*5){
+      if(file.size > 1024*1024*1){
         alert('oversize')
         return false
       }
       //this.variffyUpload(file)
       this.article.thumbnail_upload = file
       this.previewImage = URL.createObjectURL(file)
-
     },
     onRemoveImage() {
       this.article.thumbial_upload = null
@@ -242,7 +346,7 @@ export default {
           console.log(err);
         },
       })
-
+      this.thumbnail
     },
     uploader(editor) {
       editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
@@ -250,9 +354,15 @@ export default {
       };
     },
     onFinish(event) {
+      const formData = new FormData();
+      Object.entries(this.article).forEach(([key,value])=>{
+          formData.append(key,value)
+      })
+     formData.append('thumbnail_upload', this.thumbnailUpload);
       if (this.article.id) {
-        this.article._method='PATCH';
-        this.$inertia.post(route("manage.articles.update", this.article.id), this.article, {
+        formData.append('_method', 'PATCH');
+        //formData._method='PATCH';
+        this.$inertia.post(route("manage.articles.update", this.article.id), formData, {
           onSuccess: (page) => {
             console.log(page);
           },
@@ -263,8 +373,6 @@ export default {
       } else {
         this.$inertia.post(route("manage.articles.store"), this.article, {
           onSuccess: (page) => {
-            // this.modal.data = {};
-            // this.modal.isOpen = false;
           },
           onError: (err) => {
             console.log(err);

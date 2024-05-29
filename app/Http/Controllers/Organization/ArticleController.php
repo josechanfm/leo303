@@ -109,8 +109,7 @@ class ArticleController extends Controller
     public function update(Request $request, Article $article)
     {
         $data=$request->all();
-        
-        if($request->file('thumbnail_upload')){
+        if($request->hasFile('thumbnail_upload')){
             $file=$request->file('thumbnail_upload');
             $fileName=$article->id.'_'.$file->getClientOriginalName();
             $file->move(public_path('thumbnail/articles'), $fileName);
