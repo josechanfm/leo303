@@ -9,8 +9,8 @@ const props = defineProps({
 <template>
   <div v-for="article in articles" :key="article.id" class="container mx-auto pt-2">
     <div class="bg-white relative shadow rounded-lg md:pl-5">
-      <div class="flex flex-col md:flex-row items-justify">
-        <div class="md:w-[14vw] md:mr-4 shrink-0">
+      <div class="flex flex-col md:flex-row items-center">
+        <div class="md:w-[14vw] md:mr-4 shrink-0 flex justify-center">
           <img
             v-if="article.thumbnail"
             :src="article.thumbnail"
