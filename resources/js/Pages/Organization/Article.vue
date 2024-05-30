@@ -41,6 +41,7 @@
 
             <quill-editor 
               v-model:value="article.content" 
+              @paste="handleImagePaste"
             />
 
           </a-form-item>
@@ -297,6 +298,41 @@ export default {
         },
       })
     },
+    handleImagePaste(event){
+      const clipboardItems = event.clipboardData.items;
+      
+      for (let i = 0; i < clipboardItems.length; i++) {
+        const item = clipboardItems[i];
+        if (item.type.indexOf('image') !== -1) {
+          const blob = item.getAsFile();
+          console.log(blob)
+          // const dimensionResult = await imageSize(blob);
+          // const { width, height } = dimensionResult;
+          // if (blob.size > 1048576) { // 1 MB
+          //   const compressedBlob = await imageCompression(blob, {
+          //     maxSizeMB: 1,
+          //     maxWidthOrHeight: 1920,
+          //     useWebWorker: true,
+          //   });
+          //   const reader = new FileReader();
+          //   reader.onload = () => {
+          //     const range = this.quill.getSelection(true);
+          //     this.quill.insertEmbed(range.index, 'image', reader.result);
+          //     this.quill.setSelection(range.index + 1, 0);
+          //   };
+          //   reader.readAsDataURL(compressedBlob);
+          // } else {
+          //   const reader = new FileReader();
+          //   reader.onload = () => {
+          //     const range = this.quill.getSelection(true);
+          //     this.quill.insertEmbed(range.index, 'image', reader.result);
+          //     this.quill.setSelection(range.index + 1, 0);
+          //   };
+          //   reader.readAsDataURL(blob);
+          // }
+        }
+      }
+    }
   },
 
 };

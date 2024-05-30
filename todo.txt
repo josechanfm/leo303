@@ -1,0 +1,11 @@
+atbest
+1. Search feature, on members, users, articles, events, forms and others.
+2. Login log,
+3. Event log
+4. Email notification. send email notice. (Active, pasive, by event and/or by schedule)
+5. Frontend email resize. before upload. on quill and file upload.
+6. auto resize image post on quill richtext editor
+7. File uploader. DONE but only single file, still have many things to do .....
+8
+
+
