@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ previewImage }}
     <template v-if="file">
       <img :src="file" width="300px" />
       <a @click="onDeleteImage">Delete</a>

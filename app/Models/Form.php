@@ -54,9 +54,9 @@ class Form extends Model implements HasMedia
         return $this->hasMany(FormField::class)->orderBy('sequence');
     }
     //extra fields show in entry table
-    public function in_column_fields()
+    public function inColumnFields()
     {
-        return $this->hasMany(FormField::class)->where('in_column', 1);
+        return $this->hasMany(FormField::class)->where('in_column', 1)->orderBy('sequence');
     }
     //entry table column headers, for frontend table view and export to excel
     public function entryColumns()
@@ -65,7 +65,7 @@ class Form extends Model implements HasMedia
         if($this->for_member || $this->require_login){
             $columns[] = (object)['title' => 'Username', 'dataIndex' => 'username'];
         }
-        foreach ($this->in_column_fields as $column) {
+        foreach ($this->inColumnFields as $column) {
             $columns[] = (object)['title' => $column->field_name, 'dataIndex' => 'extra_' . $column->id];
         }
         $columns[] = (object)['title' => 'Submit at', 'dataIndex' => 'submitted_at'];
@@ -81,7 +81,7 @@ class Form extends Model implements HasMedia
     public function tableEntries()
     {
         $entries = $this->entries;
-        $fields = $this->in_column_fields;
+        $fields = $this->inColumnFields;
         foreach ($entries as $entry) {
             $entry->member;
             foreach ($fields as $field) {

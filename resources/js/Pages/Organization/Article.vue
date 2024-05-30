@@ -63,14 +63,14 @@
               <a-form-item :label="$t('published')" name="published">
                 <a-switch
                   v-model:checked="article.published"
-                  @change="article.public = 0"  :unCheckedValue="0" :checkedValue="1"
+                  @change="article.public = 0" 
                 />
               </a-form-item>
             </a-col>
             <a-col class="pl-10" v-if="article.published">
               <a-form-item :label="$t('public')" name="public">
                 <a-switch
-                  v-model:checked="article.public" :unCheckedValue="0" :checkedValue="1"
+                  v-model:checked="article.public"
                 />
               </a-form-item>
             </a-col>
@@ -232,19 +232,10 @@ export default {
       };
     },
     onFinish(event) {
-      const formData = new FormData();
-      Object.entries(this.article).forEach(([key,value])=>{
-        if(value!=null){
-          formData.append(key,value)
-        }
-        //console.log(typeof value, key, value)
-        
-      })
-     formData.append('thumbnail_upload', this.thumbnailUpload);
+     this.article.thumbnail_upload=this.thumbnailUpload;
       if (this.article.id) {
-        formData.append('_method', 'PATCH');
-        //formData._method='PATCH';
-        this.$inertia.post(route("manage.articles.update", this.article.id), formData, {
+        this.article._method='PATCH';
+        this.$inertia.post(route("manage.articles.update", this.article.id), this.article, {
           onSuccess: (page) => {
             console.log(page);
           },
@@ -305,7 +296,6 @@ export default {
         const item = clipboardItems[i];
         if (item.type.indexOf('image') !== -1) {
           const blob = item.getAsFile();
-          console.log(blob)
           // const dimensionResult = await imageSize(blob);
           // const { width, height } = dimensionResult;
           // if (blob.size > 1048576) { // 1 MB
