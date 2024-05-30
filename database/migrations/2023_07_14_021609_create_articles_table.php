@@ -27,7 +27,7 @@ return new class extends Migration
             $table->text('url')->nullable();
             $table->string('reference')->nullable();    
             $table->text('author')->nullable();
-            $table->string('tags')->default();
+            $table->string('tags')->nullable()->default('');
             $table->char('lang',2)->default('zh');
             $table->string('thumbnail')->nullable();
             $table->foreignId('user_id');

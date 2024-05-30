@@ -38,13 +38,11 @@
           </a-form-item>
 
           <a-form-item :label="$t('content')" name="content">
-            <ckeditor
-              ref="editorRef"
-              :editor="editor"
-              v-model="article.content"
-              :config="editorConfig"
-              :height="300"
+
+            <quill-editor 
+              v-model:value="article.content" 
             />
+
           </a-form-item>
           <a-form-item :label="$t('valid_at')" name="valid_at">
             <a-date-picker
@@ -54,7 +52,7 @@
             />
           </a-form-item>
           <a-form-item :label="$t('expired_at')" name="expired_at">
-            <a-date-picker v-model:value="article.expire_at" :valueFormat="dateFormat" />
+            <a-date-picker v-model:value="article.expire_at" :valueFormat="dateFormat" :format="dateFormat"/>
           </a-form-item>
           <a-form-item :label="$t('url')" name="url">
             <a-input v-model:value="article.url" />
@@ -64,84 +62,33 @@
               <a-form-item :label="$t('published')" name="published">
                 <a-switch
                   v-model:checked="article.published"
-                  @change="article.public = 0"
+                  @change="article.public = 0"  :unCheckedValue="0" :checkedValue="1"
                 />
               </a-form-item>
             </a-col>
             <a-col class="pl-10" v-if="article.published">
               <a-form-item :label="$t('public')" name="public">
                 <a-switch
-                  v-model:checked="article.public"
+                  v-model:checked="article.public" :unCheckedValue="0" :checkedValue="1"
                 />
               </a-form-item>
             </a-col>
           </a-row>
           <a-form-item :label="$t('tag')">
-              <a-select v-model:value="article.tags" mode="tags" style="width: 100%" placeholder="Tags Mode"
-                :options="tagOptions"></a-select>
-            </a-form-item>
-
-            <a-form-item :label="$t('thumbnail')">
-              <template v-if="article.thumbnail">
-                <img :src="article.thumbnail" width="300px" />
-                <a @click="onDeleteImage(article)">Delete</a>
-              </template>
-              <template v-else>
-                <template v-if="previewImage">
-                  <img :src="previewImage" class="w-64"/>
-                  <a @click="onRemoveImage">Remove</a>
-                </template>
-                <template v-else>
-                  <div class="flex items-center justify-center w-64">
-                    <label for="dropzone-file"
-                      class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                      <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                        <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                        </svg>
-                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                          <div v-html="$t('upload_drag_drop')"/>
-                        </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $t('image_size_note') }}</p>
-                      </div>
-                      <div>
-                      <input id="dropzone-file" type="file" @change="onSelectFile" accept="image/png, image/gif, image/jpeg" style="display:none" />
-                      </div>
-                    </label>
-                  </div>
-                  <div>
-                    <a-upload
-                      name="file"
-                      :multiple="false"
-                      :beforeUpload="beforeUpload"
-                      :showUploadList="false"
-                    >
-                      <template v-if="previewImage">
-                        <img :src="previewImage" alt="Preview" style="max-width: 200px" />
-                      </template>
-                      <template v-else>
-                        <a-button>
-                          <upload-outlined></upload-outlined>
-                          Click to Upload
-                        </a-button>
-                      </template>
-                    </a-upload>
-                  </div>
+            <a-select v-model:value="article.tags" mode="tags" style="width: 100%" placeholder="Tags Mode"
+              :options="tagOptions"></a-select>
+          </a-form-item>
 
 
-                  <file-uploader
-                    data-field="thumbnailUpload"
-                    :accepted-file-types="['image/jpeg', 'image/png', 'image/gif']"
-                    :max-file-size="2 * 1024 * 1024" 
-                  ></file-uploader>
-
-
-
-                </template>
-              </template>
-            </a-form-item>
+              <FileUploader
+                :file="article.thumbnail"
+                :maxSize="5120"
+                :maxWidth="1024"
+                :maxHeight="768"
+                :allowedTypes="['image/jpeg', 'image/png']"
+                @upload="handleFileUpload"
+                @delete="handleFileDelete"
+              />
 
           <div class="flex flex-row item-center justify-center">
             <a-button type="primary" html-type="submit">{{ $t("submit") }}</a-button>
@@ -189,32 +136,56 @@
 import OrganizationLayout from "@/Layouts/OrganizationLayout.vue";
 import { defineComponent, reactive } from "vue";
 //import Editor from 'ckeditor5-custom-build/build/ckeditor';
-import CKEditor from "@ckeditor/ckeditor5-vue";
+//import CKEditor from "@ckeditor/ckeditor5-vue";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import UploadAdapter from "@/Components/ImageUploadAdapter.vue";
 import { message } from "ant-design-vue";
-import { UploadOutlined } from '@ant-design/icons-vue'
+import { ConsoleSqlOutlined, UploadOutlined } from '@ant-design/icons-vue'
 import FileUploader from '@/Components/FileUploader.vue'
+import { quillEditor } from 'vue3-quill';
 
 export default {
   components: {
     OrganizationLayout,
-    ckeditor: CKEditor.component,
     UploadAdapter,
     UploadOutlined,
-    FileUploader
+    FileUploader,
+    quillEditor,
     //UploadAdapter
   },
   props: ["classifies", "articleCategories", "article"],
   data() {
     return {
       medias: [],
+      file:null,
       thumbnailUpload:null,
       previewImage: null,
       selectedMedia: null,
       isDrawerVisible: false,
       tagOptions: [{ 'value': '學習' }, { 'value': '公佈' }, { 'value': '交流' }, { 'value': '分享' }],
       dateFormat: "YYYY-MM-DD",
+
+      editorOptions: {
+        modules: {
+          // ... other modules
+          imageResize: {
+            displaySize: true, // Show the image size
+            customHandler: (img, src, width, height) => {
+              // Check if the image size is larger than 1MB
+              if (src.length > 1024 * 1024) {
+                // Resize the image to a maximum width of 1024 pixels
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = 1024;
+                canvas.height = (height / width) * 1024;
+                context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                return canvas.toDataURL('image/jpeg', 0.7);
+              }
+              return src;
+            },
+          },
+        },
+      },
       editor: ClassicEditor,
       editorData: "<p>Content of the editor.</p>",
       editorConfig: {
@@ -254,100 +225,6 @@ export default {
 
   },
   methods: {
-    async beforeUpload(file){
-      console.log('beforeupload')
-      const isAcceptedType = this.isAcceptedFileType(file)
-      if (!isAcceptedType) {
-        message.error(`The file type "${file.type}" is not accepted.`)
-        return false
-      }
-
-      const isImageFile = file.type.includes('image')
-      if (isImageFile) {
-        const resizedFile = await this.resizeImage(file)
-        this.previewImage = URL.createObjectURL(resizedFile)
-        // this.thumbnailUpload= URL.createObjectURL(resizedFile)
-        //this.previewImage = resizedFile
-        this.thumbnailUpload= resizedFile
-        return resizedFile
-      }
-      return true
-    },
-    isAcceptedFileType(file) {
-      const acceptedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'image/jpeg', 'image/png', 'image/gif']
-      return acceptedTypes.includes(file.type)
-    },
-    resizeImage(file){
-      return new Promise((resolve, reject) => {
-        const maxSize = 2 * 1024 * 1024 // 2MB
-        if (file.size > maxSize) {
-          const canvas = document.createElement('canvas')
-          const context = canvas.getContext('2d')
-          const img = new Image()
-          img.src = URL.createObjectURL(file)
-
-          img.onload = () => {
-            let width = img.width
-            let height = img.height
-
-            if (width > height) {
-              if (width > 1024) {
-                height *= 1024 / width
-                width = 1024
-              }
-            } else {
-              if (height > 1024) {
-                width *= 1024 / height
-                height = 1024
-              }
-            }
-
-            canvas.width = width
-            canvas.height = height
-            context.drawImage(img, 0, 0, width, height)
-
-            // const resizedImageDataUrl = canvas.toDataURL(file.type, 0.9); // Adjust the quality as needed
-            // resolve(resizedImageDataUrl);
-
-            canvas.toBlob(
-              (blob) => {
-                resolve(blob);
-              },
-              file.type,
-              0.9
-            )
-          }
-        } else {
-          resolve(file)
-        }
-      })
-    },
-
-    onSelectFile(event) {
-      const file =event.target.files[0]
-      if(file.size > 1024*1024*1){
-        alert('oversize')
-        return false
-      }
-      //this.variffyUpload(file)
-      this.article.thumbnail_upload = file
-      this.previewImage = URL.createObjectURL(file)
-    },
-    onRemoveImage() {
-      this.article.thumbial_upload = null
-      this.previewImage = null
-    },
-    onDeleteImage(article) {
-      this.$inertia.post(route('manage.article.deleteImage', this.article), {
-        onSuccess: (page) => {
-          console.log(page)
-        },
-        onError: (err) => {
-          console.log(err);
-        },
-      })
-      this.thumbnail
-    },
     uploader(editor) {
       editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
         return new UploadAdapter(loader);
@@ -356,7 +233,11 @@ export default {
     onFinish(event) {
       const formData = new FormData();
       Object.entries(this.article).forEach(([key,value])=>{
+        if(value!=null){
           formData.append(key,value)
+        }
+        //console.log(typeof value, key, value)
+        
       })
      formData.append('thumbnail_upload', this.thumbnailUpload);
       if (this.article.id) {
@@ -398,10 +279,26 @@ export default {
     },
     ckEditorFocusOut(event) {
     },
+
     copyUrl(){
       navigator.clipboard.writeText(this.$refs.articleUrl.href)
-    }
+    },
+    handleFileUpload(file) {
+      this.file = file;
+      this.thumbnailUpload= file
+    },  
+    handleFileDelete(file){
+      this.$inertia.post(route('manage.article.deleteImage', this.article), {
+        onSuccess: (page) => {
+          console.log(page)
+        },
+        onError: (err) => {
+          console.log(err);
+        },
+      })
+    },
   },
+
 };
 </script>
 

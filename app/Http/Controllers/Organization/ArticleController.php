@@ -109,6 +109,7 @@ class ArticleController extends Controller
     public function update(Request $request, Article $article)
     {
         $data=$request->all();
+        $data['tags']=explode(',',$data['tags']);
         if($request->hasFile('thumbnail_upload')){
             $file=$request->file('thumbnail_upload');
             $fileName=$article->id.'_'.$file->getClientOriginalName();
@@ -134,7 +135,9 @@ class ArticleController extends Controller
         return redirect()->back();
     }
     public function deleteImage(Article $article){
-        unlink(public_path($article->thumbnail));
+        if(file_exists($article->thumbnail)){
+            unlink(public_path($article->thumbnail));
+        }
         $article->thumbnail=null;
         $article->save();
         return redirect()->back();
