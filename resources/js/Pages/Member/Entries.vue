@@ -146,7 +146,10 @@ export default {
             });
         },
         getFieldData(records,fieldId){
+            console.log(records);
+            console.log(fieldId)
             const record=records.find(r=>r.form_field_id==fieldId)
+            return record;
             return record.field_value;
             
         }

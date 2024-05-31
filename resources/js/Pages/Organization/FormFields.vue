@@ -142,6 +142,7 @@
             v-model:checked="modal.data.required"
             :unCheckedValue="0"
             :checkedValue="1"
+            @change="modal.data.in_column=0"
           />
         </a-form-item>
         <!-- <a-form-item label="規則" name="rule">

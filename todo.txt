@@ -9,7 +9,8 @@ atbest
 
 5. Frontend image resize. before upload. (DONE, need to refine for not image file, listing files.)
 6. auto resize image post on quill richtext editor
-7.
-8. 
+7. Member dashboard, articleList content alignment need to adjust
+8. Manage page, articles and forms, when refresh the page, $t() for table lost
+
 
 
