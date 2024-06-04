@@ -12,7 +12,7 @@ class ArticleController extends Controller
         //dd(Article::where('uuid',$request->t)->where('published',true)->first());
         if(empty($request->t)){
             return to_route('/');
-        }else if(session('member') || auth()->user()->hasRole('admin')){
+        }else if(session('member') || (auth()->user() && auth()->user()->hasRole('admin'))){
             $article=Article::where('uuid',$request->t)->where('published',true)->first();
         }else{
             $article=Article::where('uuid',$request->t)->where('published',true)->where('public',true)->first();
