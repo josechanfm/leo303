@@ -71,6 +71,17 @@
           </inertia-link>
         </span>
       </a-menu-item>
+      <a-menu-item key="9">
+        <template #icon>
+          <MailOutlined />
+        </template>
+        <span>
+          <inertia-link :href="route('manage.emails.index')">
+            {{ $t("email.management") }}
+          </inertia-link>
+        </span>
+      </a-menu-item>
+
       <a-sub-menu key="sub1">
         <template #icon>
           <DesktopOutlined/>

@@ -1,4 +1,4 @@
-<template>
+s<template>
   <OrganizationLayout :title="$t('members')" :breadcrumb="breadcrumb">
     <div class="flex-auto pb-3 text-right">
       <a-button type="primary" class="!rounded" @click="createRecord()">{{
@@ -12,6 +12,11 @@
         </template>
         <template #bodyCell="{ column, text, record, index }">
           <template v-if="column.dataIndex == 'operation'">
+            <inertia-link
+              :href="route('member.member.resetPassword',record.id)"
+              method="post"
+              class="ant-btn"
+            >{{ $t('member.reset_password') }}</inertia-link>
             <inertia-link
               :href="route('manage.members.show', record.id)"
               class="ant-btn"
@@ -232,7 +237,11 @@ export default {
       },
     };
   },
-  created() {},
+  created() {
+    
+  },
+  mounted(){
+  },
   methods: {
     onCancelModal() {
       this.modal.data = {};

@@ -39,7 +39,6 @@
             :rules="rules"
             :validate-messages="validateMessages"
         >
-            <a-input type="hidden" v-model:value="modal.data.id"/>
             <a-form-item label="姓名(中文)" name="name_zh">
                 <a-input v-model:value="modal.data.name_zh" />
             </a-form-item>

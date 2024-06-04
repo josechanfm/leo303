@@ -12,6 +12,8 @@ use App\Models\User;
 use App\Exports\MemberExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Email;
 
 class MemberController extends Controller
 {
@@ -136,5 +138,30 @@ class MemberController extends Controller
     public function export()
     {
         return Excel::download(new MemberExport, 'member.xlsx');
+    }
+
+    public function resetPassword(Member $member){
+        $data=[
+            'organization_id'=>session('organization')?session('organization')->id:0,
+            'user_id'=>auth()->user()->id,
+            'sender'=>'noreplay@atbest.net',
+            'recipient'=>$member->user->email,
+            'subject'=>'Reset Password',
+            'message'=>'Reset password Template: '.$member->family_name,', '.$member->given_name,
+        ];
+        $emailData=[
+            'sender'=>$data['sender'],
+            'recipient'=>$data['recipient'],
+            'subject'=>$data['subject'],
+            'username'=>$member->family_name.', '.$member->given_name
+        ];
+        Mail::send('emails.reset-password',$emailData, function($message) use($emailData){
+            $message->from($emailData['sender'],'Atbest.net')
+                    ->to($emailData["recipient"])
+                    ->subject($emailData["subject"]);
+        });
+        Email::create($data);
+        return redirect()->back()->with('success', 'Email sent successfully!');
+
     }
 }

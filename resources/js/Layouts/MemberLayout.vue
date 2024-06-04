@@ -8,6 +8,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import { usePage } from "@inertiajs/inertia-vue3";
 import { loadLanguageAsync } from "laravel-vue-i18n";
 
 export default {
@@ -36,6 +37,8 @@ export default {
         }
       );
     };
+    const page = usePage();
+    loadLanguageAsync(page.props.value.lang);
 
     const logout = () => {
       Inertia.post(route("logout"));
