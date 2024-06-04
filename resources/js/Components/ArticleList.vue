@@ -24,9 +24,8 @@ const props = defineProps({
             <h2 class="text-xl font-bold">{{ article.title }}</h2>
           </a>
           <div class="flex items-center mt-2">
-            <span class="bg-gray-200 text-gray-700 py-1 px-2 rounded-full text-sm">{{
-              article.category_code
-            }}</span>
+            <span class="bg-gray-200 text-gray-700 py-1 px-2 rounded-full text-sm" v-if="article.organization_abbr">{{ article.organization_abbr }}</span>
+            <span class="bg-gray-200 text-gray-700 py-1 px-2 rounded-full text-sm">{{ article.category_code}}</span>
           </div>
           <div class="mt-2 text-gray-600">
             <div v-if="article.intro" class="text-justify">

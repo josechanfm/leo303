@@ -127,6 +127,9 @@
                 <a-button type="primary" html-type="submit">{{ $t('submit') }}</a-button>
             </a-form-item>
         </a-form>
+        <a :href="route('forms.show',{form:form, t:form.uuid})" target="_blank" ref="formUrl">{{ route('forms.show',{form:form, t:form.uuid}) }}</a>
+      <a-button @click="copyUrl">{{ $t('copy_to_clipboard') }}</a-button>
+
       </div>
     
 
@@ -237,6 +240,9 @@ export default {
     },
     onFinishFailed({ values, errorFields, outOfDate }){
       message.error("Some required fields are missing!");
+    },
+    copyUrl(){
+      navigator.clipboard.writeText(this.$refs.formUrl.href)
     },
 
   },

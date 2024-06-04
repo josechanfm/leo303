@@ -14,6 +14,7 @@ class Article extends Model implements HasMedia
 
     protected $fillable=['uuid','organization_id','sequence','category_code','intro','title','content','tags','valid_at','expire_at','url','reference','published','public','author','thumbnail','lang','user_id'];
     protected $casts=['tags'=>'json','published'=>'boolean','public'=>'boolean'];
+    protected $appends=['organization_abbr'];
 
     public static function boot(){
         parent::boot();
@@ -29,7 +30,10 @@ class Article extends Model implements HasMedia
             }
         });
     }
+    public function getOrganizationAbbrAttribute(){
 
+        return $this->organization?$this->organization->abbr:NULL;
+    }
     public static function publics(){
         return Article::where('published',true)->where('public',true)
                 ->where(function($query){

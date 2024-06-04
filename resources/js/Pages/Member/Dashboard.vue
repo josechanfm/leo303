@@ -154,10 +154,8 @@ export default {
           </ol>
 
           <!-- News Section-->
-          <div class="container mx-auto pt-5">
-            <div class="bg-white relative shadow rounded-lg pl-5">
+          <div class="container mx-auto">
               <ArticleList :articles="articles" />
-            </div>
           </div>
           <!-- News Section end-->
         </div>
