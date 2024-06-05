@@ -5,49 +5,49 @@
         {{ $t("messages") }}
       </h2>
     </template>
-      <div class="flex-auto pb-3 text-right">
-        <a-button type="primary" class="!rounded" @click="createRecord()">{{
-          $t("create_message")
-        }}</a-button>
-      </div>
-      <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-        <a-table
-          :dataSource="messages.data"
-          :columns="columns"
-          :pagination="pagination"
-          @change="onPaginationChange"
-          ref="dataTable"
-        >
-          <template #headerCell="{ column }">
-            {{ column.i18n ? $t(column.i18n) : column.title }}
+    <div class="flex-auto pb-3 text-right">
+      <a-button type="primary" class="!rounded" @click="createRecord()">{{
+        $t("create_message")
+      }}</a-button>
+    </div>
+    <div class="bg-white relative shadow rounded-lg overflow-x-auto">
+      <a-table
+        :dataSource="messages.data"
+        :columns="columns"
+        :pagination="pagination"
+        @change="onPaginationChange"
+        ref="dataTable"
+      >
+        <template #headerCell="{ column }">
+          {{ column.i18n ? $t(column.i18n) : column.title }}
+        </template>
+        <template #bodyCell="{ column, text, record, index }">
+          <template v-if="column.dataIndex == 'operation'">
+            <div class="space-x-2">
+              <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
+              <a-popconfirm
+                :title="$t('confirm_delete_record')"
+                :ok-text="$t('yes')"
+                :cancel-text="$t('no')"
+                @confirm="deleteRecord(record.id)"
+              >
+                <a-button>{{ $t("delete") }}</a-button>
+              </a-popconfirm>
+            </div>
           </template>
-          <template #bodyCell="{ column, text, record, index }">
-            <template v-if="column.dataIndex == 'operation'">
-              <div class="space-x-2">
-                <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
-                <a-popconfirm
-                  :title="$t('confirm_delete_record')"
-                  :ok-text="$t('yes')"
-                  :cancel-text="$t('no')"
-                  @confirm="deleteRecord(record.id)"
-                >
-                  <a-button>{{ $t("delete") }}</a-button>
-                </a-popconfirm>
-              </div>
-            </template>
-            <template v-else-if="column.dataIndex == 'category_code'">
-              {{
-                messageCategories.find((x) => x.value == record.category_code)["label"]
-              }}
-            </template>
-            <template v-else-if="column.dataIndex == 'receiver'">
-              <ol>
-                <li v-for="member in record.received_members">{{ member.given_name }}</li>
-              </ol>
-            </template>
+          <template v-else-if="column.dataIndex == 'category_code'">
+            {{ messageCategories.find((x) => x.value == record.category_code)["label"] }}
           </template>
-        </a-table>
-      </div>
+          <template v-else-if="column.dataIndex == 'receiver'">
+            <ol>
+              <li v-for="member in record.received_members" :key="member.id">
+                {{ member.given_name }}
+              </li>
+            </ol>
+          </template>
+        </template>
+      </a-table>
+    </div>
     <!-- Modal Start-->
     <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%">
       <a-form

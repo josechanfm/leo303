@@ -20,10 +20,21 @@ class OrganizationController extends Controller
      */
     public function index(Request $request)
     {
-        return Inertia::render('Admin/Organizations',[
-            'parishes'=>Config::item('parishes'),
-            'organizations'=>Organization::with('users')->with('members')->paginate($request->per_page),
-            'users'=>User::all()
+        $organization = Organization::where(function ($query) use ($request) {
+            if ($request->search['parish']) {
+                $query->where('parish', $request->search['parish']);
+            }
+            if ($request->search['abbr']) {
+                $query->where('abbr', 'like', '%' . $request->search['abbr'] . '%');
+            }
+            if ($request->search['name_zh']) {
+                $query->where('name_zh', 'like', '%' . $request->search['name_zh'] . '%');
+            }
+        })->with('users')->with('members')->paginate($request->per_page);
+        return Inertia::render('Admin/Organizations', [
+            'parishes' => Config::item('parishes'),
+            'organizations' => $organization,
+            'users' => User::all()
         ]);
     }
 
@@ -94,17 +105,17 @@ class OrganizationController extends Controller
     {
         $organization->delete();
         return redirect()->back();
-
     }
 
-    public function members(Organization $organization){
+    public function members(Organization $organization)
+    {
         //$members=Member::whereBelongsTo($)->get();
-        return Inertia::render('Admin/OrganizationMembers',[
-            'members'=>$organization->members,
+        return Inertia::render('Admin/OrganizationMembers', [
+            'members' => $organization->members,
         ]);
-
     }
-    public function createLogin(Member $member){
+    public function createLogin(Member $member)
+    {
 
         dd($member);
         if (!$member->hasUser()) {
@@ -114,14 +125,13 @@ class OrganizationController extends Controller
         }
 
         Password::broker(config('fortify.passwords'))->sendResetLink(
-            [ 'email' => $user->email ]
+            ['email' => $user->email]
         );
     }
 
-    public function masquerade(Organization $organization){
-        session(['organization'=>$organization]);
+    public function masquerade(Organization $organization)
+    {
+        session(['organization' => $organization]);
         return to_route('manage');
     }
-
-
 }

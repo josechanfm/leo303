@@ -5,12 +5,42 @@
         {{ $t("organizations") }}
       </h2>
     </template>
-    <button @click="createRecord()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
+    <button
+      @click="createRecord()"
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3"
+    >
       {{ $t("create_organization") }}
     </button>
+    <div class="container mx-auto">
+      <div class="flex justify-between gap-6">
+        <a-select
+          class="w-full"
+          :placeholder="$t('please_select_parish')"
+          v-model:value="search.parish"
+          :options="parishes"
+          :fieldNames="{ value: 'value', label: 'label_' + $t('lang') }"
+        ></a-select>
+        <a-input
+          v-model:value="search.abbr"
+          :placeholder="$t('please_input_abbr')"
+        ></a-input>
+        <a-input
+          v-model:value="search.name_zh"
+          :plcaeholder="$t('please_input_name_zh')"
+        ></a-input>
+        <a-button type="primary" @click="searchOrganizations">{{
+          $t("search")
+        }}</a-button>
+      </div>
+    </div>
     <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-        <a-table :dataSource="organizations.data" :columns="columns" :pagination="pagination" @change="onPaginationChange">
+        <a-table
+          :dataSource="organizations.data"
+          :columns="columns"
+          :pagination="pagination"
+          @change="onPaginationChange"
+        >
           <template #headerCell="{ column }">
             {{ column.i18n ? $t(column.i18n) : column.title }}
           </template>
@@ -30,11 +60,12 @@
               >
                 <a-button>{{ $t("delete") }}</a-button>
               </a-popconfirm>
-              <a-button @click="masqueradeOrganization(record)" class="ant-btn">{{ $t('masquerade') }}..</a-button>
-
+              <a-button @click="masqueradeOrganization(record)" class="ant-btn"
+                >{{ $t("masquerade") }}..</a-button
+              >
             </template>
             <template v-else-if="column.dataIndex == 'parish'">
-              {{ getOptionLabel(parishes,text) }}
+              {{ getOptionLabel(parishes, text) }}
             </template>
             <template v-else-if="column.dataIndex == 'manager'">
               <ol class="list-decimal">
@@ -64,7 +95,11 @@
         @finish="onFormFinish"
       >
         <a-form-item :label="$t('parish')" name="parish" :rules="[{ required: true }]">
-          <a-select v-model:value="modal.data.parish" :options="parishes" :fieldNames="{value:'value',label:'label_'+$t('lang')}" />
+          <a-select
+            v-model:value="modal.data.parish"
+            :options="parishes"
+            :fieldNames="{ value: 'value', label: 'label_' + $t('lang') }"
+          />
         </a-form-item>
         <a-form-item
           :label="$t('abbreviation')"
@@ -126,15 +161,15 @@
           <a-select
             v-model:value="modal.data.user_ids"
             mode="multiple"
-            :options="modal.data.members.filter(m=>m.user_id!=null)"
+            :options="modal.data.members.filter((m) => m.user_id != null)"
             :fieldNames="{ value: 'user_id', label: 'given_name' }"
           />
         </a-form-item>
       </a-form>
       <template #footer>
         <a-button @click="$refs.modalRef.$emit('finish')" type="primary">
-          <span v-if="modal.mode=='EDIT'">{{ $t('update') }}</span>
-          <span v-if="modal.mode=='CREATE'">{{ $t('create') }}</span>
+          <span v-if="modal.mode == 'EDIT'">{{ $t("update") }}</span>
+          <span v-if="modal.mode == 'CREATE'">{{ $t("create") }}</span>
         </a-button>
       </template>
     </a-modal>
@@ -150,7 +185,7 @@ export default {
   components: {
     AdminLayout,
   },
-  props: ["parishes","organizations", "users"],
+  props: ["parishes", "organizations", "users"],
   data() {
     return {
       modal: {
@@ -159,12 +194,17 @@ export default {
         title: "Modal",
         mode: "",
       },
+      search: {
+        parish: "",
+        abbr: "",
+        name_zh: "",
+      },
       pagination: {
         total: this.organizations.total,
         current: this.organizations.current_page,
         pageSize: this.organizations.per_page,
       },
-      cardStyles:[],
+      cardStyles: [],
       organizationStates: [
         { value: "ACTIVE", label: "Active" },
         { value: "SUSPENDED", label: "Suspended" },
@@ -174,23 +214,28 @@ export default {
           title: "Parish",
           i18n: "parish",
           dataIndex: "parish",
-        },{
+        },
+        {
           title: "Abbreviation",
           i18n: "abbreviation",
           dataIndex: "abbr",
-        },{
+        },
+        {
           title: "Name",
           i18n: "name_zh",
           dataIndex: "name_zh",
-        },{
+        },
+        {
           title: "Email",
           i18n: "email",
           dataIndex: "email",
-        },{
+        },
+        {
           title: "Manager",
           i18n: "manager",
           dataIndex: "manager",
-        },{
+        },
+        {
           title: "Operation",
           i18n: "operation",
           dataIndex: "operation",
@@ -202,7 +247,7 @@ export default {
         title: { required: true },
         email: { required: true },
         mobile: { required: true },
-        card_style: { required: true }
+        card_style: { required: true },
       },
       validateMessages: {
         required: "${label} is required!",
@@ -222,11 +267,11 @@ export default {
     };
   },
   created() {
-    axios.get(route("api.config.item", { key: 'card_styles' })).then((resp) => {
-            Object.entries(resp.data).forEach(([key, card]) => {
-                this.cardStyles.push({ value: key, label: card.name })
-            })
-        });
+    axios.get(route("api.config.item", { key: "card_styles" })).then((resp) => {
+      Object.entries(resp.data).forEach(([key, card]) => {
+        this.cardStyles.push({ value: key, label: card.name });
+      });
+    });
   },
   methods: {
     onPaginationChange(page, filters, sorter) {
@@ -237,7 +282,7 @@ export default {
     },
     createRecord() {
       this.modal.data = {};
-      this.modal.data.members=[];
+      this.modal.data.members = [];
       this.modal.mode = "CREATE";
       this.modal.title = "Create Record";
       this.modal.isOpen = true;
@@ -249,48 +294,48 @@ export default {
       this.modal.title = "Edit Record";
       this.modal.isOpen = true;
     },
-    onFormFinish(){
+    onFormFinish() {
       this.$refs.modalRef
         .validateFields()
         .then(() => {
-            if(this.modal.mode=='CREATE'){
-              this.storeRecord(this.modal.data)
-              this.modal.isOpen=false
-            }
-            if(this.modal.mode=='EDIT'){
-              this.updateRecord(this.modal.data)
-              this.modal.isOpen=false
-            }
+          if (this.modal.mode == "CREATE") {
+            this.storeRecord(this.modal.data);
+            this.modal.isOpen = false;
+          }
+          if (this.modal.mode == "EDIT") {
+            this.updateRecord(this.modal.data);
+            this.modal.isOpen = false;
+          }
         })
         .catch((err) => {
           console.log("error", err);
         });
     },
     storeRecord() {
-          this.$inertia.post(route("admin.organizations.store"), this.modal.data, {
-            onSuccess: (page) => {
-              //this.modal.data = {};
-              this.modal.isOpen = false;
-            },
-            onError: (err) => {
-              console.log(err);
-            },
-          });
+      this.$inertia.post(route("admin.organizations.store"), this.modal.data, {
+        onSuccess: (page) => {
+          //this.modal.data = {};
+          this.modal.isOpen = false;
+        },
+        onError: (err) => {
+          console.log(err);
+        },
+      });
     },
     updateRecord() {
-          this.$inertia.patch(
-            route("admin.organizations.update", this.modal.data.id),
-            this.modal.data,
-            {
-              onSuccess: (page) => {
-                this.modal.isOpen = false;
-                //this.modal.data = {};
-              },
-              onError: (error) => {
-                console.log(error);
-              },
-            }
-          );
+      this.$inertia.patch(
+        route("admin.organizations.update", this.modal.data.id),
+        this.modal.data,
+        {
+          onSuccess: (page) => {
+            this.modal.isOpen = false;
+            //this.modal.data = {};
+          },
+          onError: (error) => {
+            console.log(error);
+          },
+        }
+      );
     },
     deleteRecord(record) {
       this.$inertia.delete(route("admin.organizations.destroy", record.id), {
@@ -302,17 +347,30 @@ export default {
         },
       });
     },
-    getOptionLabel(options, itemValue){
-      if(options){
-        const option=options.find(o=>o.value==itemValue)
-        return option?option['label_'+this.$t('lang')]:null
+    getOptionLabel(options, itemValue) {
+      if (options) {
+        const option = options.find((o) => o.value == itemValue);
+        return option ? option["label_" + this.$t("lang")] : null;
       }
-      return '--'
+      return "--";
     },
-    masqueradeOrganization(organization){
-            this.$inertia.post(route('admin.organization.masquerade',{organization:organization.id}))
+    masqueradeOrganization(organization) {
+      this.$inertia.post(
+        route("admin.organization.masquerade", { organization: organization.id })
+      );
+    },
+    searchOrganizations() {
+      this.$inertia.get(
+        route("admin.organizations.index"),
+        { search: this.search },
+        {
+          onSuccess: (page) => {
+            console.log(page);
+          },
+          preserveState: true,
         }
-
+      );
+    },
   },
 };
 </script>

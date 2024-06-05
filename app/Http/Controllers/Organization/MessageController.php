@@ -50,8 +50,8 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        $data=$request->all();
-        $data['organization_id']=Session('organization')->id;
+        $data = $request->all();
+        $data['organization_id'] = Session('organization')->id;
         Message::create($data);
         // $message = new Message;
 

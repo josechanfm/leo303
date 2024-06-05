@@ -292,5 +292,8 @@
     "privacy_policy": "隱私權政策",
     "already_registered": "已經注冊",
     "forgot_your_password": "忘記了您的密碼?",
-    "remember_me": "記住我"
+    "remember_me": "記住我",
+    "please_select_parish": "請選擇堂區",
+    "please_input_abbr": "請輸入簡寫",
+    "please_input_name_zh": "請輸入姓名(中文)"
 }
