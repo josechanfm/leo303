@@ -19,9 +19,18 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        return Inertia::render('Organization/Events',[
-            'events'=>Event::paginate($request->per_page),
-            'categories'=>Config::item('event_categories',session('organization'))
+        $pageSize = $request->pagination['pageSize'] ?? 10;
+        $currentPage = $request->pagination['currentPage'] ?? 1;
+        $events = Organization::find(session('organization')->id)->events()->where(function ($query) use ($request) {
+            if (!empty($request->search)) {
+                if (!empty($request->search['title_en'])) {
+                    $query->where('title_en', 'like', '%' . $request->search['title_en'] . '%');
+                }
+            }
+        })->paginate($pageSize, ['*'], 'page', $currentPage);
+        return Inertia::render('Organization/Events', [
+            'events' => $events,
+            'categories' => Config::item('event_categories', session('organization'))
         ]);
     }
 
@@ -32,9 +41,9 @@ class EventController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Organization/Event',[
-            'event'=>new Event,
-            'categories'=>Config::item('event_categories',session('organization'))
+        return Inertia::render('Organization/Event', [
+            'event' => new Event,
+            'categories' => Config::item('event_categories', session('organization'))
         ]);
     }
 
@@ -46,11 +55,10 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        $data=$request->all();
-        $data['organization_id']=session('organization')->id;
+        $data = $request->all();
+        $data['organization_id'] = session('organization')->id;
         Event::create($data);
         return to_route('manage.events.index');
-
     }
 
     /**
@@ -71,9 +79,9 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        return Inertia::render('Organization/Event',[
-            'event'=>$event,
-            'categories'=>Config::item('event_categories',session('organization'))
+        return Inertia::render('Organization/Event', [
+            'event' => $event,
+            'categories' => Config::item('event_categories', session('organization'))
         ]);
     }
 

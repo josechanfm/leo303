@@ -5,17 +5,39 @@
         {{ $t("articles") }}
       </h2>
     </template>
-      <div class="flex-auto pb-3 text-right pb-3">
+    <div class="container mx-auto">
+      <div class="flex-auto pb-3">
         <inertia-link
           :href="route('manage.articles.create')"
           class="ant-btn ant-btn-primary"
           >{{ $t("create_article") }}</inertia-link
         >
       </div>
+    </div>
+    <div class="container mx-auto">
+      <div class="flex justify-between gap-6">
+        <a-select
+          class="w-full"
+          :placeholder="$t('please_select_category')"
+          v-model:value="search.category"
+          allowClear
+          :options="articleCategories"
+        ></a-select>
+        <a-input
+          v-model:value="search.title"
+          :placeholder="$t('please_input_title')"
+        ></a-input>
+        <a-button type="primary" @click="searchData">{{ $t("search") }}</a-button>
+      </div>
+    </div>
+    <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-       
-
-        <a-table :dataSource="articles.data" :columns="columns" :pagination="pagination" @change="onPaginationChange">
+        <a-table
+          :dataSource="articles.data"
+          :columns="columns"
+          :pagination="false"
+          @change="onPaginationChange"
+        >
           <template #headerCell="{ column }">
             {{ column.i18n ? $t(column.i18n) : column.title }}
           </template>
@@ -44,12 +66,11 @@
             </template>
           </template>
         </a-table>
-
-
-        
+        <Pagination :data="articles" :search="search" />
       </div>
-      <p>Article CAN NOT be delete if published.</p>
-    
+    </div>
+    <p>Article CAN NOT be delete if published.</p>
+
     <!-- Modal Start-->
     <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="100%">
       <a-form
@@ -138,23 +159,24 @@
 
 <script>
 import OrganizationLayout from "@/Layouts/OrganizationLayout.vue";
+import Pagination from "@/Components/Pagination.vue";
 import { defineComponent, reactive } from "vue";
 //import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import CKEditor from "@ckeditor/ckeditor5-vue";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import UploadAdapter from "@/Components/ImageUploadAdapter.vue";
 import { VueDraggableNext } from "vue-draggable-next";
-import { HolderOutlined } from '@ant-design/icons-vue';
+import { HolderOutlined } from "@ant-design/icons-vue";
 
 export default {
   components: {
     OrganizationLayout,
+    Pagination,
     ckeditor: CKEditor.component,
     UploadAdapter,
     draggable: VueDraggableNext,
-    HolderOutlined
+    HolderOutlined,
     //UploadAdapter
-
   },
   props: ["classifies", "articleCategories", "articles"],
   data() {
@@ -166,7 +188,8 @@ export default {
         title: "Modal",
         mode: "",
       },
-      originSequences:[],
+      originSequences: [],
+      search: {},
       pagination: {
         total: this.articles.total,
         current: this.articles.current_page,
@@ -186,26 +209,31 @@ export default {
       },
       columns: [
         {
-          title: 'Category',
+          title: "Category",
           i18n: "category",
           dataIndex: "category_code",
-        },{
+        },
+        {
           title: "Title",
           i18n: "title",
           dataIndex: "title",
-        },{
+        },
+        {
           title: "Validated at",
           i18n: "valid_at",
           dataIndex: "valid_at",
-        },{
+        },
+        {
           title: "Expired at",
           i18n: "expired_at",
           dataIndex: "expired_at",
-        },{
+        },
+        {
           title: "Published",
           i18n: "published",
           dataIndex: "published",
-        },{
+        },
+        {
           title: "Operation",
           i18n: "operation",
           dataIndex: "operation",
@@ -234,22 +262,24 @@ export default {
       },
     };
   },
-  created() {
-  },
+  created() {},
   mounted() {
-    
-    //loadLanguageAsync(page.props.value.lang);
+    this.pagination = {
+      currentPage: this.route().params.currentPage ?? 1,
+      pageSize: this.route().params.pageSize ?? 10,
+    };
+    this.search = this.route().params.search ?? {};
   },
   methods: {
     onPaginationChange(page, filters, sorter) {
-      console.log(page)
+      console.log(page);
       this.$inertia.get(route("manage.articles.index"), {
         page: page,
         per_page: this.pagination.pageSize,
       });
     },
-    onShowSizeChange(current, pageSize){
-      this.pagination.pageSize=pageSize
+    onShowSizeChange(current, pageSize) {
+      this.pagination.pageSize = pageSize;
     },
     createRecord() {
       this.modal.data = {};
@@ -334,6 +364,17 @@ export default {
       editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
         return new UploadAdapter(loader);
       };
+    },
+    searchData() {
+      this.$inertia.get(
+        route("manage.articles.index"),
+        { search: this.search, pagination: this.pagination },
+        {
+          onSuccess: (page) => {
+            console.log(page);
+          },
+        }
+      );
     },
   },
 };

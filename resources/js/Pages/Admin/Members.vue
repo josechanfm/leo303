@@ -11,9 +11,30 @@
     >
       {{ $t("create_member") }}
     </button>
+    <div class="container mx-auto">
+      <div class="flex justify-between gap-6">
+        <a-select
+          class="w-full"
+          :placeholder="$t('please_select_organization')"
+          v-model:value="search.organization"
+          allowClear
+          :options="organizations"
+          :fieldNames="{ value: 'id', label: 'abbr' }"
+        ></a-select>
+        <a-input
+          v-model:value="search.given_name"
+          :placeholder="$t('please_input_given_name')"
+        ></a-input>
+        <a-input
+          v-model:value="search.family_name"
+          :placeholder="$t('please_input_family_name')"
+        ></a-input>
+        <a-button type="primary" @click="searchData">{{ $t("search") }}</a-button>
+      </div>
+    </div>
     <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-        <a-table :dataSource="members.data" :columns="columns" :pagination="pagination" @change="onPaginationChange">
+        <a-table :dataSource="members.data" :columns="columns" :pagination="false">
           <template #headerCell="{ column }">
             {{ column.i18n ? $t(column.i18n) : column.title }}
           </template>
@@ -36,11 +57,11 @@
               </span>
             </template>
             <template v-else-if="column.dataIndex == 'avatar'">
-              <img :src="record.avatar_url" width="60"/>
+              <img :src="record.avatar_url" width="60" />
             </template>
             <template v-else-if="column.dataIndex == 'organization'">
               <span v-if="record.organization">
-                {{record.organization.abbr}}
+                {{ record.organization.abbr }}
               </span>
             </template>
             <template v-else>
@@ -48,6 +69,7 @@
             </template>
           </template>
         </a-table>
+        <Pagination :data="members" :search="search" />
       </div>
     </div>
     <!-- Modal Start-->
@@ -88,17 +110,17 @@
 
         <a-row :span="24">
           <a-col :span="18">
-            <a-form-item :label="$t('email')" :label-col="{span: 4}" name="email">
+            <a-form-item :label="$t('email')" :label-col="{ span: 4 }" name="email">
               <a-input v-model:value="modal.data.email" />
             </a-form-item>
-            <a-form-item :label="$t('gender')" :label-col="{span: 4}" name="gender">
+            <a-form-item :label="$t('gender')" :label-col="{ span: 4 }" name="gender">
               <a-switch
                 v-model:checked="modal.data.gender"
                 :checkedValue="1"
                 :unCheckedValue="0"
               />
             </a-form-item>
-            <a-form-item :label="$t('dob')" :label-col="{span: 4}" name="dob">
+            <a-form-item :label="$t('dob')" :label-col="{ span: 4 }" name="dob">
               <a-date-picker
                 v-model:value="modal.data.dob"
                 :format="dateFormat"
@@ -106,12 +128,12 @@
               />
             </a-form-item>
             <template v-if="modal.data.user">
-              <a-form-item :label="$t('users')" :label-col="{span: 4}" name="user_id">
+              <a-form-item :label="$t('users')" :label-col="{ span: 4 }" name="user_id">
                 <p>{{ modal.data.user.email }}</p>
               </a-form-item>
             </template>
             <template v-else>
-              <a-form-item :label="$t('users')" :label-col="{span: 4}" name="user_id">
+              <a-form-item :label="$t('users')" :label-col="{ span: 4 }" name="user_id">
                 <a-select
                   v-model:value="modal.data.user_id"
                   show-search
@@ -120,18 +142,16 @@
                 />
               </a-form-item>
             </template>
-
           </a-col>
           <a-col :span="6">
-            <img :src="modal.data.avatar_url" width="200"/>
+            <img :src="modal.data.avatar_url" width="200" />
           </a-col>
         </a-row>
-                
       </a-form>
       <template #footer>
         <a-button @click="$refs.modalRef.$emit('finish')" type="primary">
-          <span v-if="modal.mode=='EDIT'">{{ $t('update') }}</span>
-          <span v-if="modal.mode=='CREATE'">{{ $t('create') }}</span>
+          <span v-if="modal.mode == 'EDIT'">{{ $t("update") }}</span>
+          <span v-if="modal.mode == 'CREATE'">{{ $t("create") }}</span>
         </a-button>
       </template>
     </a-modal>
@@ -141,13 +161,15 @@
 
 <script>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
+import Pagination from "@/Components/Pagination.vue";
 import { defineComponent, reactive } from "vue";
 
 export default {
   components: {
     AdminLayout,
+    Pagination,
   },
-  props: ["organizations", "members","users"],
+  props: ["organizations", "members", "users"],
   data() {
     return {
       dateFormat: "YYYY-MM-DD",
@@ -157,6 +179,7 @@ export default {
         title: "Modal",
         mode: "",
       },
+      search: {},
       pagination: {
         total: this.members.total,
         current: this.members.current_page,
@@ -167,27 +190,33 @@ export default {
           title: "Organization",
           i18n: "organization",
           dataIndex: "organization",
-        },{
+        },
+        {
           title: "Given Name",
           i18n: "given_name",
           dataIndex: "given_name",
-        },{
+        },
+        {
           title: "Family Name",
           i18n: "family_name",
           dataIndex: "family_name",
-        },{
+        },
+        {
           title: "Display Name",
           i18n: "display_name",
           dataIndex: "display_name",
-        },{
+        },
+        {
           title: "Login Email",
           i18n: "login_email",
           dataIndex: "login",
-        },{
+        },
+        {
           title: "Avatar",
           dataIndex: "avatar",
           i18n: "avatar",
-        },{
+        },
+        {
           title: "Operation",
           i18n: "operation",
           dataIndex: "operation",
@@ -216,13 +245,14 @@ export default {
     };
   },
   created() {},
+  mounted() {
+    this.pagination = {
+      currentPage: this.route().params.currentPage ?? 1,
+      pageSize: this.route().params.pageSize ?? 10,
+    };
+    this.search = this.route().params.search ?? {};
+  },
   methods: {
-    onPaginationChange(page, filters, sorter) {
-      this.$inertia.get(route("admin.members.index"), {
-        page: page.current,
-        per_page: page.pageSize,
-      });
-    },
     filterOption(input, option) {
       return option.full_name.toLowerCase().indexOf(input.toLowerCase()) >= 0;
     },
@@ -234,25 +264,25 @@ export default {
       this.modal.isOpen = true;
     },
     editRecord(record) {
-      console.log(record.organizations)
+      console.log(record.organizations);
       this.modal.data = { ...record };
       //this.modal.data.organization_ids = record.organizations.map((org) => org.id);
       this.modal.mode = "EDIT";
       this.modal.title = "edit";
       this.modal.isOpen = true;
     },
-    onFormFinish(){
+    onFormFinish() {
       this.$refs.modalRef
         .validateFields()
         .then(() => {
-            if(this.modal.mode=='CREATE'){
-              this.storeRecord(this.modal.data)
-              this.modal.isOpen=false
-            }
-            if(this.modal.mode=='EDIT'){
-              this.updateRecord(this.modal.data)
-              this.modal.isOpen=false
-            }
+          if (this.modal.mode == "CREATE") {
+            this.storeRecord(this.modal.data);
+            this.modal.isOpen = false;
+          }
+          if (this.modal.mode == "EDIT") {
+            this.updateRecord(this.modal.data);
+            this.modal.isOpen = false;
+          }
         })
         .catch((err) => {
           console.log("error", err);
@@ -297,6 +327,18 @@ export default {
     },
     createLogin(record) {
       console.log("create login" + record.id);
+    },
+    searchData() {
+      this.$inertia.get(
+        route("admin.members.index"),
+        { search: this.search, pagination: this.pagination },
+        {
+          onSuccess: (page) => {
+            console.log(page);
+          },
+          preserveState: true,
+        }
+      );
     },
   },
 };

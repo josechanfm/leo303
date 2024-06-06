@@ -21,10 +21,22 @@ class ArticleController extends Controller
     public function index(Request $request)
     {
         //dd(session('member'));
-        return Inertia::render('Organization/Articles',[
-            'classifies'=>Classify::whereBelongsTo(session('organization'))->get(),
-            'articleCategories'=>Config::item('article_categories'),
-            'articles'=>Article::whereBelongsTo(session('organization'))->orderBy('sequence','DESC')->paginate($request->per_page)
+        $pageSize = $request->pagination['pageSize'] ?? 10;
+        $currentPage = $request->pagination['currentPage'] ?? 1;
+        $articles = Article::whereBelongsTo(session('organization'))->orderBy('sequence', 'DESC')->where(function ($query) use ($request) {
+            if (!empty($request->search)) {
+                if (!empty($request->search['category'])) {
+                    $query->where('category_code', $request->search['category']);
+                }
+                if (!empty($request->search['title'])) {
+                    $query->where('title', 'like', '%' . $request->search['title'] . '%');
+                }
+            }
+        })->paginate($pageSize, ['*'], 'page', $currentPage);
+        return Inertia::render('Organization/Articles', [
+            'classifies' => Classify::whereBelongsTo(session('organization'))->get(),
+            'articleCategories' => Config::item('article_categories'),
+            'articles' => $articles,
         ]);
     }
 
@@ -35,17 +47,16 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        $article=Article::make([
-            'organization_id'=>session('organization')->id,
-            'published'=>false,
-            'public'=>false
+        $article = Article::make([
+            'organization_id' => session('organization')->id,
+            'published' => false,
+            'public' => false
         ]);
-        return Inertia::render('Organization/Article',[
-            'classifies'=>Classify::whereBelongsTo(session('organization'))->get(),
-            'articleCategories'=>Config::item('article_categories'),
-            'article'=>$article
+        return Inertia::render('Organization/Article', [
+            'classifies' => Classify::whereBelongsTo(session('organization'))->get(),
+            'articleCategories' => Config::item('article_categories'),
+            'article' => $article
         ]);
-
     }
 
     /**
@@ -56,17 +67,17 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        $data=$request->all();
-        $data['organization_id']=session('organization')->id;
-        $data['user_id']=auth()->user()->id;
-        $data['author']=auth()->user()->name;
-        $article=Article::create($data);
+        $data = $request->all();
+        $data['organization_id'] = session('organization')->id;
+        $data['user_id'] = auth()->user()->id;
+        $data['author'] = auth()->user()->name;
+        $article = Article::create($data);
 
-        if($request->file('thumbnail_upload')){
-            $file=$request->file('thumbnail_upload');
-            $fileName=$article->id.'_'.$file->getClientOriginalName();
+        if ($request->file('thumbnail_upload')) {
+            $file = $request->file('thumbnail_upload');
+            $fileName = $article->id . '_' . $file->getClientOriginalName();
             $file->move(public_path('images/articles/thumbnail'), $fileName);
-            $article->thumbnail='/images/articles/thumbnail/'.$fileName;
+            $article->thumbnail = '/images/articles/thumbnail/' . $fileName;
             $article->save();
         }
 
@@ -92,10 +103,10 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        return Inertia::render('Organization/Article',[
-            'classifies'=>Classify::whereBelongsTo(session('organization'))->get(),
-            'articleCategories'=>Config::item('article_categories'),
-            'article'=>$article
+        return Inertia::render('Organization/Article', [
+            'classifies' => Classify::whereBelongsTo(session('organization'))->get(),
+            'articleCategories' => Config::item('article_categories'),
+            'article' => $article
         ]);
     }
 
@@ -108,14 +119,14 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
-        $data=$request->all();
-        
-        
-        if($request->hasFile('thumbnail_upload')){
-            $file=$request->file('thumbnail_upload');
-            $fileName=$article->id.'_'.$file->getClientOriginalName();
+        $data = $request->all();
+
+
+        if ($request->hasFile('thumbnail_upload')) {
+            $file = $request->file('thumbnail_upload');
+            $fileName = $article->id . '_' . $file->getClientOriginalName();
             $file->move(public_path('images/articles/thumbnail'), $fileName);
-            $data['thumbnail']='/images/articles/thumbnail/'.$fileName;
+            $data['thumbnail'] = '/images/articles/thumbnail/' . $fileName;
         }
         $article->update($data);
 
@@ -130,23 +141,25 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        if(session('organization')->id==$article->organization_id){
+        if (session('organization')->id == $article->organization_id) {
             $article->delete();
         }
         return redirect()->back();
     }
-    public function deleteImage(Article $article){
-        if(file_exists($article->thumbnail)){
+    public function deleteImage(Article $article)
+    {
+        if (file_exists($article->thumbnail)) {
             unlink(public_path($article->thumbnail));
         }
-        $article->thumbnail=null;
+        $article->thumbnail = null;
         $article->save();
         return redirect()->back();
     }
-    public function sequence(Request $request){
+    public function sequence(Request $request)
+    {
         // dd($request->all());
-        foreach($request->all() as $row){
-            Article::where('id',$row['id'])->update(['sequence'=>$row['sequence']]);
+        foreach ($request->all() as $row) {
+            Article::where('id', $row['id'])->update(['sequence' => $row['sequence']]);
         }
         return redirect()->back();
     }

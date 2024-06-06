@@ -20,10 +20,25 @@ class MemberController extends Controller
     public function index(Request $request)
     {
         //dd(Member::with('organizations')->with('user')->where('id','102')->get());
-        return Inertia::render('Admin/Members',[
-            'members'=>Member::with('organization')->with('user')->paginate($request->per_page),
-            'organizations'=>Organization::where('status',true)->get(),
-            'users'=>User::whereNotIn('id',Member::whereNotNull('user_id')->get()->pluck('user_id'))->get()
+        $pageSize = $request->pagination['pageSize'] ?? 10;
+        $currentPage = $request->pagination['currentPage'] ?? 1;
+        $members = Member::where(function ($query) use ($request) {
+            if (!empty($request->search)) {
+                if (!empty($request->search['organization'])) {
+                    $query->where('organization_id', $request->search['organization']);
+                }
+                if (!empty($request->search['given_name'])) {
+                    $query->where('given_name', 'like', '%' . $request->search['given_name'] . '%');
+                }
+                if (!empty($request->search['family_name'])) {
+                    $query->where('family_name', 'like', '%' . $request->search['family_name'] . '%');
+                }
+            }
+        })->with('organization')->with('user')->paginate($pageSize, ['*'], 'page', $currentPage);
+        return Inertia::render('Admin/Members', [
+            'members' => $members,
+            'organizations' => Organization::where('status', true)->get(),
+            'users' => User::whereNotIn('id', Member::whereNotNull('user_id')->get()->pluck('user_id'))->get()
         ]);
     }
 
@@ -94,7 +109,8 @@ class MemberController extends Controller
         $member->delete();
         return redirect()->back();
     }
-    public function createLogin(Member $member){
+    public function createLogin(Member $member)
+    {
 
         if (!$member->hasUser()) {
             $user = $member->createUser();
@@ -103,8 +119,7 @@ class MemberController extends Controller
         }
 
         Password::broker(config('fortify.passwords'))->sendResetLink(
-            [ 'email' => $user->email ]
+            ['email' => $user->email]
         );
-
     }
 }

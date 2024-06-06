@@ -28,11 +28,24 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $pageSize = $request->pagination['pageSize'] ?? 10;
+        $currentPage = $request->pagination['currentPage'] ?? 1;
+        $members = Organization::find(session('organization')->id)->members()->where(function ($query) use ($request) {
+            if (!empty($request->search)) {
+                if (!empty($request->search['given_name'])) {
+                    $query->where('given_name', 'like', '%' . $request->search['given_name'] . '%');
+                }
+                if (!empty($request->search['family_name'])) {
+                    $query->where('family_name', 'like', '%' . $request->search['family_name'] . '%');
+                }
+            }
+        })->paginate($pageSize, ['*'], 'page', $currentPage);
+        // dd($members);
         return Inertia::render('Organization/Members', [
             //'members'=>session('organization')->members
-            'members' => Organization::find(session('organization')->id)->members
+            'members' => $members
         ]);
     }
 
@@ -140,28 +153,28 @@ class MemberController extends Controller
         return Excel::download(new MemberExport, 'member.xlsx');
     }
 
-    public function resetPassword(Member $member){
-        $data=[
-            'organization_id'=>session('organization')?session('organization')->id:0,
-            'user_id'=>auth()->user()->id,
-            'sender'=>'noreplay@atbest.net',
-            'recipient'=>$member->user->email,
-            'subject'=>'Reset Password',
-            'message'=>'Reset password Template: '.$member->family_name,', '.$member->given_name,
+    public function resetPassword(Member $member)
+    {
+        $data = [
+            'organization_id' => session('organization') ? session('organization')->id : 0,
+            'user_id' => auth()->user()->id,
+            'sender' => 'noreplay@atbest.net',
+            'recipient' => $member->user->email,
+            'subject' => 'Reset Password',
+            'message' => 'Reset password Template: ' . $member->family_name, ', ' . $member->given_name,
         ];
-        $emailData=[
-            'sender'=>$data['sender'],
-            'recipient'=>$data['recipient'],
-            'subject'=>$data['subject'],
-            'username'=>$member->family_name.', '.$member->given_name
+        $emailData = [
+            'sender' => $data['sender'],
+            'recipient' => $data['recipient'],
+            'subject' => $data['subject'],
+            'username' => $member->family_name . ', ' . $member->given_name
         ];
-        Mail::send('emails.reset-password',$emailData, function($message) use($emailData){
-            $message->from($emailData['sender'],'Atbest.net')
-                    ->to($emailData["recipient"])
-                    ->subject($emailData["subject"]);
+        Mail::send('emails.reset-password', $emailData, function ($message) use ($emailData) {
+            $message->from($emailData['sender'], 'Atbest.net')
+                ->to($emailData["recipient"])
+                ->subject($emailData["subject"]);
         });
         Email::create($data);
         return redirect()->back()->with('success', 'Email sent successfully!');
-
     }
 }

@@ -5,65 +5,87 @@
         {{ $t("articles") }}
       </h2>
     </template>
-      <div class="flex-auto pb-3 text-right pb-3">
-        <inertia-link
-          :href="route('admin.articles.create')"
-          class="ant-btn ant-btn-primary"
-          >{{ $t("create_article") }}</inertia-link
-        >
+    <div class="flex-auto pb-3 container mx-auto">
+      <inertia-link
+        :href="route('admin.articles.create')"
+        class="ant-btn ant-btn-primary"
+        >{{ $t("create_article") }}</inertia-link
+      >
+    </div>
+    <div class="container mx-auto">
+      <div class="flex justify-between gap-6">
+        <a-select
+          class="w-full"
+          :placeholder="$t('please_select_category')"
+          v-model:value="search.category"
+          allowClear
+          :options="articleCategories"
+        ></a-select>
+        <a-input
+          v-model:value="search.title"
+          :placeholder="$t('please_input_title')"
+        ></a-input>
+        <a-button type="primary" @click="searchData">{{ $t("search") }}</a-button>
       </div>
+    </div>
+    <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-       
         <div class="ant-table">
-            <div class="ant-table-container">
-              <table style="table-layout: auto">
-                <thead class="ant-table-thead">
-                  <tr>
-                    <th v-for="column in columns">{{ $t(column.i18n) }}</th>
+          <div class="ant-table-container">
+            <table style="table-layout: auto">
+              <thead class="ant-table-thead">
+                <tr>
+                  <th v-for="column in columns" :key="column.id">
+                    {{ $t(column.i18n) }}
+                  </th>
+                </tr>
+              </thead>
+              <tr v-if="articles.total == 0">
+                <td :colspan="columns.length" class="ant-table-cell">
+                  <a-empty :image="simpleImage" />
+                </td>
+              </tr>
+              <draggable
+                v-else
+                tag="tbody"
+                class="dragArea list-group ant-table-tbody"
+                :list="articles.data"
+                @change="rowChange"
+              >
+                <transition-group v-for="(record, idx) in articles.data" :key="idx">
+                  <tr class="ant-table-row ant-table-row-level-0" :key="record.id">
+                    <td v-for="column in columns" :key="column.id" class="ant-table-cell">
+                      <template v-if="column.dataIndex == 'operation'">
+                        <inertia-link
+                          :href="route('admin.articles.edit', record.id)"
+                          class="ant-btn"
+                          >{{ $t("edit") }}</inertia-link
+                        >
+                      </template>
+                      <template v-else-if="column.dataIndex == 'dragger'">
+                        <holder-outlined />
+                      </template>
+                      <template v-else-if="column.dataIndex == 'published'">
+                        {{ record.published ? $t("yes") : $t("no") }}
+                      </template>
+                      <template v-else>
+                        {{ record[column.dataIndex] }}
+                      </template>
+                    </td>
                   </tr>
-                </thead>
-                <draggable
-                  tag="tbody"
-                  class="dragArea list-group ant-table-tbody"
-                  :list="articles.data"
-                  @change="rowChange"
-                >
-                  <transition-group v-for="(record, idx) in articles.data">
-                    <tr class="ant-table-row ant-table-row-level-0" :key="record.id">
-                      <td v-for="column in columns" class="ant-table-cell">
-                        <template v-if="column.dataIndex=='operation'">
-                          <inertia-link :href="route('admin.articles.edit',record.id)" class="ant-btn">{{  $t("edit") }}</inertia-link>
-                        </template>
-                        <template v-else-if="column.dataIndex=='dragger'">
-                          <holder-outlined />
-                        </template>
-                        <template v-else-if="column.dataIndex == 'published'">
-                          {{ record.published ? $t("yes") : $t("no") }}
-                        </template>
-                        <template v-else>
-                          {{ record[column.dataIndex] }}
-                        </template>
-                      </td>
-                    </tr>
-                  </transition-group>
-                </draggable>
-              </table>
-            </div>
-        </div>
-        <div class="float-right py-5 px-5">
-          <a-pagination
-            v-model:current="pagination.current"
-            v-model:pageSize="pagination.pageSize"
-            show-size-changer
-            :total="pagination.total"
-            @showSizeChange="onShowSizeChange"
-            @change="onPaginationChange"
+                </transition-group>
+              </draggable>
+            </table>
+          </div>
+          <Pagination
+            :data="articles"
+            :search="search"
           />
         </div>
-        
       </div>
-      <p>Article CAN NOT be delete if published.</p>
-    
+    </div>
+    <p>Article CAN NOT be delete if published.</p>
+
     <!-- Modal Start-->
     <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="100%">
       <a-form
@@ -152,21 +174,24 @@
 
 <script>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
+import Pagination from "@/Components/Pagination.vue";
 import { defineComponent, reactive } from "vue";
 //import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import CKEditor from "@ckeditor/ckeditor5-vue";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import UploadAdapter from "@/Components/ImageUploadAdapter.vue";
 import { VueDraggableNext } from "vue-draggable-next";
-import { HolderOutlined } from '@ant-design/icons-vue';
+import { HolderOutlined } from "@ant-design/icons-vue";
+import { Empty } from "ant-design-vue";
 
 export default {
   components: {
     AdminLayout,
+    Pagination,
     ckeditor: CKEditor.component,
     UploadAdapter,
     draggable: VueDraggableNext,
-    HolderOutlined
+    HolderOutlined,
     //UploadAdapter
   },
   props: ["classifies", "articleCategories", "articles"],
@@ -179,13 +204,15 @@ export default {
         title: "Modal",
         mode: "",
       },
-      originSequences:[],
+      search: {},
+      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+      originSequences: [],
       pagination: {
         total: this.articles.total,
         current: this.articles.current_page,
         pageSize: this.articles.per_page,
       },
-      originalSequences:[],
+      originalSequences: [],
       editor: ClassicEditor,
       editorData: "<p>Content of the editor.</p>",
       editorConfig: {
@@ -203,27 +230,33 @@ export default {
           title: "Dragger",
           i18n: "dragger_sort",
           dataIndex: "dragger",
-        },{
+        },
+        {
           title: "Category",
           i18n: "category",
           dataIndex: "category_code",
-        },{
+        },
+        {
           title: "Title",
           i18n: "title",
           dataIndex: "title",
-        },{
+        },
+        {
           title: "Validated at",
           i18n: "valid_at",
           dataIndex: "valid_at",
-        },{
+        },
+        {
           title: "Expired at",
           i18n: "expired_at",
           dataIndex: "expired_at",
-        },{
+        },
+        {
           title: "Published",
           i18n: "published",
           dataIndex: "published",
-        },{
+        },
+        {
           title: "Operation",
           i18n: "operation",
           dataIndex: "operation",
@@ -253,9 +286,15 @@ export default {
     };
   },
   created() {
-    this.originalSequences=this.articles.data.map(a=>a.sequence)
+    this.originalSequences = this.articles.data.map((a) => a.sequence);
   },
-  mounted() {},
+  mounted() {
+    this.pagination = {
+      currentPage: this.route().params.currentPage ?? 1,
+      pageSize: this.route().params.pageSize ?? 10,
+    };
+    this.search = this.route().params.search ?? {};
+  },
   methods: {
     onPaginationChange(page, filters, sorter) {
       this.$inertia.get(route("admin.articles.index"), {
@@ -263,19 +302,21 @@ export default {
         per_page: this.pagination.pageSize,
       });
     },
-    onShowSizeChange(current, pageSize){
-      this.pagination.pageSize=pageSize
+    onShowSizeChange(current, pageSize) {
+      this.pagination.pageSize = pageSize;
     },
     rowChange(event) {
-      this.articles.data.map((d,i)=>{d.sequence =this.originalSequences[i]})
+      this.articles.data.map((d, i) => {
+        d.sequence = this.originalSequences[i];
+      });
       this.$inertia.post(route("admin.article.sequence"), this.articles.data, {
-         onSuccess: (page) => {
-           console.log(page);
-         },
-         onError: (error) => {
-           console.log(error);
-         },
-       });
+        onSuccess: (page) => {
+          console.log(page);
+        },
+        onError: (error) => {
+          console.log(error);
+        },
+      });
     },
     createRecord() {
       this.modal.data = {};
@@ -360,6 +401,18 @@ export default {
       editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
         return new UploadAdapter(loader);
       };
+    },
+    searchData() {
+      this.$inertia.get(
+        route("admin.articles.index"),
+        { search: this.search, pagination: this.pagination },
+        {
+          onSuccess: (page) => {
+            console.log(page);
+          },
+          preserveState: true,
+        }
+      );
     },
   },
 };

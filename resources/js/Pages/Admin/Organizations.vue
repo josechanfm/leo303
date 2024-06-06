@@ -18,6 +18,7 @@
           :placeholder="$t('please_select_parish')"
           v-model:value="search.parish"
           :options="parishes"
+          allowClear
           :fieldNames="{ value: 'value', label: 'label_' + $t('lang') }"
         ></a-select>
         <a-input
@@ -26,21 +27,14 @@
         ></a-input>
         <a-input
           v-model:value="search.name_zh"
-          :plcaeholder="$t('please_input_name_zh')"
+          :placeholder="$t('please_input_name_zh')"
         ></a-input>
-        <a-button type="primary" @click="searchOrganizations">{{
-          $t("search")
-        }}</a-button>
+        <a-button type="primary" @click="searchData">{{ $t("search") }}</a-button>
       </div>
     </div>
-    <div class="container mx-auto pt-5">
+    <div class="container mx-auto py-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-        <a-table
-          :dataSource="organizations.data"
-          :columns="columns"
-          :pagination="pagination"
-          @change="onPaginationChange"
-        >
+        <a-table :dataSource="organizations.data" :columns="columns" :pagination="false">
           <template #headerCell="{ column }">
             {{ column.i18n ? $t(column.i18n) : column.title }}
           </template>
@@ -79,6 +73,10 @@
             </template>
           </template>
         </a-table>
+        <Pagination
+          :data="organizations"
+          :search="search"
+        />
       </div>
     </div>
     <!-- Modal Start-->
@@ -179,11 +177,13 @@
 
 <script>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
+import Pagination from "@/Components/Pagination.vue";
 import { defineComponent, reactive } from "vue";
 
 export default {
   components: {
     AdminLayout,
+    Pagination,
   },
   props: ["parishes", "organizations", "users"],
   data() {
@@ -194,11 +194,7 @@ export default {
         title: "Modal",
         mode: "",
       },
-      search: {
-        parish: "",
-        abbr: "",
-        name_zh: "",
-      },
+      search: {},
       pagination: {
         total: this.organizations.total,
         current: this.organizations.current_page,
@@ -273,13 +269,14 @@ export default {
       });
     });
   },
+  mounted() {
+    this.pagination = {
+      currentPage: this.route().params.currentPage ?? 1,
+      pageSize: this.route().params.pageSize ?? 10,
+    };
+    this.search = this.route().params.search ?? {};
+  },
   methods: {
-    onPaginationChange(page, filters, sorter) {
-      this.$inertia.get(route("admin.organizations.index"), {
-        page: page.current,
-        per_page: page.pageSize,
-      });
-    },
     createRecord() {
       this.modal.data = {};
       this.modal.data.members = [];
@@ -359,10 +356,10 @@ export default {
         route("admin.organization.masquerade", { organization: organization.id })
       );
     },
-    searchOrganizations() {
+    searchData() {
       this.$inertia.get(
         route("admin.organizations.index"),
-        { search: this.search },
+        { search: this.search, pagination: this.pagination },
         {
           onSuccess: (page) => {
             console.log(page);

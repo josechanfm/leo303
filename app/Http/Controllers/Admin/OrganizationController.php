@@ -20,20 +20,24 @@ class OrganizationController extends Controller
      */
     public function index(Request $request)
     {
-        $organization = Organization::where(function ($query) use ($request) {
-            if ($request->search['parish']) {
-                $query->where('parish', $request->search['parish']);
+        $pageSize = $request->pagination['pageSize'] ?? 10;
+        $currentPage = $request->pagination['currentPage'] ?? 1;
+        $organizations = Organization::where(function ($query) use ($request) {
+            if (!empty($request->search)) {
+                if (!empty($request->search['parish'])) {
+                    $query->where('parish', $request->search['parish']);
+                }
+                if (!empty($request->search['abbr'])) {
+                    $query->where('abbr', 'like', '%' . $request->search['abbr'] . '%');
+                }
+                if (!empty($request->search['name_zh'])) {
+                    $query->where('name_zh', 'like', '%' . $request->search['name_zh'] . '%');
+                }
             }
-            if ($request->search['abbr']) {
-                $query->where('abbr', 'like', '%' . $request->search['abbr'] . '%');
-            }
-            if ($request->search['name_zh']) {
-                $query->where('name_zh', 'like', '%' . $request->search['name_zh'] . '%');
-            }
-        })->with('users')->with('members')->paginate($request->per_page);
+        })->with('users')->with('members')->paginate($pageSize, ['*'], 'page', $currentPage);
         return Inertia::render('Admin/Organizations', [
             'parishes' => Config::item('parishes'),
-            'organizations' => $organization,
+            'organizations' => $organizations,
             'users' => User::all()
         ]);
     }

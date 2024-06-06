@@ -5,15 +5,25 @@
         {{ $t("events") }}
       </h2>
     </template>
-
-    
-      <div class="flex-auto pb-3 text-right">
+    <div class="container mx-auto">
+      <div class="flex-auto pb-3">
         <inertia-link
           :href="route('manage.events.create')"
           class="ant-btn ant-btn-primary"
           >{{ $t("create_event") }}</inertia-link
         >
       </div>
+    </div>
+    <div class="container mx-auto">
+      <div class="flex justify-between gap-6">
+        <a-input
+          v-model:value="search.title_en"
+          :placeholder="$t('please_input_title_en')"
+        ></a-input>
+        <a-button type="primary" @click="searchData">{{ $t("search") }}</a-button>
+      </div>
+    </div>
+    <div class="container mx-auto py-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
         <a-table :dataSource="events.data" :columns="columns">
           <template #headerCell="{ column }">
@@ -33,17 +43,19 @@
           </template>
         </a-table>
       </div>
-    
+    </div>
   </OrganizationLayout>
 </template>
 
 <script>
 import OrganizationLayout from "@/Layouts/OrganizationLayout.vue";
+import Pagination from "@/Components/Pagination.vue";
 import { defineComponent, reactive } from "vue";
 
 export default {
   components: {
     OrganizationLayout,
+    Pagination,
   },
   props: ["events", "categories"],
   data() {
@@ -51,26 +63,32 @@ export default {
       columns: [
         {
           title: "Event title",
-          i18n:"event_title_en",
+          i18n: "event_title_en",
           dataIndex: "title_en",
         },
         {
           title: "Start date",
-          i18n:"start_date",
+          i18n: "start_date",
           dataIndex: "start_date",
         },
         {
           title: "End date",
-          i18n:"end_date",
+          i18n: "end_date",
           dataIndex: "end_date",
         },
         {
           title: "Operation",
-          i18n:"operation",
+          i18n: "operation",
           dataIndex: "operation",
           key: "operation",
         },
       ],
+      search: {},
+      pagination: {
+        total: this.events.total,
+        current: this.events.current_page,
+        pageSize: this.events.per_page,
+      },
       rules: {
         name_zh: { required: true },
         mobile: { required: true },
@@ -94,6 +112,26 @@ export default {
     };
   },
   created() {},
-  methods: {},
+  mounted() {
+    this.pagination = {
+      currentPage: this.route().params.currentPage ?? 1,
+      pageSize: this.route().params.pageSize ?? 10,
+    };
+    this.search = this.route().params.search ?? {};
+  },
+  methods: {
+    searchData() {
+      this.$inertia.get(
+        route("manage.events.index"),
+        { search: this.search, pagination: this.pagination },
+        {
+          onSuccess: (page) => {
+            console.log(page);
+          },
+          preserveState: true,
+        }
+      );
+    },
+  },
 };
 </script>
