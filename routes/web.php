@@ -32,7 +32,7 @@ use App\Models\Article;
 //     ]);
 // })->name('/');;
 
-Route::get('/',[\App\Http\Controllers\WelcomeController::class,'dashboard'])->name('/');
+Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'dashboard'])->name('/');
 
 Route::get('/language/{language}', function ($language) {
     Session::put('applocale', $language);
@@ -44,7 +44,7 @@ Route::post('registration', [\App\Http\Controllers\RegistrationController::class
 Route::get('article', [\App\Http\Controllers\ArticleController::class, 'item'])->name('article.item');
 Route::resource('forms', App\Http\Controllers\FormController::class)->names('forms');
 Route::get('form/{entry}/receipt', [App\Http\Controllers\FormController::class, 'receipt'])->name('form.receipt');
-Route::get('content', [App\Http\Controllers\ContentController::class,'page'])->name('content');
+Route::get('content', [App\Http\Controllers\ContentController::class, 'page'])->name('content');
 
 //Member
 Route::group([
@@ -57,9 +57,12 @@ Route::group([
 ], function () {
     Route::get('/', [\App\Http\Controllers\Member\DashboardController::class, 'index'])->name('member.dashboard');
     Route::get('get_qrcode', [\App\Http\Controllers\Member\DashboardController::class, 'getQrcode'])->name('member.getQrcode');
+    Route::resource('blogs', App\Http\Controllers\Member\BlogController::class)->names('member.blogs');
+    Route::post('blog/{blog}/content/reply', [App\Http\Controllers\Member\BlogContentController::class, 'replyContent'])->name('member.blog.content.reply');
+    Route::resource('blog/{blog}/content', App\Http\Controllers\Member\BlogContentController::class)->names('member.blog.contents');
     Route::resource('portfolios', App\Http\Controllers\Member\PortfolioController::class)->names('member.portfolios');
     Route::resource('profile', App\Http\Controllers\Member\ProfileController::class)->names('member.profile');
-    Route::post('profile/change_password', [App\Http\Controllers\Member\ProfileController::class,'changePassword'])->name('member.profile.changePassword');
+    Route::post('profile/change_password', [App\Http\Controllers\Member\ProfileController::class, 'changePassword'])->name('member.profile.changePassword');
     Route::resource('professionals', App\Http\Controllers\Member\ProfessionalController::class)->names('member.professionals');
     Route::get('membership', [App\Http\Controllers\Member\MembershipController::class, 'index'])->name('member.membership');
     Route::post('membership/switch/{member}', [App\Http\Controllers\Member\MembershipController::class, 'switch'])->name('member.membership.switch');
@@ -78,15 +81,15 @@ Route::group([
     ]
 ], function () {
     Route::get('/', [App\Http\Controllers\Organization\DashboardController::class, 'index'])->name('manage');
-    Route::post('organization/switch/{organization}', [App\Http\Controllers\Organization\OrganizationController::class,'switch'])->name('manage.organization.switch');
+    Route::post('organization/switch/{organization}', [App\Http\Controllers\Organization\OrganizationController::class, 'switch'])->name('manage.organization.switch');
     Route::resource('organizations', App\Http\Controllers\Organization\OrganizationController::class)->names('manage.organizations');
-    Route::post('organization/delete_logo/{organization}', [App\Http\Controllers\Organization\OrganizationController::class,'deleteLogo'])->name('manage.organization.deleteLogo');
+    Route::post('organization/delete_logo/{organization}', [App\Http\Controllers\Organization\OrganizationController::class, 'deleteLogo'])->name('manage.organization.deleteLogo');
     Route::get('/{organization}/medias', [App\Http\Controllers\Organization\MediaController::class, 'getMedias'])->name('manage.medias');
     Route::resource('members', App\Http\Controllers\Organization\MemberController::class)->names('manage.members');
     Route::post('member/create/login/{member}', [App\Http\Controllers\Organization\MemberController::class, 'createLogin'])->name('manage.member.createLogin');
     Route::post('member/{member}/reset_password', [\App\Http\Controllers\Organization\MemberController::class, 'resetPassword'])->name('member.member.resetPassword');
     Route::resource('forms', App\Http\Controllers\Organization\FormController::class)->names('manage.forms');
-    Route::post('form/delete_image/{form}', [App\Http\Controllers\Organization\FormController::class,'deleteImage'])->name('manage.form.deleteImage');
+    Route::post('form/delete_image/{form}', [App\Http\Controllers\Organization\FormController::class, 'deleteImage'])->name('manage.form.deleteImage');
     Route::post('form/{form}/backup', [App\Http\Controllers\Organization\FormController::class, 'backup'])->name('manage.form.backup');
     Route::resource('form/{form}/fields', App\Http\Controllers\Organization\FormFieldController::class)->names('manage.form.fields');
     Route::post('form/{form}/fields_sequence', [App\Http\Controllers\Organization\FormFieldController::class, 'fieldsSequence'])->name('manage.form.fieldsSequence');
@@ -104,7 +107,7 @@ Route::group([
     Route::resource('emails', App\Http\Controllers\Organization\EmailController::class)->names('manage.emails');
 
     Route::resource('articles', App\Http\Controllers\Organization\ArticleController::class)->names('manage.articles');
-    Route::post('article/delete_image/{article}', [App\Http\Controllers\Organization\ArticleController::class,'deleteImage'])->name('manage.article.deleteImage');
+    Route::post('article/delete_image/{article}', [App\Http\Controllers\Organization\ArticleController::class, 'deleteImage'])->name('manage.article.deleteImage');
     Route::resource('events', App\Http\Controllers\Organization\EventController::class)->names('manage.events');
     Route::resource('configs', App\Http\Controllers\Organization\ConfigController::class)->names('manage.configs');
     Route::get('image_upload', [App\Http\Controllers\Organization\UploaderController::class, 'image'])->name('manage.image_upload');
@@ -123,21 +126,21 @@ Route::group([
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
     Route::resource('organizations', App\Http\Controllers\Admin\OrganizationController::class)->names('admin.organizations');
     Route::get('organization/{organization}/members', [App\Http\Controllers\Admin\OrganizationController::class, 'members'])->name('admin.organization.members');
-    Route::post('organization/masquerade/{organization}', [App\Http\Controllers\Admin\OrganizationController::class,'masquerade'])->name('admin.organization.masquerade');
+    Route::post('organization/masquerade/{organization}', [App\Http\Controllers\Admin\OrganizationController::class, 'masquerade'])->name('admin.organization.masquerade');
 
     Route::resource('members', App\Http\Controllers\Admin\MemberController::class)->names('admin.members');
     Route::resource('users', App\Http\Controllers\Admin\UserController::class)->names('admin.users');
     Route::resource('configs', App\Http\Controllers\Admin\ConfigController::class)->names('admin.configs');
     Route::resource('features', App\Http\Controllers\Admin\FeatureController::class)->names('admin.features');
-    Route::post('feature/delete_image/{feature}', [App\Http\Controllers\Admin\FeatureController::class,'deleteImage'])->name('admin.feature.deleteImage');
+    Route::post('feature/delete_image/{feature}', [App\Http\Controllers\Admin\FeatureController::class, 'deleteImage'])->name('admin.feature.deleteImage');
     Route::resource('articles', App\Http\Controllers\Admin\ArticleController::class)->names('admin.articles');
-    Route::post('article/sequence', [App\Http\Controllers\Admin\ArticleController::class,'sequence'])->name('admin.article.sequence');
-    Route::post('article/delete_image/{article}', [App\Http\Controllers\Admin\ArticleController::class,'deleteImage'])->name('admin.article.deleteImage');
+    Route::post('article/sequence', [App\Http\Controllers\Admin\ArticleController::class, 'sequence'])->name('admin.article.sequence');
+    Route::post('article/delete_image/{article}', [App\Http\Controllers\Admin\ArticleController::class, 'deleteImage'])->name('admin.article.deleteImage');
     Route::resource('issues', App\Http\Controllers\Admin\IssueController::class)->names('admin.issues');
-   
+
 
     Route::resource('forms', App\Http\Controllers\Admin\FormController::class)->names('admin.forms');
-    Route::resource('form/{form}/fields', App\Http\Controllers\Admin\FormFieldController::class)->names('admin.form.fields');    
+    Route::resource('form/{form}/fields', App\Http\Controllers\Admin\FormFieldController::class)->names('admin.form.fields');
     Route::resource('form/{form}/entries', App\Http\Controllers\Admin\EntryController::class)->names('admin.form.entries');
     Route::get('entry/{form}/export', [App\Http\Controllers\Admin\EntryController::class, 'export'])->name('admin.entry.export');
     Route::get('form/{form}/entry/{entry}/success', [App\Http\Controllers\Admin\EntryController::class, 'success'])->name('admin.form.entry.success');

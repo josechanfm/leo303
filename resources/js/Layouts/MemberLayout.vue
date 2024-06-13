@@ -50,9 +50,7 @@ export default {
       loadLanguageAsync,
     };
   },
-  created(){
-    
-  },
+  created() {},
   mounted() {
     //loadLanguageAsync(this.$page.props.lang)
   },
@@ -72,16 +70,17 @@ export default {
               <!-- Logo -->
               <div class="shrink-0 flex items-center">
                 <Link :href="route('member.dashboard')">
-                  <img v-if="$page.props.currentMember.organization.logo" :src="$page.props.currentMember.organization.logo" class="block h-14 w-auto" />
+                  <img
+                    v-if="$page.props.currentMember.organization.logo"
+                    :src="$page.props.currentMember.organization.logo"
+                    class="block h-14 w-auto"
+                  />
                   <img v-else src="/images/site_logo.png" class="block h-14 w-auto" />
                 </Link>
               </div>
               <!-- Navigation Links -->
               <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                <NavLink
-                  :href="route('/')"
-                  :active="route().current('/')"
-                >
+                <NavLink :href="route('/')" :active="route().current('/')">
                   {{ $t("dashboard") }}
                 </NavLink>
                 <NavLink :href="route('member.entries.index')">
@@ -91,6 +90,11 @@ export default {
                 <NavLink :href="route('member.profile.index')">
                   {{ $t("profile") }}
                 </NavLink>
+
+                <NavLink :href="route('member.blogs.index')">
+                  {{ $t("blogs") }}
+                </NavLink>
+
                 <NavLink
                   :href="route('member.guardian.back')"
                   v-if="$page.props.by_guardian"
@@ -296,10 +300,7 @@ export default {
           class="sm:hidden"
         >
           <div class="pt-2 pb-3 space-y-1">
-            <ResponsiveNavLink
-              :href="route('/')"
-              :active="route().current('dashboard')"
-            >
+            <ResponsiveNavLink :href="route('/')" :active="route().current('dashboard')">
               {{ $t("dashboard") }}
             </ResponsiveNavLink>
           </div>
@@ -346,26 +347,26 @@ export default {
                 :href="route('profile.show')"
                 :active="route().current('profile.show')"
               >
-                {{$t('account')}}
+                {{ $t("account") }}
               </ResponsiveNavLink>
               <ResponsiveNavLink
                 as="a"
                 :href="route('manage')"
                 v-if="$page.props.user.roles.includes('organizer')"
               >
-                {{$t('manager')}}
+                {{ $t("manager") }}
               </ResponsiveNavLink>
               <ResponsiveNavLink
                 v-if="$page.props.jetstream.hasApiFeatures"
                 :href="route('api-tokens.index')"
                 :active="route().current('api-tokens.index')"
               >
-                {{$t('api_tokens')}}
+                {{ $t("api_tokens") }}
               </ResponsiveNavLink>
 
               <!-- Authentication -->
               <form method="POST" @submit.prevent="logout">
-                <ResponsiveNavLink as="button"> {{$t('log_out')}} </ResponsiveNavLink>
+                <ResponsiveNavLink as="button"> {{ $t("log_out") }} </ResponsiveNavLink>
               </form>
 
               <!-- Team Management -->

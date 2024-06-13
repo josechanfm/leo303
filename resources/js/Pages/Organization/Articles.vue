@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="container mx-auto">
-      <div class="flex justify-between gap-6">
+      <div class="flex flex-col md:flex-row justify-between gap-6">
         <a-select
           class="w-full"
           :placeholder="$t('please_select_category')"
@@ -262,7 +262,9 @@ export default {
       },
     };
   },
-  created() {},
+  created() {
+
+  },
   mounted() {
     this.pagination = {
       currentPage: this.route().params.currentPage ?? 1,

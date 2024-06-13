@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="container mx-auto">
-      <div class="flex justify-between gap-6">
+      <div class="flex flex-col md:flex-row justify-between gap-6">
         <a-input
           v-model:value="search.title_en"
           :placeholder="$t('please_input_title_en')"
