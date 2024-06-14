@@ -105,7 +105,8 @@ Route::group([
     Route::get('certificates/delete_media/{mediaId}', [App\Http\Controllers\Organization\CertificateController::class, 'deleteMedia'])->name('manage.certificate.deleteMedia');
     Route::resource('certificate/{certificate}/members', App\Http\Controllers\Organization\CertificateMemberController::class)->names('manage.certificate.members');
     Route::resource('emails', App\Http\Controllers\Organization\EmailController::class)->names('manage.emails');
-
+    Route::resource('blogs', App\Http\Controllers\Organization\BlogController::class)->names('manage.blogs');
+    Route::resource('blog-contents', App\Http\Controllers\Organization\BlogContentController::class)->names('manage.blog.contents');
     Route::resource('articles', App\Http\Controllers\Organization\ArticleController::class)->names('manage.articles');
     Route::post('article/delete_image/{article}', [App\Http\Controllers\Organization\ArticleController::class, 'deleteImage'])->name('manage.article.deleteImage');
     Route::resource('events', App\Http\Controllers\Organization\EventController::class)->names('manage.events');

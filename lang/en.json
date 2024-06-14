@@ -300,5 +300,9 @@
     "please_input_title": "Please input title",
     "please_select_category": "Please select category",
     "please_input_name": "Please input name",
-    "please_input_title_en": "Please input title En"
+    "please_input_title_en": "Please input title En",
+    "blogs.management": "Blogs Management",
+    "create_blog": "Create Blog",
+    "contents_management": "Contents Management",
+    "content.user": "Commenter"
 }

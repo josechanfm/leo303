@@ -303,5 +303,13 @@
     "please_input_title": "請輸入標題",
     "please_select_category": "請選擇組別",
     "please_input_name": "請輸入名稱",
-    "please_input_title_en": "請輸入活動名稱(英文)"
+    "please_input_title_en": "請輸入活動名稱(英文)",
+    "blogs.management": "留言板管理",
+    "blog.user": "創建人",
+    "blog.title": "標題",
+    "blog.description": "簡介",
+    "create_at": "創建時間",
+    "create_blog": "創建板塊",
+    "contents_management": "內容管理",
+    "content.user": "留言人"
 }
