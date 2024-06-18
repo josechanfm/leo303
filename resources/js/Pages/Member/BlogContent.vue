@@ -234,11 +234,6 @@ export default {
       }
       console.log(scrollEnd);
     },
-    scrollEndFunction() {
-      // 在滚动到底部时触发的函数
-      console.log("已滚动到底部！");
-      // 可以在此处执行你想要的逻辑
-    },
   },
 };
 </script>

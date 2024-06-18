@@ -13,8 +13,11 @@
         >
       </div>
       <div class="flex flex-col gap-3" ref="scrollContainer" @scroll="checkScroll">
-        <div class="" v-for="bc in blog_contents" :key="bc.id">
-          <a :href="route('member.blog.contents.show', { blog: blog, content: bc })">
+        <div class="" v-for="(bc, idx) in blog_contents" :key="idx">
+          <a
+            v-if="idx < page * 4"
+            :href="route('member.blog.contents.show', { blog: blog, content: bc })"
+          >
             <a-card hoverable>
               <a-card-meta :title="bc.title">
                 <template #description>
@@ -121,9 +124,16 @@ export default {
       dayjs,
     };
   },
-  created() {},
+  created() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  unmounted() {
+    window.removeEventListener("scroll", this.handleScroll);
+  },
   data() {
     return {
+      page: 1,
+      pageLoading: false,
       newBlog: "",
       createBlogContent: false,
       new_blog_content: {},
@@ -171,18 +181,19 @@ export default {
       this.createBlogContent = false;
       this.new_blog_content = {};
     },
-    checkScroll() {
-      const container = this.$refs.scrollContainer;
-      // 判断是否滚动到底部
-      if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
-        // 执行滚动到底部时触发的函数
-        this.scrollEndFunction();
+    handleScroll(event) {
+      const body = document.getElementById("app");
+      const scrollHeight = body.scrollHeight;
+      const scrollEnd = window.innerHeight + window.scrollY >= scrollHeight;
+
+      if (scrollEnd == true && this.content.reply_contents.length > this.page * 4) {
+        this.pageLoading = true;
+        setTimeout(() => {
+          this.pageLoading = false;
+          this.page++;
+        }, 1500);
       }
-    },
-    scrollEndFunction() {
-      // 在滚动到底部时触发的函数
-      console.log("已滚动到底部！");
-      // 可以在此处执行你想要的逻辑
+      console.log(scrollEnd);
     },
   },
 };
