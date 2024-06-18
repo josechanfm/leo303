@@ -12,34 +12,6 @@
           >回覆</a-button
         >
       </div>
-      <div class="flex flex-col gap-2">
-        <a-card :title="content.title" :bordered="false">
-          <div class="flex flex-col gap-1">
-            <div>{{ content.user.name }}:</div>
-            <div>
-              {{ content.content }}
-            </div>
-          </div>
-        </a-card>
-        <div class="" v-for="c in content.reply_contents" :key="c.id">
-          <a-card>
-            <div class="flex flex-col gap-1">
-              <div>{{ c.user.name }}:</div>
-              <div>
-                {{ c.content }}
-              </div>
-            </div>
-            <div class="text-right">
-              <a-button type="link" @click="replyContent(c.id)">回覆</a-button>
-            </div>
-            <a-card v-if="c.reply_contents.length != 0">
-              <div v-for="rc in c.reply_contents" :key="rc.id" class="border-b-2 mb-4">
-                {{ rc.user.name }}:{{ rc.content }}
-              </div>
-            </a-card>
-          </a-card>
-        </div>
-      </div>
       <div
         class="border bg-white shadow-md rounded-md p-4 my-4"
         v-if="replyContentVisable == true"
@@ -62,6 +34,70 @@
           </div>
         </div>
       </div>
+      <div class="flex flex-col gap-2">
+        <a-card :title="content.title" :bordered="false">
+          <div class="flex flex-col gap-1">
+            <div>{{ content.user.name }}:</div>
+            <div>
+              {{ content.content }}
+            </div>
+          </div>
+        </a-card>
+        <div class="" v-for="(c, idx) in content.reply_contents" :key="idx">
+          <a-card v-if="idx < page * 4">
+            <div class="flex flex-col gap-1">
+              <div class="flex justify-between">
+                <div>{{ c.user.name }}:</div>
+                <div>{{ dayjs(c.created_at).format("YYYY-MM-DD HH:mm:ss") }}</div>
+              </div>
+              <div>
+                {{ c.content }}
+              </div>
+            </div>
+            <div class="text-right">
+              <a-button type="link" @click="replyContent(c.id)">回覆</a-button>
+            </div>
+            <a-card v-if="c.reply_contents.length != 0">
+              <div v-for="rc in c.reply_contents" :key="rc.id" class="border-b-2 mb-4">
+                {{ rc.user.name }}:{{ rc.content }}
+              </div>
+            </a-card>
+          </a-card>
+        </div>
+        <div v-if="pageLoading" class="flex justify-center">
+          <svg
+            class="animate-spin"
+            width="40"
+            height="40"
+            viewBox="-25 -25 250 250"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            style="transform: rotate(-90deg)"
+          >
+            <circle
+              r="90"
+              cx="100"
+              cy="100"
+              fill="transparent"
+              stroke="#e0e0e0"
+              stroke-width="16px"
+              stroke-dasharray="565.48px"
+              stroke-dashoffset="0"
+            ></circle>
+            <circle
+              r="90"
+              cx="100"
+              cy="100"
+              stroke="blue"
+              stroke-width="16px"
+              stroke-linecap="round"
+              stroke-dashoffset="367px"
+              fill="transparent"
+              stroke-dasharray="565.48px"
+            ></circle>
+          </svg>
+        </div>
+      </div>
     </div>
   </MemberLayout>
 </template>
@@ -69,8 +105,12 @@
 import MemberLayout from "@/Layouts/MemberLayout.vue";
 import { router } from "@inertiajs/vue3";
 import { onBeforeUnmount, ref, shallowRef, onMounted } from "vue";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
+dayjs.extend(duration);
+
 export default {
-  components: { MemberLayout },
+  components: { MemberLayout, dayjs },
   props: ["blog", "content"],
   setup() {
     const editorRef = shallowRef();
@@ -117,11 +157,19 @@ export default {
       toolbarConfig,
       editorConfig,
       handleCreated,
+      dayjs,
     };
   },
-  created() {},
+  created() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  unmounted() {
+    window.removeEventListener("scroll", this.handleScroll);
+  },
   data() {
     return {
+      page: 1,
+      pageLoading: false,
       newBlog: "",
       replyContentVisable: false,
       reply_blog_content: {},
@@ -171,6 +219,25 @@ export default {
     replyContent(reply_id) {
       this.replyContentVisable = true;
       this.reply_blog_content.reply_id = reply_id;
+    },
+    handleScroll(event) {
+      const body = document.getElementById("app");
+      const scrollHeight = body.scrollHeight;
+      const scrollEnd = window.innerHeight + window.scrollY >= scrollHeight;
+
+      if (scrollEnd == true && this.content.reply_contents.length > this.page * 4) {
+        this.pageLoading = true;
+        setTimeout(() => {
+          this.pageLoading = false;
+          this.page++;
+        }, 1500);
+      }
+      console.log(scrollEnd);
+    },
+    scrollEndFunction() {
+      // 在滚动到底部时触发的函数
+      console.log("已滚动到底部！");
+      // 可以在此处执行你想要的逻辑
     },
   },
 };

@@ -30,6 +30,6 @@ class BlogContent extends Model
     }
     public function getReplyContentsAttribute()
     {
-        return BlogContent::where('reply_id', $this->id)->get();
+        return BlogContent::where('reply_id', $this->id)->orderBy('created_at', 'desc')->get();
     }
 }

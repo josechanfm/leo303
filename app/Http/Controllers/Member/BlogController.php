@@ -23,7 +23,7 @@ class BlogController extends Controller
     {
         return Inertia::render('Member/Blog', [
             'blog' => $blog,
-            'blog_contents' => BlogContent::where('blog_id', $blog->id)->where('reply_id', 0)->get()
+            'blog_contents' => BlogContent::where('blog_id', $blog->id)->where('reply_id', 0)->orderBy('created_at', 'desc')->get()
         ]);
     }
     public function mediaUpload(Request $request)

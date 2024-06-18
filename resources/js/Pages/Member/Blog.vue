@@ -12,12 +12,24 @@
           >發佈留言</a-button
         >
       </div>
-      <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-3" ref="scrollContainer" @scroll="checkScroll">
         <div class="" v-for="bc in blog_contents" :key="bc.id">
           <a :href="route('member.blog.contents.show', { blog: blog, content: bc })">
             <a-card hoverable>
               <a-card-meta :title="bc.title">
-                <template #description>{{ bc.content }}</template>
+                <template #description>
+                  <div class="flex justify-between">
+                    <div class="truncate">
+                      {{ bc.content }}
+                    </div>
+                    <div class="flex gap-3">
+                      <div class="">
+                        {{ dayjs(bc.created_at).format("YYYY-MM-DD HH:mm:ss") }}
+                      </div>
+                      <div class="text-blue-400">{{ bc.reply_contents.length }}回覆</div>
+                    </div>
+                  </div>
+                </template>
               </a-card-meta>
             </a-card>
           </a>
@@ -55,8 +67,11 @@
 import MemberLayout from "@/Layouts/MemberLayout.vue";
 import { router } from "@inertiajs/vue3";
 import { onBeforeUnmount, ref, shallowRef, onMounted } from "vue";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
+dayjs.extend(duration);
 export default {
-  components: { MemberLayout },
+  components: { MemberLayout, dayjs },
   props: ["blog", "blog_contents"],
   setup() {
     const editorRef = shallowRef();
@@ -103,6 +118,7 @@ export default {
       toolbarConfig,
       editorConfig,
       handleCreated,
+      dayjs,
     };
   },
   created() {},
@@ -154,6 +170,19 @@ export default {
     cancelBlogContent() {
       this.createBlogContent = false;
       this.new_blog_content = {};
+    },
+    checkScroll() {
+      const container = this.$refs.scrollContainer;
+      // 判断是否滚动到底部
+      if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
+        // 执行滚动到底部时触发的函数
+        this.scrollEndFunction();
+      }
+    },
+    scrollEndFunction() {
+      // 在滚动到底部时触发的函数
+      console.log("已滚动到底部！");
+      // 可以在此处执行你想要的逻辑
     },
   },
 };
