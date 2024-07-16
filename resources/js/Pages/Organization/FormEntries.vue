@@ -14,12 +14,9 @@
             <template #bodyCell="{ column, text, record, index }">
               <template v-if="column.dataIndex == 'operation'">
                 <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
-                <a
-                  :href="route('form.receipt',  record)"
-                  target="_blank"
-                  class="ant-btn"
-                  >{{ $t("receipt") }}</a
-                >
+                <a-button :href="route('form.receipt',  record)" target="_blank" as="link">
+                  {{ $t("receipt") }}
+                </a-button>
                 <a-popconfirm
                   :title="$t('confirm_delete_record')"
                   :ok-text="$t('yes')"

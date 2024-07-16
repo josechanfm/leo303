@@ -44,13 +44,9 @@ Route::post('registration', [\App\Http\Controllers\RegistrationController::class
 Route::get('article', [\App\Http\Controllers\ArticleController::class, 'item'])->name('article.item');
 Route::resource('forms', App\Http\Controllers\FormController::class)->names('forms');
 Route::get('form/{entry}/receipt', [App\Http\Controllers\FormController::class, 'receipt'])->name('form.receipt');
-<<<<<<< HEAD
 Route::get('content', [App\Http\Controllers\ContentController::class,'page'])->name('content');
 Route::get('widget/polling',[App\Http\Controllers\Widget\PollController::class,'polling'])->name('widget.polling');
 Route::post('widget/poll/vote',[App\Http\Controllers\Widget\PollController::class,'vote'])->name('widget.poll.vote');
-=======
-Route::get('content', [App\Http\Controllers\ContentController::class, 'page'])->name('content');
->>>>>>> 0625693eee1da8eef151cd931fd7c8ae8dd0e224
 
 //Member
 Route::group([
@@ -148,10 +144,6 @@ Route::group([
     Route::post('article/sequence', [App\Http\Controllers\Admin\ArticleController::class, 'sequence'])->name('admin.article.sequence');
     Route::post('article/delete_image/{article}', [App\Http\Controllers\Admin\ArticleController::class, 'deleteImage'])->name('admin.article.deleteImage');
     Route::resource('issues', App\Http\Controllers\Admin\IssueController::class)->names('admin.issues');
-<<<<<<< HEAD
-=======
-
->>>>>>> 0625693eee1da8eef151cd931fd7c8ae8dd0e224
 
     Route::resource('forms', App\Http\Controllers\Admin\FormController::class)->names('admin.forms');
     Route::resource('form/{form}/fields', App\Http\Controllers\Admin\FormFieldController::class)->names('admin.form.fields');

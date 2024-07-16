@@ -30,26 +30,18 @@
           </template>
           <template #bodyCell="{ column, text, record, index }">
             <template v-if="column.dataIndex == 'operation'">
-              <inertia-link
-                :href="route('manage.form.entries.index', { form: record.id })"
-                class="ant-btn"
-                >{{ $t("applications") }}</inertia-link
-              >
-              <a
-                :href="route('manage.entry.export', { form: record.id })"
-                class="ant-btn"
-                >{{ $t("export") }}</a
-              >
-              <inertia-link
-                :href="route('manage.form.fields.index', { form: record.id })"
-                class="ant-btn"
-              >
+              <a-button :href="route('manage.form.entries.index', { form: record.id })" as="link" >
+                {{ $t("applications") }}
+              </a-button>
+              <a-button :href="route('manage.entry.export', { form: record.id })" as="link">
+                {{ $t("export") }}
+              </a-button>
+              <a-button :href="route('manage.form.fields.index', { form: record.id }) "as="link">
                 {{ $t("data_fields") }}
-              </inertia-link>
-              <inertia-link :href="route('manage.forms.edit', record.id)" class="ant-btn">
+              </a-button>
+              <a-button :href="route('manage.forms.edit', record.id)" as="link">
                 {{ $t("edit") }}
-              </inertia-link>
-
+              </a-button>
               <a-popconfirm
                 :title="$t('confirm_delete_record')"
                 :ok-text="$t('yes')"

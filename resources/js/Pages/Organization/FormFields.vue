@@ -24,52 +24,67 @@
         </button>
       </template>
     </div>
+
+    <a-table
+      :dataSource="fields"
+      :columns="columns"
+      :pagination="false"
+      rowKey="id"
+      @end="onDragEnd"
+    >
+      <template #bodyCell="{ column, record, index }">
+        <template v-if="column.key === 'action'">
+          |||
+        </template>
+      </template>
+    </a-table>
+
     <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-      <div class="ant-table">
-        <div class="ant-table-container">
-          <table style="table-layout: auto">
-            <thead class="ant-table-thead">
-              <tr>
-                <th v-for="column in columns" :key="column.id">{{ $t(column.i18n) }}</th>
-              </tr>
-            </thead>
-            <draggable
-              tag="tbody"
-              class="dragArea list-group ant-table-tbody"
-              :list="fields"
-              :disabled="!isDrop"
-              @change="rowChange"
-            >
-              <transition-group v-for="(record, idx) in fields" :key="idx">
-                <tr class="ant-table-row ant-table-row-level-0" :key="record.id">
-                  <td
-                    v-for="column in columns"
-                    class="ant-table-cell"
-                    :class="isDrop ? 'cursor-grab' : ''"
-                    :key="column.id"
+            <div class="ant-table">
+              <div class="ant-table-container">
+                <table style="table-layout: auto">
+                  <thead class="ant-table-thead">
+                    <tr>
+                      <th v-for="column in columns" :key="column.id">{{ $t(column.i18n) }}</th>
+                    </tr>
+                  </thead>
+                  <draggable
+                    tag="tbody"
+                    class="dragArea list-group ant-table-tbody"
+                    :list="fields"
+                    :disabled="!isDrop"
+                    @change="rowChange"
                   >
-                    <template v-if="column.dataIndex == 'field_label'">
-                      <div class="flex items-center">
-                        <template v-if="isDrop == true"><holder-outlined /></template>
-                        {{ record.field_label }}
-                      </div>
-                    </template>
-                    <template v-else-if="column.dataIndex == 'operation'">
-                      <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
-                      <a-button
-                        @click="deleteRecord(record)"
-                        :disabled="form.published == 1"
-                        >{{ $t("delete") }}</a-button
-                      >
-                    </template>
-                    <template v-else> {{ record[column.dataIndex] }}</template>
-                  </td>
-                </tr>
-              </transition-group>
-            </draggable>
-          </table>
-        </div>
-      </div>
+                    <transition-group v-for="(record, idx) in fields" :key="idx">
+                      <tr class="ant-table-row ant-table-row-level-0" :key="record.id">
+                        <td
+                          v-for="column in columns"
+                          class="ant-table-cell"
+                          :class="isDrop ? 'cursor-grab' : ''"
+                          :key="column.id"
+                        >
+                          <template v-if="column.dataIndex == 'field_label'">
+                            <div class="flex items-center">
+                              <template v-if="isDrop == true"><holder-outlined /></template>
+                              {{ record.field_label }}
+                            </div>
+                          </template>
+                          <template v-else-if="column.dataIndex == 'operation'">
+                            <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
+                            <a-button
+                              @click="deleteRecord(record)"
+                              :disabled="form.published == 1"
+                              >{{ $t("delete") }}</a-button
+                            >
+                          </template>
+                          <template v-else> {{ record[column.dataIndex] }}</template>
+                        </td>
+                      </tr>
+                    </transition-group>
+                  </draggable>
+                </table>
+              </div>
+            </div>
     </div>
 
     <!-- Modal Start-->
@@ -390,6 +405,14 @@ export default {
         },
       });
     },
+    onDragEnd(event){
+      const fromIndex = event.fromIndex;
+      const toIndex = event.toIndex;
+      const updatedData = [...data.value];
+      const [removed] = updatedData.splice(fromIndex, 1);
+      updatedData.splice(toIndex, 0, removed);
+      data.value = updatedData;
+    }
   },
 };
 </script>
