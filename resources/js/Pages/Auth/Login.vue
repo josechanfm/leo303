@@ -10,13 +10,15 @@ import TextInput from "@/Components/TextInput.vue";
 
 defineProps({
   canResetPassword: Boolean,
-  status: String,
 });
+
+
 
 const form = useForm({
   email: "",
   password: "",
   remember: false,
+  service:route().params.s
 });
 
 const submit = () => {
@@ -38,13 +40,9 @@ const submit = () => {
     <template #logo>
       <AuthenticationCardLogo />
     </template>
-
-    <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-      {{ status }}
-    </div>
-
     <form @submit.prevent="submit">
       <div>
+        <TextInput v-model="form.service" hidden/>
         <InputLabel for="email" :value="$t('email')" />
         <TextInput
           id="email"
@@ -53,6 +51,7 @@ const submit = () => {
           class="mt-1 block w-full"
           required
           autofocus
+          style="line-height: 30px;"
         />
         <InputError class="mt-2" :message="form.errors.email" />
       </div>
@@ -66,6 +65,7 @@ const submit = () => {
           class="mt-1 block w-full"
           required
           autocomplete="current-password"
+          style="line-height: 30px;"
         />
         <InputError class="mt-2" :message="form.errors.password" />
       </div>

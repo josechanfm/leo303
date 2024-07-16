@@ -79,8 +79,6 @@
             <a-select v-model:value="article.tags" mode="tags" style="width: 100%" placeholder="Tags Mode"
               :options="tagOptions"></a-select>
           </a-form-item>
-
-
               <FileUploader
                 :file="article.thumbnail"
                 :maxSize="5120"
@@ -102,7 +100,7 @@
     
 
     <a-drawer
-      v-model:visible="isDrawerVisible"
+      v-model:open="isDrawerVisible"
       class="custom-class"
       title="Basic Drawer"
       placement="right"

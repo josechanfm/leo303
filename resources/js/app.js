@@ -8,8 +8,10 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import { InertiaProgress } from '@inertiajs/progress';
 import Antd from 'ant-design-vue';
+import 'ant-design-vue/dist/reset.css';
+
 import { i18nVue } from 'laravel-vue-i18n'
-import 'ant-design-vue/dist/antd.css';
+//import 'ant-design-vue/dist/antd.css';
 
 
 // import { createI18n } from 'vue-i18n';

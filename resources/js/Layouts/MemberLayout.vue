@@ -71,7 +71,7 @@ export default {
             <div class="flex">
               <!-- Logo -->
               <div class="shrink-0 flex items-center">
-                <Link :href="route('member.dashboard')">
+                <Link :href="route('/')">
                   <img v-if="$page.props.currentMember.organization.logo" :src="$page.props.currentMember.organization.logo" class="block h-14 w-auto" />
                   <img v-else src="/images/site_logo.png" class="block h-14 w-auto" />
                 </Link>
@@ -79,7 +79,7 @@ export default {
               <!-- Navigation Links -->
               <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                 <NavLink
-                  :href="route('/')"
+                  :href="route('member.dashboard')"
                   :active="route().current('/')"
                 >
                   {{ $t("dashboard") }}
@@ -108,7 +108,7 @@ export default {
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">
               <!-- Teams Dropdown Here-->
-
+              <!--
               <div class="ml-0 relative">
                 <Dropdown align="right" width="20">
                   <template #trigger>
@@ -146,7 +146,7 @@ export default {
                   </template>
                 </Dropdown>
               </div>
-
+              -->
               <!-- Settings Dropdown -->
               <div class="ml-3 relative">
                 <Dropdown align="right" width="48">

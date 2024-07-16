@@ -70,7 +70,7 @@ const showingNavigationDropdown = ref(false);
           </div>
 
           <div class="flex items-center">
-            <ul class="sm:flex space-x-4 hidden items-center text-white">
+            <ul class="list-none sm:flex space-x-4 hidden items-center text-white">
               <li>
                 <a
                   href="http://www.faom.org.mo/portal/"

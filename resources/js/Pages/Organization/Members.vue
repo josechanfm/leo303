@@ -29,17 +29,12 @@ s
           </template>
           <template #bodyCell="{ column, text, record, index }">
             <template v-if="column.dataIndex == 'operation'">
-              <inertia-link
-                :href="route('member.member.resetPassword', record.id)"
-                method="post"
-                class="ant-btn"
-                >{{ $t("member.reset_password") }}</inertia-link
-              >
-              <inertia-link
+              <a-button
                 :href="route('manage.members.show', record.id)"
-                class="ant-btn"
-                >{{ $t("view") }}</inertia-link
+                as="link"
               >
+              {{ $t("view") }}
+              </a-button>
               <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
               <a-popconfirm
                 :title="$t('confirm_delete_record')"
@@ -66,7 +61,7 @@ s
     </div>
 
     <!-- Modal Start-->
-    <a-modal v-model:visible="modal.isOpen" :title="$t(modal.title)" width="60%">
+    <a-modal v-model:open="modal.isOpen" :title="$t(modal.title)" width="60%">
       <a-form
         ref="modalRef"
         :model="modal.data"

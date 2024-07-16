@@ -72,7 +72,7 @@
     <p>Article CAN NOT be delete if published.</p>
 
     <!-- Modal Start-->
-    <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="100%">
+    <a-modal v-model:open="modal.isOpen" :title="modal.title" width="100%">
       <a-form
         ref="modalRef"
         :model="modal.data"

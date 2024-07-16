@@ -17,7 +17,7 @@
           </inertia-link>
         </span>
       </a-menu-item>
-      <a-menu-item key="2">
+      <a-menu-item key="members">
         <template #icon>
           <TeamOutlined />
         </template>
@@ -27,7 +27,7 @@
           </inertia-link>
         </span>
       </a-menu-item>
-      <a-menu-item key="3">
+      <a-menu-item key="certificates">
         <template #icon>
           <FileProtectOutlined />
         </template>
@@ -37,7 +37,7 @@
           </inertia-link>
         </span>
       </a-menu-item>
-      <a-menu-item key="4">
+      <a-menu-item key="forms">
         <template #icon>
           <FormOutlined />
         </template>
@@ -45,7 +45,7 @@
           <inertia-link :href="route('manage.forms.index')"> {{$t('forms')}} </inertia-link>
         </span>
       </a-menu-item>
-      <a-menu-item key="6">
+      <a-menu-item key="events">
         <template #icon>
           <CalendarOutlined />
         </template>
@@ -53,7 +53,7 @@
           <inertia-link :href="route('manage.events.index')"> {{$t('events')}} </inertia-link>
         </span>
       </a-menu-item>
-      <a-menu-item key="7">
+      <a-menu-item key="articles">
         <template #icon>
           <CopyOutlined />
         </template>
@@ -61,7 +61,7 @@
           <inertia-link :href="route('manage.articles.index')"> {{$t('articles')}} </inertia-link>
         </span>
       </a-menu-item>
-      <a-menu-item key="8">
+      <a-menu-item key="messages">
         <template #icon>
           <MailOutlined />
         </template>
@@ -71,7 +71,7 @@
           </inertia-link>
         </span>
       </a-menu-item>
-      <a-menu-item key="9">
+      <a-menu-item key="emails">
         <template #icon>
           <MailOutlined />
         </template>
@@ -108,7 +108,7 @@
   </div>
 </template>
 <script>
-import { defineComponent, reactive, toRefs, watch } from "vue";
+import { defineComponent, reactive, toRefs, watch, onMounted } from "vue";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -146,13 +146,23 @@ export default defineComponent({
     AppstoreOutlined,
   },
   props: ["organization"],
-  setup() {
+    setup() {
     const state = reactive({
       collapsed: false,
       selectedKeys: ["1"],
       openKeys: [],
       preOpenKeys: ["sub1"],
     });
+    onMounted(()=>{
+      const r=route().current().split('.')
+      if(r[1]){
+        state.selectedKeys=[r[1]]
+      }else{
+        state.selectedKeys=["1"]
+      }
+      
+      
+    })
     watch(
       () => state.openKeys,
       (_val, oldVal) => {

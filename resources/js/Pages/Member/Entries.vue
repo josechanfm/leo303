@@ -38,7 +38,7 @@
             </div>
         </div>
     
-        <a-modal v-model:visible="modal.isOpen" title="我的表格" width="60%" cancelText="關閉"       :ok-button-props="{ hidden: true }">
+        <a-modal v-model:open="modal.isOpen" title="我的表格" width="60%" cancelText="關閉"       :ok-button-props="{ hidden: true }">
             <div v-for="field in modal.data.form.fields">
                 {{ field.field_name }} {{ getFieldData(modal.data.records,field.id)}}
             </div>

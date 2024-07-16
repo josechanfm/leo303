@@ -74,7 +74,7 @@
 
     <!-- Modal Start-->
     <a-modal
-      v-model:visible="modal.isOpen"
+      v-model:open="modal.isOpen"
       :title="modal.mode == 'CREATE' ? $t('create_field') : $t('edit_field')"
       width="60%"
     >

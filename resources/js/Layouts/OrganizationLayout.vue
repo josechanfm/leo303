@@ -19,6 +19,7 @@
         <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
 
         <div class="flex-1"></div>
+        <!--
         <Dropdown align="right" width="20">
           <template #trigger>
             <span class="inline-flex rounded-md">
@@ -46,7 +47,7 @@
             </div>
           </template>
         </Dropdown>
-
+        -->
         <a-dropdown placement="bottomRight">
           <a class="trigger" @click.prevent>
             <!-- {{ $page.props.currentUser.roles }} -->
@@ -54,10 +55,12 @@
           </a>
           <template #overlay>
             <a-menu>
+              <!--
               <a-menu-item>
                 <inertia-link :href="route('profile.show')" :active="route().current('dashboard')">{{ $t("account")
                 }}</inertia-link>
               </a-menu-item>
+              -->
               <a-menu-divider />
               <a-menu-item>
                 <inertia-link :href="route('member.profile.index')">{{

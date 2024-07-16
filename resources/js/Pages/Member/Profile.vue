@@ -113,14 +113,14 @@
                       @finishFailed="onFinishFailed"
                     >
                       <a-form-item
-                        label="Old Password"
+                        :label="$t('old_password')"
                         name="old"
                         :rules="[{ required: true, message: 'Please input your password!' }]"
                       >
                         <a-input-password v-model:value="password.old" />
                       </a-form-item>
                       <a-form-item
-                        label="New Password"
+                        :label="$t('new_password')"
                         name="new"
                         :rules="[{ required: true, message: 'Please input your password!' }]"
                       >
@@ -128,7 +128,7 @@
                       </a-form-item>
 
                       <a-form-item
-                        label="Confirm Password"
+                        :label="$t('confirm_password')"
                         name="confirm"
                         :rules="[{ required: true, message: 'Please input your password!' }]"
                       >
