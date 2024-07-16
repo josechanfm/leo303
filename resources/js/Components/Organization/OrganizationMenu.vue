@@ -33,7 +33,7 @@
         </template>
         <span>
           <inertia-link :href="route('manage.certificates.index')">
-            {{$t('certificates') }}
+            {{ $t("certificates") }}
           </inertia-link>
         </span>
       </a-menu-item>
@@ -42,7 +42,9 @@
           <FormOutlined />
         </template>
         <span>
-          <inertia-link :href="route('manage.forms.index')"> {{$t('forms')}} </inertia-link>
+          <inertia-link :href="route('manage.forms.index')">
+            {{ $t("forms") }}
+          </inertia-link>
         </span>
       </a-menu-item>
       <a-menu-item key="events">
@@ -50,7 +52,9 @@
           <CalendarOutlined />
         </template>
         <span>
-          <inertia-link :href="route('manage.events.index')"> {{$t('events')}} </inertia-link>
+          <inertia-link :href="route('manage.events.index')">
+            {{ $t("events") }}
+          </inertia-link>
         </span>
       </a-menu-item>
       <a-menu-item key="articles">
@@ -58,7 +62,9 @@
           <CopyOutlined />
         </template>
         <span>
-          <inertia-link :href="route('manage.articles.index')"> {{$t('articles')}} </inertia-link>
+          <inertia-link :href="route('manage.articles.index')">
+            {{ $t("articles") }}
+          </inertia-link>
         </span>
       </a-menu-item>
       <a-menu-item key="messages">
@@ -82,9 +88,20 @@
         </span>
       </a-menu-item>
 
+      <a-menu-item key="10">
+        <template #icon>
+          <ProjectOutlined />
+        </template>
+        <span>
+          <inertia-link :href="route('manage.blogs.index')">
+            {{ $t("blogs.management") }}
+          </inertia-link>
+        </span>
+      </a-menu-item>
+
       <a-sub-menu key="sub1">
         <template #icon>
-          <DesktopOutlined/>
+          <DesktopOutlined />
         </template>
         <template #title>Navigation One</template>
         <a-menu-item key="101">Option 5</a-menu-item>
@@ -121,6 +138,7 @@ import {
   NotificationOutlined,
   MessageOutlined,
   CopyOutlined,
+  ProjectOutlined,
   MailOutlined,
   DesktopOutlined,
   InboxOutlined,
@@ -136,6 +154,7 @@ export default defineComponent({
     FileProtectOutlined,
     FormOutlined,
     MergeCellsOutlined,
+    ProjectOutlined,
     CalendarOutlined,
     NotificationOutlined,
     MessageOutlined,

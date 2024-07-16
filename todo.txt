@@ -1,9 +1,7 @@
 atbest
-1. Search feature, on members, users, articles, events, forms and others.
+1. Search feature, on members, users, articles, events, forms and others. (OK)
 2. Login log, through Observers
 3. Event log
-
-
 
 4. Email notification. send email notice. (Active, Passive: by event and/or by schedule). 
 
