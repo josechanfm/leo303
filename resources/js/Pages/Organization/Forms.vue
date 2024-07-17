@@ -1,5 +1,14 @@
 <template>
   <OrganizationLayout title="表格" :breadcrumb="breadcrumb">
+    <div class="flex justify-end pb-3 gap-3">
+      <a-button
+          :href="route('manage.forms.create')"
+          as="link"
+          type="primary"
+      >
+        {{ $t("create_form") }}
+      </a-button>
+    </div>
     <div class="container mx-auto">
       <div class="flex-auto pb-3">
         <inertia-link

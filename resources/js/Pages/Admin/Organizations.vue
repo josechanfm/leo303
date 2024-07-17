@@ -1,35 +1,30 @@
 <template>
-  <AdminLayout title="Dashboard">
+  <AdminLayout :title="$t('organization')">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         {{ $t("organizations") }}
       </h2>
     </template>
-    <button
-      @click="createRecord()"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3"
-    >
-      {{ $t("create_organization") }}
-    </button>
+
+    <div class="flex justify-end pb-3 gap-3">
+      <a-button @click="createRecord()" type="primary">
+        {{ $t("create_organization") }}
+      </a-button>
+    </div>
     <div class="container mx-auto">
-      <div class="flex flex-col md:flex-row justify-between gap-6">
-        <a-select
-          class="w-full"
-          :placeholder="$t('please_select_parish')"
-          v-model:value="search.parish"
-          :options="parishes"
-          allowClear
-          :fieldNames="{ value: 'value', label: 'label_' + $t('lang') }"
-        ></a-select>
+      <div class="flex flex-auto gap-2">
         <a-input
           v-model:value="search.abbr"
           :placeholder="$t('please_input_abbr')"
+          class="w-64"
         ></a-input>
         <a-input
           v-model:value="search.name_zh"
           :placeholder="$t('please_input_name_zh')"
+          class="w-64"
         ></a-input>
         <a-button type="primary" @click="searchData">{{ $t("search") }}</a-button>
+        <a-button type="primary" as="link" :href="route('admin.organizations.index')">{{ $t("search_clear") }}</a-button>
       </div>
     </div>
     <div class="container mx-auto py-5">
@@ -39,12 +34,10 @@
             {{ column.i18n ? $t(column.i18n) : column.title }}
           </template>
           <template #bodyCell="{ column, text, record, index }">
-            <template v-if="column.dataIndex == 'operation'">
-              <inertia-link
-                :href="route('admin.organization.members', record.id)"
-                class="ant-btn"
-                >{{ $t("members") }}</inertia-link
-              >
+            <div v-if="column.dataIndex == 'operation'" class="flex flex-auto gap-1">
+              <a-button :href="route('admin.organization.members', record.id)" as="link">
+                {{ $t("members") }}
+              </a-button>
               <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
               <a-popconfirm
                 :title="$t('confirm_delete_record')"
@@ -54,10 +47,8 @@
               >
                 <a-button>{{ $t("delete") }}</a-button>
               </a-popconfirm>
-              <a-button @click="masqueradeOrganization(record)" class="ant-btn"
-                >{{ $t("masquerade") }}..</a-button
-              >
-            </template>
+              <a-button @click="masqueradeOrganization(record)" class="ant-btn">{{ $t("masquerade") }}</a-button>
+            </div>
             <template v-else-if="column.dataIndex == 'parish'">
               {{ getOptionLabel(parishes, text) }}
             </template>
@@ -83,22 +74,15 @@
     <a-modal v-model:open="modal.isOpen" :title="modal.title" width="60%">
       <a-form
         ref="modalRef"
-        :model="modal.data"
         name="Organization"
+        autocomplete="off"
+        :model="modal.data"
         :label-col="{ span: 8 }"
         :wrapper-col="{ span: 16 }"
-        autocomplete="off"
         :rules="rules"
         :validate-messages="validateMessages"
         @finish="onFormFinish"
       >
-        <a-form-item :label="$t('parish')" name="parish" :rules="[{ required: true }]">
-          <a-select
-            v-model:value="modal.data.parish"
-            :options="parishes"
-            :fieldNames="{ value: 'value', label: 'label_' + $t('lang') }"
-          />
-        </a-form-item>
         <a-form-item
           :label="$t('abbreviation')"
           name="abbr"
@@ -106,19 +90,13 @@
         >
           <a-input v-model:value="modal.data.abbr" />
         </a-form-item>
-        <!-- <a-form-item
-          :label="$t('territory')"
-          name="territory"
-        >
-          <a-input v-model:value="modal.data.territory" />
-        </a-form-item> -->
-        <a-form-item :label="$t('name_zh')" name="name_zh">
+        <a-form-item :label="$t('organization_name_zh')" name="name_zh">
           <a-input v-model:value="modal.data.name_zh" />
         </a-form-item>
-        <a-form-item :label="$t('name_en')" name="name_en">
+        <a-form-item :label="$t('organization_name_en')" name="name_en">
           <a-input v-model:value="modal.data.name_en" />
         </a-form-item>
-        <a-form-item :label="$t('name_pt')" name="name_pt">
+        <a-form-item :label="$t('organization_name_pt')" name="name_pt">
           <a-input v-model:value="modal.data.name_pt" />
         </a-form-item>
         <a-form-item :label="$t('email')" name="email">
@@ -207,35 +185,27 @@ export default {
       ],
       columns: [
         {
-          title: "Parish",
-          i18n: "parish",
-          dataIndex: "parish",
-        },
-        {
           title: "Abbreviation",
           i18n: "abbreviation",
           dataIndex: "abbr",
-        },
-        {
+        },{
           title: "Name",
-          i18n: "name_zh",
+          i18n: "organization_name_zh",
           dataIndex: "name_zh",
-        },
-        {
+        },{
           title: "Email",
           i18n: "email",
           dataIndex: "email",
-        },
-        {
+        },{
           title: "Manager",
           i18n: "manager",
           dataIndex: "manager",
-        },
-        {
+        },{
           title: "Operation",
           i18n: "operation",
           dataIndex: "operation",
           key: "operation",
+          width: 350,
         },
       ],
       rules: {
@@ -278,18 +248,18 @@ export default {
   },
   methods: {
     createRecord() {
-      this.modal.data = {};
-      this.modal.data.members = [];
-      this.modal.mode = "CREATE";
-      this.modal.title = "Create Record";
-      this.modal.isOpen = true;
+      this.modal.data = {}
+      this.modal.data.members = []
+      this.modal.mode = "CREATE"
+      this.modal.title = this.$t('organization')+' '+this.$t('create')
+      this.modal.isOpen = true
     },
     editRecord(record) {
       this.modal.data = { ...record };
-      this.modal.data.user_ids = record.users.map((item) => item.id);
-      this.modal.mode = "EDIT";
-      this.modal.title = "Edit Record";
-      this.modal.isOpen = true;
+      this.modal.data.user_ids = record.users.map((item) => item.id)
+      this.modal.mode = "EDIT"
+      this.modal.title = this.$t('organization')+' '+this.$t('edit')
+      this.modal.isOpen = true
     },
     onFormFinish() {
       this.$refs.modalRef
@@ -320,19 +290,15 @@ export default {
       });
     },
     updateRecord() {
-      this.$inertia.patch(
-        route("admin.organizations.update", this.modal.data.id),
-        this.modal.data,
-        {
-          onSuccess: (page) => {
-            this.modal.isOpen = false;
-            //this.modal.data = {};
-          },
-          onError: (error) => {
-            console.log(error);
-          },
-        }
-      );
+      this.$inertia.patch(route("admin.organizations.update", this.modal.data.id),this.modal.data,{
+        onSuccess: (page) => {
+          this.modal.isOpen = false;
+          //this.modal.data = {};
+        },
+        onError: (error) => {
+          console.log(error);
+        },
+      });
     },
     deleteRecord(record) {
       this.$inertia.delete(route("admin.organizations.destroy", record.id), {
@@ -352,21 +318,15 @@ export default {
       return "--";
     },
     masqueradeOrganization(organization) {
-      this.$inertia.post(
-        route("admin.organization.masquerade", { organization: organization.id })
-      );
+      this.$inertia.post(route("admin.organization.masquerade", { organization: organization.id }));
     },
     searchData() {
-      this.$inertia.get(
-        route("admin.organizations.index"),
-        { search: this.search, pagination: this.pagination },
-        {
-          onSuccess: (page) => {
-            console.log(page);
-          },
-          preserveState: true,
-        }
-      );
+      this.$inertia.get(route("admin.organizations.index"),{ search: this.search, pagination: this.pagination },{
+        onSuccess: (page) => {
+          console.log(page);
+        },
+        preserveState: true,
+      });
     },
   },
 };

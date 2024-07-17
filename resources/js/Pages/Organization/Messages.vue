@@ -1,14 +1,9 @@
 <template>
-  <OrganizationLayout :title="$t('messages')">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("messages") }}
-      </h2>
-    </template>
+  <OrganizationLayout :title="$t('messages')" :breadcrumb="breadcrumb">
     <div class="flex-auto pb-3 text-right">
-      <a-button type="primary" class="!rounded" @click="createRecord()">{{
-        $t("create_message")
-      }}</a-button>
+      <a-button type="primary" class="!rounded" @click="createRecord()">
+        {{ $t("create_message") }}
+      </a-button>
     </div>
     <div class="bg-white relative shadow rounded-lg overflow-x-auto">
       <a-table
@@ -126,6 +121,7 @@ export default {
   props: ["messageCategories", "messages", "members"],
   data() {
     return {
+      breadcrumb: [{ label: "通告列表", url: null }],
       modal: {
         isOpen: false,
         data: {},

@@ -1,55 +1,51 @@
 <template>
-  <OrganizationLayout title="Dashboard">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Blogs</h2>
-    </template>
-    <div class="container mx-auto p-5">
-      <div class="flex-auto pb-3 text-right">
-        <a-button type="primary" class="!rounded" @click="createRecord()">{{
-          $t("create_blog")
-        }}</a-button>
-      </div>
-      <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-        <a-table
-          :dataSource="blogs"
-          :columns="columns"
-          :pagination="pagination"
-          @change="onPaginationChange"
-          ref="dataTable"
-        >
-          <template #headerCell="{ column }">
-            {{ column.i18n ? $t(column.i18n) : column.title }}
-          </template>
-          <template #bodyCell="{ column, text, record, index }">
-            <template v-if="column.key == 'user'">{{ record.user.name }}</template>
-            <template v-if="column.dataIndex == 'operation'">
-              <div class="space-x-2">
-                <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
-                <a :href="route('manage.blogs.show', record.id)">
-                  <a-button>
-                    {{ $t("contents_management") }}
-                  </a-button>
-                </a>
-                <a-popconfirm
-                  :title="$t('confirm_delete_record')"
-                  :ok-text="$t('yes')"
-                  :cancel-text="$t('no')"
-                  @confirm="deleteRecord(record.id)"
-                >
-                  <a-button>{{ $t("delete") }}</a-button>
-                </a-popconfirm>
-              </div>
-            </template>
-            <template v-else-if="column.dataIndex == 'category'">
-              {{ bulletinCategories.find((x) => x.value == text)["label"] }}
-            </template>
-          </template>
-        </a-table>
-      </div>
+  <OrganizationLayout title="$t()">
+    <div class="flex-auto pb-3 text-right">
+      <a-button type="primary" class="!rounded" @click="createRecord()">
+        {{ $t("create_blog") }}
+      </a-button>
     </div>
+    <div class="bg-white relative shadow rounded-lg overflow-x-auto">
+      <a-table
+        :dataSource="blogs"
+        :columns="columns"
+        :pagination="pagination"
+        @change="onPaginationChange"
+        ref="dataTable"
+      >
+        <template #headerCell="{ column }">
+          {{ column.i18n ? $t(column.i18n) : column.title }}
+        </template>
+        <template #bodyCell="{ column, text, record, index }">
+          <template v-if="column.key == 'user'">{{ record.user.name }}</template>
+          <template v-if="column.dataIndex == 'operation'">
+            <div class="space-x-2">
+              <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
+              <a :href="route('manage.blogs.show', record.id)">
+                <a-button>
+                  {{ $t("contents_management") }}
+                </a-button>
+              </a>
+              <a-popconfirm
+                :title="$t('confirm_delete_record')"
+                :ok-text="$t('yes')"
+                :cancel-text="$t('no')"
+                @confirm="deleteRecord(record.id)"
+              >
+                <a-button>{{ $t("delete") }}</a-button>
+              </a-popconfirm>
+            </div>
+          </template>
+          <template v-else-if="column.dataIndex == 'category'">
+            {{ bulletinCategories.find((x) => x.value == text)["label"] }}
+          </template>
+        </template>
+      </a-table>
+    </div>
+
     <!-- Modal Start-->
     <a-modal
-      v-model:visible="modal.isOpen"
+      v-model:open="modal.isOpen"
       :title="modal.mode == 'CREATE' ? 'Create' : 'Edit'"
       width="60%"
     >

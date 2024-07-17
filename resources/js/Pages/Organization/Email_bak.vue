@@ -1,11 +1,5 @@
 <template>
-  <OrganizationLayout :title="$t('email')">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Create email
-      </h2>
-    </template>
-    
+  <OrganizationLayout :title="$t('email')" :breadcrumb="breadcrumb">
       <div class="bg-white relative shadow rounded-lg p-5">
         <a-form 
           :model="email" 
@@ -54,6 +48,10 @@ export default {
   props: ['email'],
   data() {
     return {
+      breadcrumb: [
+        { label: "電郵列表", url:route('manage.emails.index')},
+        { label: this.email.id?'電郵修改':'電郵新增', url: null }
+      ],
       mode: null,
       dateFormat: "YYYY-MM-DD",
       rules: {

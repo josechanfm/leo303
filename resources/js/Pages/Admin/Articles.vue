@@ -5,17 +5,26 @@
         {{ $t("articles") }}
       </h2>
     </template>
-    <div class="flex-auto pb-3 container mx-auto">
-      <inertia-link
-        :href="route('admin.articles.create')"
-        class="ant-btn ant-btn-primary"
-        >{{ $t("create_article") }}</inertia-link
-      >
+    <div class="flex justify-end pb-3 gap-3">
+      <template v-if="isDraggable">
+        <a-button type="primary" @click="reloadFormFields">
+          {{ $t("finish") }}
+        </a-button>
+      </template>
+      <template v-else>
+        <a-button type="primary" @click="isDraggable = !isDraggable">
+          {{ $t("dragger_sort") }}
+        </a-button>
+        <a-button :href="route('admin.articles.create')" as="link" type="primary">
+          {{ $t("create_article") }}
+        </a-button>
+      </template>
     </div>
+    
     <div class="container mx-auto">
-      <div class="flex flex-col md:flex-row justify-between gap-6">
+      <div class="flex flex-auto gap-2">
         <a-select
-          class="w-full"
+          class="w-64"
           :placeholder="$t('please_select_category')"
           v-model:value="search.category"
           allowClear
@@ -24,10 +33,33 @@
         <a-input
           v-model:value="search.title"
           :placeholder="$t('please_input_title')"
+          class="w-64"
         ></a-input>
         <a-button type="primary" @click="searchData">{{ $t("search") }}</a-button>
+        <a-button type="primary" as="link" :href="route('admin.articles.index')">{{ $t("search_clear") }}</a-button>
       </div>
     </div>
+
+    <a-table
+      :dataSource="articles.data"
+      :columns="columns"
+      :customRow="customRow"
+      :pagination="pagination"
+      @change="onPaginationChange"
+    >
+      <template #bodyCell="{ column, record, index }">
+          <template v-if="column.dataIndex === 'operation'">
+            <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
+            <a-button @click="deleteRecord(record)">{{ $t("delete") }}</a-button>
+          </template>
+          <template v-else-if="column.dataIndex==='dragger'">
+            <holder-outlined />
+          </template>
+
+      </template>
+    </a-table>
+
+
     <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
         <div class="ant-table">
@@ -194,12 +226,21 @@ export default {
   props: ["classifies", "articleCategories", "articles"],
   data() {
     return {
+      dataModel:null,
+      sourceObj:null,
+      targetObj:null,
+      isDraggable: false,
       dateFormat: "YYYY-MM-DD",
       modal: {
         isOpen: false,
         data: { content_en: "" },
         title: "Modal",
         mode: "",
+      },
+      pagination: {
+        total: this.articles.total,
+        current: this.articles.current_page,
+        pageSize: this.articles.per_page,
       },
       search: {},
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
@@ -284,21 +325,16 @@ export default {
   },
   created() {
     this.originalSequences = this.articles.data.map((a) => a.sequence);
+    this.dataModel=this.articles.data
   },
   mounted() {
-    this.pagination = {
-      currentPage: this.route().params.currentPage ?? 1,
-      pageSize: this.route().params.pageSize ?? 10,
-    };
+    // this.pagination = {
+    //   currentPage: this.route().params.currentPage ?? 1,
+    //   pageSize: this.route().params.pageSize ?? 10,
+    // };
     this.search = this.route().params.search ?? {};
   },
   methods: {
-    onPaginationChange(page, filters, sorter) {
-      this.$inertia.get(route("admin.articles.index"), {
-        page: page,
-        per_page: this.pagination.pageSize,
-      });
-    },
     onShowSizeChange(current, pageSize) {
       this.pagination.pageSize = pageSize;
     },
@@ -411,6 +447,112 @@ export default {
         }
       );
     },
+    // onPaginationChange(page, filters, sorter) {
+    //   this.$inertia.get(route("admin.articles.index"), {
+    //     page: page,
+    //     per_page: this.pagination.pageSize,
+    //   });
+    // },
+
+    onPaginationChange(page, filters, sorter) {
+      this.$inertia.get(route("admin.articles.index"),{
+          page: page.current,
+          per_page: page.pageSize,
+        },{
+          onSuccess: (page) => {
+            console.log(page);
+          },
+          onError: (error) => {
+            console.log(error);
+          },
+      });
+    },
+
+    reloadFormFields() {
+      this.$inertia.reload({
+        only: ["articles"],
+        onSuccess: (page) => {
+          this.isDraggable = false;
+        },
+      });
+    },
+    customRow(record, index){
+      return {
+        domProps:{
+          draggable:this.isDraggable
+        },
+        style:{
+          cursor: this.isDraggable?'move':'default'
+        },
+        // mouse move
+        onMouseenter: event =>{
+          if(this.isDraggable){
+            var ev = event || window.event // for competible with IE
+            ev.target.draggable = true
+          }
+        },
+        // start drag
+        onDragstart: event => {
+          if(this.isDraggable){
+            var ev = event || window.event
+            ev.stopPropagation() // block popup
+            this.sourceObj = record // get sourceObject with record id
+          }
+        },
+        // drag crossing elements
+        onDragover: event => {
+          if(this.isDraggable){
+            var ev = event || window.event
+            ev.preventDefault()
+          }
+        },
+        // mouse up
+        onDrop: event => {
+          if(this.isDraggable){
+            var ev = event || window.event
+            ev.stopPropagation()
+            this.targetObj=record // get target Object
+            // swap record position
+            let sourceIndex = ''
+            let targetIndex = ''
+            this.dataModel.map((item,idx) => {
+              if(this.sourceObj == item){
+                console.log(idx)
+                sourceIndex = idx
+              }
+              if(this.targetObj == item){
+                targetIndex = idx
+              }
+            })
+            // show swap data
+            let arr=[]
+            this.dataModel.map((item,idx) => {
+              if(sourceIndex == idx){
+                arr.push(this.targetObj)
+              }else if(targetIndex == idx){
+                arr.push(this.sourceObj)
+              }else{
+                arr.push(item)
+              }
+            })
+            arr.map((item,idx) => {
+              arr[idx].sequence=idx
+              console.log(item);
+            })
+            this.dataModel=arr
+            this.$inertia.post(route("admin.article.sequence"), this.dataModel, {
+              onSuccess: (page) => {
+                console.log(page);
+              },
+              onError: (error) => {
+                console.log(error);
+              },
+            });
+          }
+        },
+      }
+    }
+
   },
 };
 </script>

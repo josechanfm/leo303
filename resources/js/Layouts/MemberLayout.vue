@@ -69,30 +69,17 @@ export default {
             <div class="flex">
               <!-- Logo -->
               <div class="shrink-0 flex items-center">
-<<<<<<< HEAD
                 <Link :href="route('/')">
                   <img v-if="$page.props.currentMember.organization.logo" :src="$page.props.currentMember.organization.logo" class="block h-14 w-auto" />
-=======
-                <Link :href="route('member.dashboard')">
-                  <img
-                    v-if="$page.props.currentMember.organization.logo"
-                    :src="$page.props.currentMember.organization.logo"
-                    class="block h-14 w-auto"
-                  />
->>>>>>> 0625693eee1da8eef151cd931fd7c8ae8dd0e224
                   <img v-else src="/images/site_logo.png" class="block h-14 w-auto" />
                 </Link>
               </div>
               <!-- Navigation Links -->
               <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-<<<<<<< HEAD
                 <NavLink
                   :href="route('member.dashboard')"
                   :active="route().current('/')"
                 >
-=======
-                <NavLink :href="route('/')" :active="route().current('/')">
->>>>>>> 0625693eee1da8eef151cd931fd7c8ae8dd0e224
                   {{ $t("dashboard") }}
                 </NavLink>
                 <NavLink :href="route('member.entries.index')">
@@ -229,6 +216,7 @@ export default {
 
             <!-- Hamburger -->
             <div class="-mr-2 flex items-center sm:hidden">
+              <!--
               <div class="ml-0 relative">
                 <Dropdown align="right" width="20">
                   <template #trigger>
@@ -266,7 +254,7 @@ export default {
                   </template>
                 </Dropdown>
               </div>
-
+              -->
               <button
                 class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition"
                 @click="showingNavigationDropdown = !showingNavigationDropdown"

@@ -1,91 +1,34 @@
 <template>
   <OrganizationLayout title="表格欄位" :breadcrumb="breadcrumb">
+
     <div class="flex justify-end pb-3 gap-3">
-      <template v-if="isDrop">
-        <button
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3"
-          @click="reloadFormFields"
-        >
+      <template v-if="isDraggable">
+        <a-button type="primary" @click="reloadFormFields">
           {{ $t("finish") }}
-        </button>
+        </a-button>
       </template>
       <template v-else>
-        <button
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3"
-          @click="isDrop = !isDrop"
-        >
+        <a-button type="primary" @click="isDraggable = !isDraggable">
           {{ $t("dragger_sort") }}
-        </button>
-        <button
-          @click="createRecord()"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3"
-        >
+        </a-button>
+        <a-button @click="createRecord()" type="primary">
           {{ $t("create_field") }}
-        </button>
+        </a-button>
       </template>
     </div>
 
     <a-table
-      :dataSource="fields"
+      :dataSource="dataModel"
       :columns="columns"
-      :pagination="false"
-      rowKey="id"
-      @end="onDragEnd"
+      :customRow="customRow"
     >
       <template #bodyCell="{ column, record, index }">
-        <template v-if="column.key === 'action'">
-          |||
-        </template>
+          <template v-if="column.dataIndex === 'operation'">
+            <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
+            <a-button @click="deleteRecord(record)" :disabled="form.published == 1">{{ $t("delete") }}</a-button>
+          </template>
       </template>
     </a-table>
-
-    <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-            <div class="ant-table">
-              <div class="ant-table-container">
-                <table style="table-layout: auto">
-                  <thead class="ant-table-thead">
-                    <tr>
-                      <th v-for="column in columns" :key="column.id">{{ $t(column.i18n) }}</th>
-                    </tr>
-                  </thead>
-                  <draggable
-                    tag="tbody"
-                    class="dragArea list-group ant-table-tbody"
-                    :list="fields"
-                    :disabled="!isDrop"
-                    @change="rowChange"
-                  >
-                    <transition-group v-for="(record, idx) in fields" :key="idx">
-                      <tr class="ant-table-row ant-table-row-level-0" :key="record.id">
-                        <td
-                          v-for="column in columns"
-                          class="ant-table-cell"
-                          :class="isDrop ? 'cursor-grab' : ''"
-                          :key="column.id"
-                        >
-                          <template v-if="column.dataIndex == 'field_label'">
-                            <div class="flex items-center">
-                              <template v-if="isDrop == true"><holder-outlined /></template>
-                              {{ record.field_label }}
-                            </div>
-                          </template>
-                          <template v-else-if="column.dataIndex == 'operation'">
-                            <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
-                            <a-button
-                              @click="deleteRecord(record)"
-                              :disabled="form.published == 1"
-                              >{{ $t("delete") }}</a-button
-                            >
-                          </template>
-                          <template v-else> {{ record[column.dataIndex] }}</template>
-                        </td>
-                      </tr>
-                    </transition-group>
-                  </draggable>
-                </table>
-              </div>
-            </div>
-    </div>
 
     <!-- Modal Start-->
     <a-modal
@@ -194,17 +137,18 @@ import OrganizationLayout from "@/Layouts/OrganizationLayout.vue";
 import { defineComponent, reactive } from "vue";
 import { VueDraggableNext } from "vue-draggable-next";
 import { HolderOutlined } from "@ant-design/icons-vue";
+import Sortable from "sortablejs";
 
 export default {
   components: {
     OrganizationLayout,
     draggable: VueDraggableNext,
     HolderOutlined,
+    Sortable
   },
   props: ["templateOptions", "form", "fields", "fieldTypes"],
   data() {
     return {
-      isDrop: false,
       breadcrumb: [
         { label: "表格列表", url: route("manage.forms.index") },
         { label: "表格欄位", url: null },
@@ -216,6 +160,10 @@ export default {
         title: "Modal",
         mode: "",
       },
+      dataModel:null,
+      sourceObj:null,
+      targetObj:null,
+      isDraggable: false,
       columns: [
         {
           title: "Field Label",
@@ -270,7 +218,9 @@ export default {
       },
     };
   },
-  created() {},
+  created() {
+    this.dataModel=this.fields
+  },
   methods: {
     createRecord() {
       this.modal.data = {};
@@ -382,36 +332,91 @@ export default {
         this.modal.data.field_name = this.modal.data.field_label;
       }
     },
-    rowChange(event) {
-      var data = [];
-      this.fields.forEach((field, idx) => {
-        data.push({ id: field.id, form_id: field.form_id, sequence: idx });
-      });
-      console.log(data);
-      this.$inertia.post(route("manage.form.fieldsSequence", this.form.id), data, {
-        onSuccess: (page) => {
-          console.log(page);
-        },
-        onError: (error) => {
-          console.log(error);
-        },
-      });
-    },
+
     reloadFormFields() {
       this.$inertia.reload({
         only: ["fields"],
         onSuccess: (page) => {
-          this.isDrop = false;
+          this.isDraggable = false;
         },
       });
     },
-    onDragEnd(event){
-      const fromIndex = event.fromIndex;
-      const toIndex = event.toIndex;
-      const updatedData = [...data.value];
-      const [removed] = updatedData.splice(fromIndex, 1);
-      updatedData.splice(toIndex, 0, removed);
-      data.value = updatedData;
+
+    customRow(record, index){
+      return {
+        domProps:{
+          draggable:this.isDraggable
+        },
+        style:{
+          cursor: this.isDraggable?'move':'default'
+        },
+        // mouse move
+        onMouseenter: event =>{
+          if(this.isDraggable){
+            var ev = event || window.event // for competible with IE
+            ev.target.draggable = true
+          }
+        },
+        // start drag
+        onDragstart: event => {
+          if(this.isDraggable){
+            var ev = event || window.event
+            ev.stopPropagation() // block popup
+            this.sourceObj = record // get sourceObject with record id
+          }
+        },
+        // drag crossing elements
+        onDragover: event => {
+          if(this.isDraggable){
+            var ev = event || window.event
+            ev.preventDefault()
+          }
+        },
+        // mouse up
+        onDrop: event => {
+          if(this.isDraggable){
+            var ev = event || window.event
+            ev.stopPropagation()
+            this.targetObj=record // get target Object
+            // swap record position
+            let sourceIndex = ''
+            let targetIndex = ''
+            this.dataModel.map((item,idx) => {
+              if(this.sourceObj == item){
+                console.log(idx)
+                sourceIndex = idx
+              }
+              if(this.targetObj == item){
+                targetIndex = idx
+              }
+            })
+            // show swap data
+            let arr=[]
+            this.dataModel.map((item,idx) => {
+              if(sourceIndex == idx){
+                arr.push(this.targetObj)
+              }else if(targetIndex == idx){
+                arr.push(this.sourceObj)
+              }else{
+                arr.push(item)
+              }
+            })
+            arr.map((item,idx) => {
+              arr[idx].sequence=idx
+              console.log(item);
+            })
+            this.dataModel=arr
+            this.$inertia.post(route("manage.form.fieldsSequence", this.form.id), this.dataModel, {
+              onSuccess: (page) => {
+                console.log(page);
+              },
+              onError: (error) => {
+                console.log(error);
+              },
+            });
+          }
+        },
+      }
     }
   },
 };

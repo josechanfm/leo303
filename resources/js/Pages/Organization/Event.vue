@@ -1,5 +1,5 @@
 <template>
-  <OrganizationLayout title="Dashboard">
+  <OrganizationLayout :title="$t('events')" :breadcrumb="breadcrumb">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">Create Event</h2>
     </template>
@@ -86,6 +86,10 @@ export default {
   props: ["event", "categories"],
   data() {
     return {
+      breadcrumb: [
+        { label: "活動列表", url:route('manage.events.index')},
+        { label: this.event.id?'活動修改':'活動新增', url: null }
+      ],
       mode: null,
       dateFormat: "YYYY-MM-DD",
       rules: {

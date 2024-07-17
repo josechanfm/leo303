@@ -1,18 +1,13 @@
 <template>
-  <OrganizationLayout :title="$t('events')">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("events") }}
-      </h2>
-    </template>
-    <div class="container mx-auto">
-      <div class="flex-auto pb-3">
-        <inertia-link
+  <OrganizationLayout :title="$t('events')" :breadcrumb="breadcrumb">
+    <div class="flex justify-end pb-3 gap-3">
+      <a-button
           :href="route('manage.events.create')"
-          class="ant-btn ant-btn-primary"
-          >{{ $t("create_event") }}</inertia-link
-        >
-      </div>
+          as="link"
+          type="primary"
+      >
+        {{ $t("create_event") }}
+      </a-button>
     </div>
     <div class="container mx-auto">
       <div class="flex flex-col md:flex-row justify-between gap-6">
@@ -60,6 +55,7 @@ export default {
   props: ["events", "categories"],
   data() {
     return {
+      breadcrumb: [{ label: "活動列表", url: null }],
       columns: [
         {
           title: "Event title",

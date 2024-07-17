@@ -1,18 +1,13 @@
 <template>
-  <OrganizationLayout :title="$t('articles')">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("articles") }}
-      </h2>
-    </template>
-    <div class="container mx-auto">
-      <div class="flex-auto pb-3">
-        <inertia-link
+  <OrganizationLayout :title="$t('articles')" :breadcrumb="breadcrumb">
+    <div class="flex justify-end pb-3 gap-3">
+      <a-button
           :href="route('manage.articles.create')"
-          class="ant-btn ant-btn-primary"
-          >{{ $t("create_article") }}</inertia-link
-        >
-      </div>
+          as="link"
+          type="primary"
+      >
+        {{ $t("create_article") }}
+      </a-button>
     </div>
     <div class="container mx-auto">
       <div class="flex flex-col md:flex-row justify-between gap-6">
@@ -181,6 +176,7 @@ export default {
   props: ["classifies", "articleCategories", "articles"],
   data() {
     return {
+      breadcrumb: [{ label: "文章列表", url: null }],
       dateFormat: "YYYY-MM-DD",
       modal: {
         isOpen: false,

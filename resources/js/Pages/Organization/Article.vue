@@ -1,103 +1,96 @@
 <template>
-  <OrganizationLayout :title="$t('article')">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("article") }}
-      </h2>
-    </template>
-    <!-- <a-button @click="getCursor()">{{ $t("cursor") }}</a-button> -->
-    
-      <div class="flex-auto pb-3 text-right pb-3">
-        <a-button @click="isDrawerVisible = !isDrawerVisible" type="primary">{{
-          $t("Images")
-        }}</a-button>
-      </div>
-      <div class="bg-white relative shadow rounded-lg overflow-x-auto p-5">
-        <a-form
-          :model="article"
-          name="Teacher"
-          layout="vertical"
-          autocomplete="off"
-          :rules="rules"
-          :validate-messages="validateMessages"
-          @finish="onFinish"
-          @finishFailed="onFinishFailed"
-          enctype="multipart/form-data"
-        >
-          <a-form-item :label="$t('article_category')" name="category_code">
-            <a-select
-              v-model:value="article.category_code"
-              :options="articleCategories"
-            />
-          </a-form-item>
-          <a-form-item :label="$t('title')" name="title">
-            <a-input v-model:value="article.title" />
-          </a-form-item>
-          <a-form-item :label="$t('intro')" name="intro">
-            <a-textarea v-model:value="article.intro" :rows="5"/>
-          </a-form-item>
+  <OrganizationLayout :title="$t('article')" :breadcrumb="breadcrumb">
+    <div class="flex justify-end pb-3 gap-3">
+      <a-button @click="isDrawerVisible = !isDrawerVisible" type="primary">
+        {{ $t("Images") }}
+      </a-button>
+    </div>
+    <div class="bg-white relative shadow rounded-lg overflow-x-auto p-5">
+      <a-form
+        :model="article"
+        name="Teacher"
+        layout="vertical"
+        autocomplete="off"
+        :rules="rules"
+        :validate-messages="validateMessages"
+        @finish="onFinish"
+        @finishFailed="onFinishFailed"
+        enctype="multipart/form-data"
+      >
+        <a-form-item :label="$t('article_category')" name="category_code">
+          <a-select
+            v-model:value="article.category_code"
+            :options="articleCategories"
+          />
+        </a-form-item>
+        <a-form-item :label="$t('title')" name="title">
+          <a-input v-model:value="article.title" />
+        </a-form-item>
+        <a-form-item :label="$t('intro')" name="intro">
+          <a-textarea v-model:value="article.intro" :rows="5"/>
+        </a-form-item>
 
-          <a-form-item :label="$t('content')" name="content">
+        <a-form-item :label="$t('content')" name="content">
 
-            <quill-editor 
-              v-model:value="article.content" 
-              @paste="handleImagePaste"
-            />
+          <quill-editor 
+            v-model:value="article.content" 
+            @paste="handleImagePaste"
+          />
 
-          </a-form-item>
-          <a-form-item :label="$t('valid_at')" name="valid_at">
-            <a-date-picker
-              v-model:value="article.valid_at"
-              :format="dateFormat"
-              :valueFormat="dateFormat"
-            />
-          </a-form-item>
-          <a-form-item :label="$t('expired_at')" name="expired_at">
-            <a-date-picker v-model:value="article.expire_at" :valueFormat="dateFormat" :format="dateFormat"/>
-          </a-form-item>
-          <a-form-item :label="$t('url')" name="url">
-            <a-input v-model:value="article.url" />
-          </a-form-item>
-          <a-row>
-            <a-col>
-              <a-form-item :label="$t('published')" name="published">
-                <a-switch
-                  v-model:checked="article.published"
-                  @change="article.public = 0" 
-                />
-              </a-form-item>
-            </a-col>
-            <a-col class="pl-10" v-if="article.published">
-              <a-form-item :label="$t('public')" name="public">
-                <a-switch
-                  v-model:checked="article.public"
-                />
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-form-item :label="$t('tag')">
-            <a-select v-model:value="article.tags" mode="tags" style="width: 100%" placeholder="Tags Mode"
-              :options="tagOptions"></a-select>
-          </a-form-item>
-              <FileUploader
-                :file="article.thumbnail"
-                :maxSize="5120"
-                :maxWidth="1024"
-                :maxHeight="768"
-                :allowedTypes="['image/jpeg', 'image/png']"
-                @upload="handleFileUpload"
-                @delete="handleFileDelete"
+        </a-form-item>
+        <a-form-item :label="$t('valid_at')" name="valid_at">
+          <a-date-picker
+            v-model:value="article.valid_at"
+            :format="dateFormat"
+            :valueFormat="dateFormat"
+          />
+        </a-form-item>
+        <a-form-item :label="$t('expired_at')" name="expired_at">
+          <a-date-picker v-model:value="article.expire_at" :valueFormat="dateFormat" :format="dateFormat"/>
+        </a-form-item>
+        <a-form-item :label="$t('url')" name="url">
+          <a-input v-model:value="article.url" />
+        </a-form-item>
+        <a-row>
+          <a-col>
+            <a-form-item :label="$t('published')" name="published">
+              <a-switch
+                v-model:checked="article.published"
+                @change="article.public = 0" 
               />
+            </a-form-item>
+          </a-col>
+          <a-col class="pl-10" v-if="article.published">
+            <a-form-item :label="$t('public')" name="public">
+              <a-switch
+                v-model:checked="article.public"
+              />
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-form-item :label="$t('tag')">
+          <a-select v-model:value="article.tags" mode="tags" style="width: 100%" placeholder="Tags Mode"
+            :options="tagOptions"></a-select>
+        </a-form-item>
+            <FileUploader
+              :file="article.thumbnail"
+              :maxSize="5120"
+              :maxWidth="1024"
+              :maxHeight="768"
+              :allowedTypes="['image/jpeg', 'image/png']"
+              @upload="handleFileUpload"
+              @delete="handleFileDelete"
+            />
 
-          <div class="flex flex-row item-center justify-center">
-            <a-button type="primary" html-type="submit">{{ $t("submit") }}</a-button>
-          </div>
-        </a-form>
-      </div>
-      <a :href="route('article.item',{t:article.uuid})" target="_blank" ref="articleUrl">{{ route('article.item',{t:article.uuid}) }}</a>
-      <a-button @click="copyUrl">{{ $t('copy_to_clipboard') }}</a-button>
-      <p>Article CAN NOT be delete if published.</p>
-    
+        <div class="flex flex-row item-center justify-center">
+          <a-button type="primary" html-type="submit">{{ $t("submit") }}</a-button>
+        </div>
+      </a-form>
+    </div>
+    <a :href="route('article.item',{t:article.uuid})" target="_blank" ref="articleUrl">{{ route('article.item',{t:article.uuid}) }}</a>
+    <a-button @click="copyUrl">{{ $t('copy_to_clipboard') }}</a-button>
+    <p>Article CAN NOT be delete if published.</p>
+  
 
     <a-drawer
       v-model:open="isDrawerVisible"
@@ -155,6 +148,10 @@ export default {
   props: ["classifies", "articleCategories", "article"],
   data() {
     return {
+      breadcrumb: [
+        { label: "文章列表", url:route('manage.events.index')},
+        { label: this.article.id?'文章修改':'文章新增', url: null }
+      ],
       medias: [],
       file:null,
       thumbnailUpload:null,

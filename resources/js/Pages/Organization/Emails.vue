@@ -1,19 +1,18 @@
 <template>
-  <OrganizationLayout :title="$t('email.management')">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("email.management") }}
-      </h2>
-    </template>
+  <OrganizationLayout :title="$t('email.management')" :breadcrumb="breadcrumb">
     <div class="flex-auto pb-3 text-right">
-      <inertia-link
-        :href="route('manage.emails.create')"
-        class="ant-btn ant-btn-primary"
-        >{{ $t("email.create") }}</inertia-link
-      >
+      <a-button type="primary" class="!rounded" @click="createRecord()">
+        {{ $t("email.create") }}
+      </a-button>
     </div>
     <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-      <a-table :dataSource="emails.data" :columns="columns">
+      <a-table 
+        ref="dataTable"
+        :dataSource="emails.data" 
+        :columns="columns"
+        :pagination="pagination"
+        @change="onPaginationChange"
+      >
         <template #headerCell="{ column }">
           {{ column.i18n ? $t(column.i18n) : column.title }}
         </template>
@@ -74,11 +73,17 @@ export default {
   props: ["emails"],
   data() {
     return {
+      breadcrumb: [{ label: "電郵列表", url: null }],
       modal: {
         isOpen: false,
         data: {},
         title: "Modal",
         mode: "",
+      },
+      pagination: {
+        total: this.emails.total,
+        current: this.emails.current_page,
+        pageSize: this.emails.per_page,
       },
       columns: [
         {
@@ -128,12 +133,95 @@ export default {
   created() {},
   mounted() {},
   methods: {
+    createRecord(record) {
+      this.modal.data = {};
+      this.modal.mode = "CREATE";
+      this.modal.isOpen = true;
+    },
+    editRecord(record) {
+      this.modal.data = { ...record };
+      this.modal.mode = "EDIT";
+      this.modal.isOpen = true;
+    },
     showRecord(record) {
       this.modal.data = { ...record };
       this.modal.mode = "VIEW";
       this.modal.title = "view";
       this.modal.isOpen = true;
     },
+    storeRecord() {
+      this.$refs.modalRef
+        .validateFields()
+        .then(() => {
+          this.$inertia.post(route("manage.emails.store"), this.modal.data, {
+            preserveState: false,
+            onSuccess: (page) => {
+              this.modal.isOpen = false;
+              message.success("Create Successful.");
+            },
+            onError: (err) => {
+              console.log(err);
+            },
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    updateRecord() {
+      this.$refs.modalRef
+        .validateFields()
+        .then(() => {
+          this.modal.data._method = "PATCH";
+          this.$inertia.post(
+            route("manage.emails.update", this.modal.data.id),
+            this.modal.data,
+            {
+              preserveState: false,
+              onSuccess: (page) => {
+                this.modal.isOpen = false;
+                message.success("Update Successful.");
+              },
+              onError: (error) => {
+                console.log(error);
+              },
+            }
+          );
+        })
+        .catch((err) => {
+          console.log("error", err);
+        });
+    },
+    deleteRecord(recordId) {
+      this.$inertia.delete(route("manage.emails.destroy", recordId), {
+        preserveState: false,
+        onSuccess: (page) => {
+          message.success("Delete Successful.");
+          console.log(page);
+        },
+        onError: (error) => {
+          alert(error.message);
+        },
+      });
+    },
+    onPaginationChange(page, filters, sorter) {
+      this.$inertia.get(
+        route("manage.emails.index"),
+        {
+          page: page.current,
+          per_page: page.pageSize,
+        },
+        {
+          onSuccess: (page) => {
+            console.log(page);
+          },
+          onError: (error) => {
+            console.log(error);
+          },
+        }
+      );
+    },
+
   },
 };
 </script>

@@ -18,7 +18,7 @@
         </template>
         <span>
           <inertia-link :href="route('admin.organizations.index')">
-            {{ $t("organization") }}
+            {{ $t("organizations") }}
           </inertia-link>
         </span>
       </a-menu-item>
