@@ -116,6 +116,7 @@ export default {
     <div class="container mx-auto">
       <div class="flex flex-col-reverse md:flex-row gap-6">
         <div class="flex-auto">
+          {{ $page.props.user }}
           <!-- Feature Section -->
           <div class="container mx-auto mt-5 bg-white rounded-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 py-3 px-2">

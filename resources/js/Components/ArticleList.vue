@@ -16,6 +16,7 @@ const props = defineProps({
             :src="article.thumbnail"
             class="object-cover"
             alt="thumbnail"
+            width="200px"
           />
           <img v-else src="/images/site_logo.png" alt="Thumnail" />
         </div>
