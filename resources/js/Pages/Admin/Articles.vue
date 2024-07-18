@@ -36,84 +36,46 @@
           class="w-64"
         ></a-input>
         <a-button type="primary" @click="searchData">{{ $t("search") }}</a-button>
-        <a-button type="primary" as="link" :href="route('admin.articles.index')">{{ $t("search_clear") }}</a-button>
+        <a-button type="primary" as="link" :href="route('admin.articles.index')">{{ $t("clear") }}</a-button>
       </div>
     </div>
-
-    <a-table
-      :dataSource="articles.data"
-      :columns="columns"
-      :customRow="customRow"
-      :pagination="pagination"
-      @change="onPaginationChange"
-    >
-      <template #bodyCell="{ column, record, index }">
-          <template v-if="column.dataIndex === 'operation'">
-            <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
-            <a-button @click="deleteRecord(record)">{{ $t("delete") }}</a-button>
-          </template>
-          <template v-else-if="column.dataIndex==='dragger'">
-            <holder-outlined />
-          </template>
-
-      </template>
-    </a-table>
-
 
     <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-        <div class="ant-table">
-          <div class="ant-table-container">
-            <table style="table-layout: auto">
-              <thead class="ant-table-thead">
-                <tr>
-                  <th v-for="column in columns" :key="column.id">
-                    {{ $t(column.i18n) }}
-                  </th>
-                </tr>
-              </thead>
-              <tr v-if="articles.total == 0">
-                <td :colspan="columns.length" class="ant-table-cell">
-                  <a-empty :image="simpleImage" />
-                </td>
-              </tr>
-              <draggable
-                v-else
-                tag="tbody"
-                class="dragArea list-group ant-table-tbody"
-                :list="articles.data"
-                @change="rowChange"
-              >
-                <transition-group v-for="(record, idx) in articles.data" :key="idx">
-                  <tr class="ant-table-row ant-table-row-level-0" :key="record.id">
-                    <td v-for="column in columns" :key="column.id" class="ant-table-cell">
-                      <template v-if="column.dataIndex == 'operation'">
-                        <inertia-link
-                          :href="route('admin.articles.edit', record.id)"
-                          class="ant-btn"
-                          >{{ $t("edit") }}</inertia-link
-                        >
-                      </template>
-                      <template v-else-if="column.dataIndex == 'dragger'">
-                        <holder-outlined />
-                      </template>
-                      <template v-else-if="column.dataIndex == 'published'">
-                        {{ record.published ? $t("yes") : $t("no") }}
-                      </template>
-                      <template v-else>
-                        {{ record[column.dataIndex] }}
-                      </template>
-                    </td>
-                  </tr>
-                </transition-group>
-              </draggable>
-            </table>
-          </div>
-          <Pagination :data="articles" :search="search" />
-        </div>
+        <a-table
+          :dataSource="articles.data"
+          :columns="columns"
+          :customRow="customRow"
+          :pagination="pagination"
+          @change="onPaginationChange"
+        >
+          <template #headerCell="{ column, record, index }">
+            <template v-if="isDraggable">
+                {{ $t(column.i18n) }}
+            </template>
+            <template v-else>
+              <span v-if="column.dataIndex=='dragger'"></span>
+              <span v-else>{{ $t(column.i18n) }}</span>
+            </template>
+          </template>
+          <template #bodyCell="{ column, record, index }">
+              <template v-if="column.dataIndex === 'operation'">
+                <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
+                <a-button @click="deleteRecord(record)">{{ $t("delete") }}</a-button>
+              </template>
+              <template v-else-if="column.dataIndex==='category_code'">
+                {{ getLable(articleCategories, record.category_code) }}
+              </template>
+              <template v-else-if="column.dataIndex==='dragger' && isDraggable">
+                <holder-outlined />
+              </template>
+          </template>
+        </a-table>
       </div>
     </div>
-    <p>Article CAN NOT be delete if published.</p>
+    <p>Article CAN NOT be delete if published.</p>  
+
+
 
     <!-- Modal Start-->
     <a-modal v-model:open="modal.isOpen" :title="modal.title" width="100%">
@@ -271,7 +233,7 @@ export default {
         },
         {
           title: "Category",
-          i18n: "category",
+          i18n: "article_category",
           dataIndex: "category_code",
         },
         {
@@ -535,11 +497,12 @@ export default {
                 arr.push(item)
               }
             })
-            arr.map((item,idx) => {
-              arr[idx].sequence=idx
-              console.log(item);
-            })
-            this.dataModel=arr
+            // arr.map((item,idx) => {
+            //   arr[idx].sequence=idx
+            //   console.log(item);
+            // })
+            //this.dataModel=arr
+            this.dataModel=this.reorderSequence(arr)
             this.$inertia.post(route("admin.article.sequence"), this.dataModel, {
               onSuccess: (page) => {
                 console.log(page);
@@ -551,7 +514,17 @@ export default {
           }
         },
       }
-    }
+    },
+    reorderSequence(records){
+      this.dataModel.map((item,idx) => {
+        console.log(item)
+      })
+    },
+    getLable(categories, value){
+      const item=categories.find(c=>c.value==value)
+      if(item) return item.label
+      return '--';
+    } 
 
   },
 };

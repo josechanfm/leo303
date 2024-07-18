@@ -5,16 +5,15 @@
         {{ $t("members") }}
       </h2>
     </template>
-    <button
-      @click="createRecord()"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3"
-    >
-      {{ $t("create_member") }}
-    </button>
+    <div class="flex justify-end pb-3 gap-3">
+      <a-button @click="createRecord()" type="primary">
+        {{ $t("create_member") }}
+      </a-button>
+    </div>
     <div class="container mx-auto">
-      <div class="flex flex-col md:flex-row justify-between gap-6">
+      <div class="flex flex-auto gap-2">
         <a-select
-          class="w-full"
+          class="w-32"
           :placeholder="$t('please_select_organization')"
           v-model:value="search.organization"
           allowClear
@@ -24,17 +23,19 @@
         <a-input
           v-model:value="search.given_name"
           :placeholder="$t('please_input_given_name')"
+          class="w-32"
         ></a-input>
         <a-input
           v-model:value="search.family_name"
           :placeholder="$t('please_input_family_name')"
+          class="w-32"
         ></a-input>
         <a-button type="primary" @click="searchData">{{ $t("search") }}</a-button>
       </div>
     </div>
     <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-        <a-table :dataSource="members.data" :columns="columns" :pagination="false">
+        <a-table :dataSource="members.data" :columns="columns" :pagination="pagination" @change="onPaginationChange">
           <template #headerCell="{ column }">
             {{ column.i18n ? $t(column.i18n) : column.title }}
           </template>
@@ -69,7 +70,7 @@
             </template>
           </template>
         </a-table>
-        <Pagination :data="members" :search="search" />
+        <!-- <Pagination :data="members" :search="search" /> -->
       </div>
     </div>
     <!-- Modal Start-->
@@ -162,7 +163,6 @@
 <script>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import Pagination from "@/Components/Pagination.vue";
-import { defineComponent, reactive } from "vue";
 
 export default {
   components: {
@@ -246,15 +246,28 @@ export default {
   },
   created() {},
   mounted() {
-    this.pagination = {
-      currentPage: this.route().params.currentPage ?? 1,
-      pageSize: this.route().params.pageSize ?? 10,
-    };
+    // this.pagination = {
+    //   currentPage: this.route().params.currentPage ?? 1,
+    //   pageSize: this.route().params.pageSize ?? 10,
+    // };
     this.search = this.route().params.search ?? {};
   },
   methods: {
     filterOption(input, option) {
       return option.full_name.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+    },
+    onPaginationChange(page, filters, sorter) {
+      this.$inertia.get(route("admin.members.index"),{
+          page: page.current,
+          per_page: page.pageSize,
+        },{
+          onSuccess: (page) => {
+            console.log(page);
+          },
+          onError: (error) => {
+            console.log(error);
+          },
+      });
     },
     createRecord() {
       this.modal.data = {};
@@ -329,10 +342,7 @@ export default {
       console.log("create login" + record.id);
     },
     searchData() {
-      this.$inertia.get(
-        route("admin.members.index"),
-        { search: this.search, pagination: this.pagination },
-        {
+      this.$inertia.get(route("admin.members.index"),{ search: this.search },{
           onSuccess: (page) => {
             console.log(page);
           },

@@ -1,10 +1,5 @@
 <template>
   <OrganizationLayout title="證書" :breadcrumb="breadcrumb">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ $t("certificates") }}
-      </h2>
-    </template>
     
       <div class="flex-auto pb-3 text-right">
         <a-button type="primary" class="!rounded" @click="createRecord()">{{

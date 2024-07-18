@@ -1,6 +1,6 @@
 <template>
   <OrganizationLayout :title="$t('articles')" :breadcrumb="breadcrumb">
-    <div class="flex justify-end pb-3 gap-3">
+    <div class="flex-auto pb-3 text-right">
       <a-button
           :href="route('manage.articles.create')"
           as="link"
@@ -10,9 +10,9 @@
       </a-button>
     </div>
     <div class="container mx-auto">
-      <div class="flex flex-col md:flex-row justify-between gap-6">
+      <div class="flex flex-auto gap-2">
         <a-select
-          class="w-full"
+          class="w-32"
           :placeholder="$t('please_select_category')"
           v-model:value="search.category"
           allowClear
@@ -21,6 +21,7 @@
         <a-input
           v-model:value="search.title"
           :placeholder="$t('please_input_title')"
+          class="w-64"
         ></a-input>
         <a-button type="primary" @click="searchData">{{ $t("search") }}</a-button>
       </div>
@@ -38,11 +39,9 @@
           </template>
           <template #bodyCell="{ column, text, record, index }">
             <template v-if="column.dataIndex == 'operation'">
-              <inertia-link
-                :href="route('manage.articles.edit', record.id)"
-                class="ant-btn"
-                >{{ $t("edit") }}</inertia-link
-              >
+              <a-button :href="route('manage.articles.edit', record.id)" as="link">
+                {{ $t("edit") }}
+              </a-button>
               <a-popconfirm
                 :title="$t('confirm_delete_record')"
                 :ok-text="$t('yes')"
@@ -66,89 +65,6 @@
     </div>
     <p>Article CAN NOT be delete if published.</p>
 
-    <!-- Modal Start-->
-    <a-modal v-model:open="modal.isOpen" :title="modal.title" width="100%">
-      <a-form
-        ref="modalRef"
-        :model="modal.data"
-        name="Teacher"
-        layout="vertical"
-        autocomplete="off"
-        :rules="rules"
-        :validate-messages="validateMessages"
-      >
-        <a-form-item :label="$t('article_category')" name="category_code">
-          <a-select
-            v-model:value="modal.data.category_code"
-            :options="articleCategories"
-          />
-        </a-form-item>
-        <a-form-item :label="$t('title')" name="title">
-          <a-input v-model:value="modal.data.title" />
-        </a-form-item>
-        <a-form-item :label="$t('title')" name="title_fn">
-          <a-input v-model:value="modal.data.title" />
-        </a-form-item>
-        <a-form-item :label="$t('content')" name="content_en">
-          <ckeditor
-            :editor="editor"
-            v-model="modal.data.content_en"
-            :config="editorConfig"
-          />
-        </a-form-item>
-        <a-form-item :label="$t('valid_at')" name="valid_at">
-          <a-date-picker
-            v-model:value="modal.data.valid_at"
-            :format="dateFormat"
-            :valueFormat="dateFormat"
-          />
-        </a-form-item>
-        <a-form-item :label="$t('expired_at')" name="expired_at">
-          <a-date-picker v-model:value="modal.data.expire_at" :valueFormat="dateFormat" />
-        </a-form-item>
-        <a-form-item :label="$t('url')" name="url">
-          <a-input v-model:value="modal.data.url" />
-        </a-form-item>
-        <a-row>
-          <a-col>
-            <a-form-item :label="$t('published')" name="published">
-              <a-switch
-                v-model:checked="modal.data.published"
-                :checkedValue="1"
-                :unCheckedValue="0"
-                @change="modal.data.public = 0"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col class="pl-10" v-if="modal.data.published">
-            <a-form-item :label="$t('public')" name="public">
-              <a-switch
-                v-model:checked="modal.data.public"
-                :checkedValue="1"
-                :unCheckedValue="0"
-              />
-            </a-form-item>
-          </a-col>
-        </a-row>
-      </a-form>
-      <template #footer>
-        <a-button
-          v-if="modal.mode == 'EDIT'"
-          key="Update"
-          type="primary"
-          @click="updateRecord()"
-          >{{ $t("update") }}</a-button
-        >
-        <a-button
-          v-if="modal.mode == 'CREATE'"
-          key="Store"
-          type="primary"
-          @click="storeRecord()"
-          >{{ $t("add") }}</a-button
-        >
-      </template>
-    </a-modal>
-    <!-- Modal End-->
   </OrganizationLayout>
 </template>
 
@@ -178,12 +94,6 @@ export default {
     return {
       breadcrumb: [{ label: "文章列表", url: null }],
       dateFormat: "YYYY-MM-DD",
-      modal: {
-        isOpen: false,
-        data: { content_en: "" },
-        title: "Modal",
-        mode: "",
-      },
       originSequences: [],
       search: {},
       pagination: {

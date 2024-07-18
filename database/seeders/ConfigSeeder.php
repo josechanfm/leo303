@@ -41,6 +41,9 @@ class ConfigSeeder extends Seeder
                 }, {
                     "value": "COURSE",
                     "label": "Course"
+                }, {
+                    "value": "OTHER",
+                    "label": "Other"
                 }]'
             ],
             [

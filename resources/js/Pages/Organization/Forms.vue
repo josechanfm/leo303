@@ -1,6 +1,6 @@
 <template>
   <OrganizationLayout title="表格" :breadcrumb="breadcrumb">
-    <div class="flex justify-end pb-3 gap-3">
+    <div class="flex-auto pb-3 text-right">
       <a-button
           :href="route('manage.forms.create')"
           as="link"
@@ -10,23 +10,16 @@
       </a-button>
     </div>
     <div class="container mx-auto">
-      <div class="flex-auto pb-3">
-        <inertia-link
-          :href="route('manage.forms.create')"
-          class="ant-btn ant-btn-primary !rounded"
-          >{{ $t("create_form") }}</inertia-link
-        >
-      </div>
-    </div>
-    <div class="container mx-auto">
-      <div class="flex flex-col md:flex-row justify-between gap-6">
+      <div class="flex flex-auto gap-2">
         <a-input
           v-model:value="search.name"
           :placeholder="$t('please_input_name')"
+          class="w-64"
         ></a-input>
         <a-input
           v-model:value="search.title"
           :placeholder="$t('please_input_title')"
+          class="w-64"
         ></a-input>
         <a-button type="primary" @click="searchData">{{ $t("search") }}</a-button>
       </div>

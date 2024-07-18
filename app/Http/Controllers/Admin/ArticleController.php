@@ -20,8 +20,9 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $pageSize = $request->pagination['pageSize'] ?? 10;
-        $currentPage = $request->pagination['currentPage'] ?? 1;
+        // $pageSize = $request->pagination['pageSize'] ?? 10;
+        // $currentPage = $request->pagination['currentPage'] ?? 1;
+
         $articles = Article::where(function ($query) use ($request) {
             if (!empty($request->search)) {
                 if (!empty($request->search['category'])) {
@@ -31,7 +32,7 @@ class ArticleController extends Controller
                     $query->where('title', 'like', '%' . $request->search['title'] . '%');
                 }
             }
-        })->paginate($pageSize, ['*'], 'page', $currentPage);
+        })->paginate($request->per_page);
         return Inertia::render('Admin/Articles', [
             // 'classifies'=>Classify::whereBelongsTo(session('organization'))->get(),
             'organizations' => Organization::all(),

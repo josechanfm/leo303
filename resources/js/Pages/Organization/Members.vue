@@ -1,22 +1,22 @@
 s
 <template>
   <OrganizationLayout :title="$t('members')" :breadcrumb="breadcrumb">
-    <div class="container mx-auto">
-      <div class="flex-auto pb-3">
+    <div class="flex-auto pb-3 text-right">
         <a-button type="primary" class="!rounded" @click="createRecord()">{{
           $t("create_member")
         }}</a-button>
-      </div>
     </div>
     <div class="container mx-auto">
-      <div class="flex flex-col md:flex-row justify-between gap-6">
+      <div class="flex flex-auto gap-2">
         <a-input
           v-model:value="search.given_name"
           :placeholder="$t('please_input_given_name')"
+          class="w-64"
         ></a-input>
         <a-input
           v-model:value="search.family_name"
           :placeholder="$t('please_input_family_name')"
+          class="w-64"
         ></a-input>
         <a-button type="primary" @click="searchData">{{ $t("search") }}</a-button>
       </div>

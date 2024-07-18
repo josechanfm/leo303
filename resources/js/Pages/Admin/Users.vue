@@ -1,17 +1,16 @@
 <template>
-  <AdminLayout title="Dashboard">
+  <AdminLayout :title="$t('users')">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $t("users") }}</h2>
     </template>
-    <button
-      @click="createRecord()"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3"
-    >
-      {{ $t("create_user") }}
-    </button>
+    <div class="flex justify-end pb-3 gap-3">
+      <a-button @click="createRecord()" type="primary">
+        {{ $t("create_user") }}
+      </a-button>
+    </div>
     <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-        <a-table :dataSource="users" :columns="columns">
+        <a-table :dataSource="users.data" :columns="columns" :pagination="pagination" @change="onPaginationChange">
           <template #headerCell="{ column }">
             {{ column.i18n ? $t(column.i18n) : column.title }}
           </template>
@@ -145,6 +144,11 @@ export default {
         title: "Modal",
         mode: "",
       },
+      pagination: {
+        total: this.users.total,
+        current: this.users.current_page,
+        pageSize: this.users.per_page,
+      },
       teacherStateLabels: {},
       columns: [
         {
@@ -207,6 +211,19 @@ export default {
   methods: {
     filterOption(input, option) {
       return option.full_name.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+    },
+    onPaginationChange(page, filters, sorter) {
+      this.$inertia.get(route("admin.users.index"),{
+          page: page.current,
+          per_page: page.pageSize,
+        },{
+          onSuccess: (page) => {
+            console.log(page);
+          },
+          onError: (error) => {
+            console.log(error);
+          },
+      });
     },
     createRecord() {
       this.modal.data = {};

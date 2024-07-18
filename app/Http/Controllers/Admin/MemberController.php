@@ -20,8 +20,8 @@ class MemberController extends Controller
     public function index(Request $request)
     {
         //dd(Member::with('organizations')->with('user')->where('id','102')->get());
-        $pageSize = $request->pagination['pageSize'] ?? 10;
-        $currentPage = $request->pagination['currentPage'] ?? 1;
+        // $pageSize = $request->pagination['pageSize'] ?? 10;
+        // $currentPage = $request->pagination['currentPage'] ?? 1;
         $members = Member::where(function ($query) use ($request) {
             if (!empty($request->search)) {
                 if (!empty($request->search['organization'])) {
@@ -34,7 +34,8 @@ class MemberController extends Controller
                     $query->where('family_name', 'like', '%' . $request->search['family_name'] . '%');
                 }
             }
-        })->with('organization')->with('user')->paginate($pageSize, ['*'], 'page', $currentPage);
+        })->with('organization')->with('user')->paginate($request->per_page);
+        //})->with('organization')->with('user')->paginate($pageSize, ['*'], 'page', $currentPage);
         return Inertia::render('Admin/Members', [
             'members' => $members,
             'organizations' => Organization::where('status', true)->get(),

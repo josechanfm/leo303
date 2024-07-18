@@ -5,12 +5,11 @@
         {{ $t("configs") }}
       </h2>
     </template>
-    <button
-      @click="createRecord()"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3"
-    >
-      {{ $t("create_config_item") }}
-    </button>
+    <div class="flex justify-end pb-3 gap-3">
+      <a-button @click="createRecord()" type="primary">
+        {{ $t("create_config_item") }}
+      </a-button>
+    </div>
     <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
         <a-table :dataSource="configs" :columns="columns">

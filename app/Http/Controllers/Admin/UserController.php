@@ -18,11 +18,11 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Admin/Users',[
             'organizations'=>Organization::all(),
-            'users'=>User::with('organizations')->with('roles')->with('permissions')->get(),
+            'users'=>User::with('organizations')->with('roles')->with('permissions')->paginate($request->per_page),
             'roles'=>\Spatie\Permission\Models\Role::all(),
             'permissions'=>Permission::all()
         ]);
