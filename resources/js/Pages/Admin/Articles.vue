@@ -43,7 +43,7 @@
     <div class="container mx-auto pt-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
         <a-table
-          :dataSource="articles.data"
+          :dataSource="dataModel"
           :columns="columns"
           :customRow="customRow"
           :pagination="pagination"
@@ -345,7 +345,6 @@ export default {
         });
     },
     updateRecord() {
-      console.log(this.modal.data);
       this.$refs.modalRef
         .validateFields()
         .then(() => {
@@ -378,17 +377,17 @@ export default {
         },
       });
     },
-    //deleteRecord(recordId) {
-    //if (!confirm('Are you sure want to remove?')) return;
-    // this.$inertia.delete(route('admin.articles.destroy', recordId), {
-    //     onSuccess: (page) => {
-    //         console.log(page);
-    //     },
-    //     onError: (error) => {
-    //         console.log(error);
-    //     }
-    // });
-    //},
+    deleteRecord(recordId) {
+    if (!confirm('Are you sure want to remove?')) return;
+    this.$inertia.delete(route('admin.articles.destroy', recordId), {
+        onSuccess: (page) => {
+            console.log(page);
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    });
+    },
     createLogin(recordId) {
       console.log("create login" + recordId);
     },
@@ -479,12 +478,15 @@ export default {
             let targetIndex = ''
             this.dataModel.map((item,idx) => {
               if(this.sourceObj == item){
-                console.log(idx)
                 sourceIndex = idx
               }
               if(this.targetObj == item){
                 targetIndex = idx
               }
+            })
+            const sequences=[];
+            this.dataModel.map((item,idx) => {
+              sequences.push(item.sequence)
             })
             // show swap data
             let arr=[]
@@ -497,12 +499,10 @@ export default {
                 arr.push(item)
               }
             })
-            // arr.map((item,idx) => {
-            //   arr[idx].sequence=idx
-            //   console.log(item);
-            // })
-            //this.dataModel=arr
-            this.dataModel=this.reorderSequence(arr)
+            arr.map((item,idx) => {
+              arr[idx].sequence=sequences[idx]
+            })
+            this.dataModel=arr
             this.$inertia.post(route("admin.article.sequence"), this.dataModel, {
               onSuccess: (page) => {
                 console.log(page);
@@ -514,11 +514,6 @@ export default {
           }
         },
       }
-    },
-    reorderSequence(records){
-      this.dataModel.map((item,idx) => {
-        console.log(item)
-      })
     },
     getLable(categories, value){
       const item=categories.find(c=>c.value==value)
