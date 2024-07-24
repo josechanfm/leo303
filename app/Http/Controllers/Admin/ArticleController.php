@@ -32,7 +32,7 @@ class ArticleController extends Controller
                     $query->where('title', 'like', '%' . $request->search['title'] . '%');
                 }
             }
-        })->paginate($request->per_page);
+        })->orderByRaw('ISNULL(sequence), sequence ASC')->paginate($request->per_page);
         return Inertia::render('Admin/Articles', [
             // 'classifies'=>Classify::whereBelongsTo(session('organization'))->get(),
             'organizations' => Organization::all(),
@@ -148,7 +148,7 @@ class ArticleController extends Controller
 
     public function sequence(Request $request)
     {
-        // dd($request->all());
+        //dd($request->all());
         foreach ($request->all() as $row) {
             Article::where('id', $row['id'])->update(['sequence' => $row['sequence']]);
         }

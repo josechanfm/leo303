@@ -12,7 +12,6 @@
                         <template #headerCell="{ column }">
                             {{ column.i18n ? $t(column.i18n) : column.title }}
                         </template>
-
                         <template #bodyCell="{column, text, record, index}">
                             <template v-if="column.dataIndex=='operation'">
                                 <a-button @click="viewRecord(record)">{{$t('view')}}</a-button>
@@ -22,12 +21,12 @@
                                 {{record.form.title}}
                             </template>
                             <template v-else-if="column.dataIndex=='record'">
-                                <ol>
+                                <ul class="list-none p-0">
                                     <li v-for="field in record.form.fields.filter(f=>f.in_column==true)">
-                                        {{ field.field_name }}
+                                        {{ field.field_name }}: 
                                         {{ getFieldData(record.records,field.id)}}
                                     </li>
-                                </ol>
+                                </ul>
                             </template>
                             <template v-else>
                                 {{record[column.dataIndex]}}
@@ -38,9 +37,9 @@
             </div>
         </div>
     
-        <a-modal v-model:open="modal.isOpen" title="我的表格" width="60%" cancelText="關閉"       :ok-button-props="{ hidden: true }">
+        <a-modal v-model:open="modal.isOpen" title="我的表格" width="60%" cancelText="關閉" :ok-button-props="{ hidden: true }">
             <div v-for="field in modal.data.form.fields">
-                {{ field.field_name }} {{ getFieldData(modal.data.records,field.id)}}
+                {{ field.field_name }}: {{ getFieldData(modal.data.records,field.id)}}
             </div>
         </a-modal>
    
@@ -146,10 +145,7 @@ export default {
             });
         },
         getFieldData(records,fieldId){
-            console.log(records);
-            console.log(fieldId)
             const record=records.find(r=>r.form_field_id==fieldId)
-            return record;
             return record.field_value;
             
         }
