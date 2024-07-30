@@ -32,7 +32,18 @@ use App\Models\Article;
 //     ]);
 // })->name('/');;
 
-Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'dashboard'])->name('/');
+Route::domain(env('APP_URL'))->group(function () {
+    Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'dashboard'])->name('/');
+});
+
+Route::domain('{abbr}.' . env('APP_URL'))->group(function () {
+    echo 'abc';
+    dd(request()->getHost());
+    Route::get('/', [\App\Http\Controllers\WebsiteController::class, 'home'])->name('website');
+});
+
+
+// Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'dashboard'])->name('/');
 
 Route::get('/language/{language}', function ($language) {
     Session::put('applocale', $language);

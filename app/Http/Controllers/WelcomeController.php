@@ -7,11 +7,11 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\Article;
+use App\Models\Organization;
 
 class WelcomeController extends Controller
 {
     public function dashboard(){
-        
         return Inertia::render('Welcome', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),

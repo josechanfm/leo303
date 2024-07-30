@@ -34,6 +34,7 @@ return new class extends Migration
             $table->boolean('status')->nullable();
             $table->string('card_style')->nullable();
             $table->string('logo')->nullable();
+            $table->string('webiste')->nullable();
             $table->timestamps();
       
         });

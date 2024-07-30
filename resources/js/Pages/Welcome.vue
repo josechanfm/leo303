@@ -1,5 +1,5 @@
 <script setup>
-import WebLayout from '@/Layouts/WebLayout.vue';
+import DefaultLayout from '@/Layouts/DefaultLayout.vue';
 import ArticleList from "@/Components/ArticleList.vue";
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import { UserOutlined } from '@ant-design/icons-vue';
@@ -17,7 +17,7 @@ defineProps({
 </script>
 
 <template>
-  <WebLayout title="Dashboard">
+  <DefaultLayout title="Dashboard">
     <div class="lg:h-96 bg-gradient-to-tr bg-[#0081C8] rounded-md flex items-center">
       <div class="ml-5 lg:ml-20 lg:w-4/5 py-5">
         <h2 class="text-white text-4xl" v-if="welcomeMessage">{{ welcomeMessage.title }}</h2>
@@ -50,5 +50,5 @@ defineProps({
       <ArticleList :articles="articles"/>
     
 
-  </WebLayout>
+  </DefaultLayout>
 </template>
