@@ -12,6 +12,7 @@ defineProps({
   title: String,
   organization:Object
 });
+
 const logout = () => {
   console.log("logout");
   Inertia.post(route("logout"));
@@ -25,13 +26,11 @@ const showingNavigationDropdown = ref(false);
   <!-- Header -->
   <header>
     <!-- navbar and menu -->
-    <nav class="shadow" style="background-image: url('/images/layout_background.jpg')">
-      <div class="flex justify-between items-center py-6 px-10 container mx-auto">
+    <nav class="shadow bg-gradient-to-tr bg-[#0081C8]">
+      <div class="flex justify-between items-center py-6 px-10 container mx-auto ">
         <div class="flex">
           <div class="shrink-0 flex items-center">
-            <a href="/"
-              ><img src="/images/site_logo.png" class="block h-14 w-auto"
-            /></a>
+            <a href="/"><img :src="'/logos/'+organization.logo" class="block h-14 w-auto"/></a>
           </div>
           <h1 class="ml-2 pt-4 text-2xl font-bold">
             <a href="/" class="text-white">{{organization.name_zh}}</a>
@@ -73,17 +72,23 @@ const showingNavigationDropdown = ref(false);
           <div class="flex items-center">
             <ul class="list-none sm:flex space-x-4 hidden items-center text-white">
               <li>
-                <a
-                  href="http://www.faom.org.mo/portal/"
-                  target="_blank"
-                  class="text-bold text-white hover:text-yellow-300 text-md"
-                  >工聯</a
-                >
+                <a href="https://www.lionsclubs.org/" target="_blank"
+                  class="text-bold text-white hover:text-yellow-300 text-md">總會</a>
               </li>
               <li>
-                <a href="https://www.mo.gov.mo" target="_blank"
-                  class="text-bold text-white hover:text-yellow-300 text-md">一戶通</a>
+                <a href="https://www.lionsclubs.org.hk/" target="_blank"
+                  class="text-bold text-white hover:text-yellow-300 text-md">區會</a
+                >
               </li>
+              <li v-if="organization.parent_domain">
+                <a :href="organization.parent_domain" target="_blank"
+                  class="text-bold text-white hover:text-yellow-300 text-md">母會</a>
+              </li>
+              <li>
+                <a href="https://www.leo303.org" target="_blank"
+                  class="text-bold text-white hover:text-yellow-300 text-md">會員</a>
+              </li>
+              
               <template v-if="$page.props.user.id">
                 <li>
                   <a

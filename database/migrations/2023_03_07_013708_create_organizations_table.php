@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('name_zh')->nullable();
             $table->string('name_en')->nullable();
             $table->string('name_pt')->nullable();
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
             $table->string('country')->nullable();
@@ -34,7 +34,8 @@ return new class extends Migration
             $table->boolean('status')->nullable();
             $table->string('card_style')->nullable();
             $table->string('logo')->nullable();
-            $table->string('webiste')->nullable();
+            $table->string('domain')->nullable();
+            $table->date('founted_at')->nullable();
             $table->timestamps();
       
         });

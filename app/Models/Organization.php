@@ -69,5 +69,8 @@ class Organization extends Model implements HasMedia
     public function emails(){
         return $this->hasMany(Email::class);
     }
+    public function articles(){
+        return $this->hasMany(Article::class);
+    }
 
 }

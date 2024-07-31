@@ -32,17 +32,20 @@ use App\Models\Article;
 //     ]);
 // })->name('/');;
 
-Route::domain(env('APP_URL'))->group(function () {
-    Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'dashboard'])->name('/');
-});
+// Route::domain(env('APP_URL'))->group(function () {
+//     Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'dashboard'])->name('/');
+// });
 
-Route::domain('{abbr}.' . env('APP_URL'))->group(function () {
-    echo 'abc';
-    dd(request()->getHost());
+Route::domain('{abbr}.' . env('APP_DOMAIN'))->middleware('check_subdomain')->group(function () {
     Route::get('/', [\App\Http\Controllers\WebsiteController::class, 'home'])->name('website');
+    Route::get('/board', [\App\Http\Controllers\WebsiteController::class, 'board'])->name('website.board');
+    Route::get('/former', [\App\Http\Controllers\WebsiteController::class, 'board'])->name('website.former');
+    Route::get('/news_events', [\App\Http\Controllers\WebsiteController::class, 'newsEvents'])->name('website.newsEvents');
+    Route::get('/forms', [\App\Http\Controllers\WebsiteController::class, 'forms'])->name('website.forms');
+    Route::get('/article', [\App\Http\Controllers\WebsiteController::class, 'article'])->name('website.article');
 });
 
-
+Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'dashboard'])->name('/');
 // Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'dashboard'])->name('/');
 
 Route::get('/language/{language}', function ($language) {
