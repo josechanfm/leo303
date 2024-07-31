@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
-            $table->string('parish')->nullable();
             $table->string('abbr');
             $table->string('name_display')->nullable();
             $table->string('name_zh')->nullable();
@@ -31,13 +30,12 @@ return new class extends Migration
             $table->text('content')->nullable();
             $table->string('registration_code')->nullable();
             $table->string('president')->nullable();
-            $table->boolean('status')->nullable();
             $table->string('card_style')->nullable();
             $table->string('logo')->nullable();
-            $table->string('domain')->nullable();
-            $table->date('founted_at')->nullable();
+            $table->string('subdomain')->nullable();
+            $table->date('founded_at')->nullable();
+            $table->boolean('status')->nullable();
             $table->timestamps();
-      
         });
     }
 

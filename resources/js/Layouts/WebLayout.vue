@@ -88,30 +88,6 @@ const showingNavigationDropdown = ref(false);
                 <a href="https://www.leo303.org" target="_blank"
                   class="text-bold text-white hover:text-yellow-300 text-md">會員</a>
               </li>
-              
-              <template v-if="$page.props.user.id">
-                <li>
-                  <a
-                    :href="route('member.dashboard')"
-                    target="_blank"
-                    class="text-bold text-white hover:text-yellow-300 text-md"
-                    >{{ $t("member_dashboard") }}</a
-                  >
-                </li>
-                <li>
-                  <a @click="logout">{{ $t("log_out") }}</a>
-                </li>
-              </template>
-              <template v-else>
-                <li>
-                  <inertia-link :href="route('login')" class="text-bold text-white hover:text-yellow-300 text-md">{{
-                    $t("login") }}</inertia-link>
-                </li>
-                <li>
-                  <inertia-link :href="route('registration')"
-                    class="text-bold text-white hover:text-yellow-300 text-md">{{ $t("register") }}</inertia-link>
-                </li>
-              </template>
             </ul>
             <!-- <div class="md:flex items-center hidden space-x-4 ml-8 lg:ml-12">
                             <h1 class="text-text-gray-600  py-2 hover:cursor-pointer hover:text-indigo-600"><inertia-link

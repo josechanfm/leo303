@@ -126,6 +126,17 @@
         <a-form-item :label="$t('president')" name="president">
           <a-input v-model:value="modal.data.president" />
         </a-form-item>
+        <a-form-item :label="$t('domain')" name="domain">
+          <a-input v-model:value="modal.data.domain" />
+        </a-form-item>
+        <a-form-item :label="$t('founded_at')" name="founded_at">
+          <a-date-picker
+              v-model:value="modal.data.founded_at"
+              :format="dateFormat"
+              :valueFormat="dateFormat"
+            />
+
+        </a-form-item> 
         <a-form-item :label="$t('status')" name="status">
           <a-switch
             v-model:checked="modal.data.status"
@@ -166,6 +177,7 @@ export default {
   props: ["parishes", "organizations", "users"],
   data() {
     return {
+      dateFormat: "YYYY-MM-DD",
       modal: {
         isOpen: false,
         data: {},
