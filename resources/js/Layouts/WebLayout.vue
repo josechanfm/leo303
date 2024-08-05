@@ -10,7 +10,7 @@ defineProps({
   laravelVersion: String,
   phpVersion: String,
   title: String,
-  organization:Object
+  organization: Object,
 });
 
 const logout = () => {
@@ -27,13 +27,15 @@ const showingNavigationDropdown = ref(false);
   <header>
     <!-- navbar and menu -->
     <nav class="shadow bg-gradient-to-tr bg-[#0081C8]">
-      <div class="flex justify-between items-center py-6 px-10 container mx-auto ">
-        <div class="flex">
+      <div class="flex justify-between items-center py-4 px-8 container mx-auto">
+        <div class="flex items-center">
           <div class="shrink-0 flex items-center">
-            <a href="/"><img :src="'/logos/'+organization.logo" class="block h-14 w-auto"/></a>
+            <a href="/"
+              ><img :src="'/logos/' + organization.logo" class="block h-14 w-auto"
+            /></a>
           </div>
           <h1 class="ml-2 pt-4 text-2xl font-bold">
-            <a href="/" class="text-white">{{organization.name_zh}}</a>
+            <a href="/" class="text-white">{{ organization.name_zh }}</a>
           </h1>
         </div>
 
@@ -72,21 +74,36 @@ const showingNavigationDropdown = ref(false);
           <div class="flex items-center">
             <ul class="list-none sm:flex space-x-4 hidden items-center text-white">
               <li>
-                <a href="https://www.lionsclubs.org/" target="_blank"
-                  class="text-bold text-white hover:text-yellow-300 text-md">總會</a>
+                <a
+                  href="https://www.lionsclubs.org/"
+                  target="_blank"
+                  class="text-bold text-white hover:text-yellow-300 text-md"
+                  >總會</a
+                >
               </li>
               <li>
-                <a href="https://www.lionsclubs.org.hk/" target="_blank"
-                  class="text-bold text-white hover:text-yellow-300 text-md">區會</a
+                <a
+                  href="https://www.lionsclubs.org.hk/"
+                  target="_blank"
+                  class="text-bold text-white hover:text-yellow-300 text-md"
+                  >區會</a
                 >
               </li>
               <li v-if="organization.parent_domain">
-                <a :href="organization.parent_domain" target="_blank"
-                  class="text-bold text-white hover:text-yellow-300 text-md">母會</a>
+                <a
+                  :href="organization.parent_domain"
+                  target="_blank"
+                  class="text-bold text-white hover:text-yellow-300 text-md"
+                  >母會</a
+                >
               </li>
               <li>
-                <a href="https://www.leo303.org" target="_blank"
-                  class="text-bold text-white hover:text-yellow-300 text-md">會員</a>
+                <a
+                  href="https://www.leo303.org"
+                  target="_blank"
+                  class="text-bold text-white hover:text-yellow-300 text-md"
+                  >會員</a
+                >
               </li>
             </ul>
             <!-- <div class="md:flex items-center hidden space-x-4 ml-8 lg:ml-12">
@@ -107,7 +124,7 @@ const showingNavigationDropdown = ref(false);
       >
         <div class="pt-2 pb-3 space-y-1">
           <ResponsiveNavLink :href="route('/')" :active="route().current('dashboard')">
-            {{ $t('dashboard') }}
+            {{ $t("dashboard") }}
           </ResponsiveNavLink>
         </div>
 
@@ -128,7 +145,7 @@ const showingNavigationDropdown = ref(false);
             </template>
             <template v-else>
               <a :href="route('login')">
-                <ResponsiveNavLink as="button"> {{ $t('login') }}</ResponsiveNavLink>
+                <ResponsiveNavLink as="button"> {{ $t("login") }}</ResponsiveNavLink>
               </a>
               <a :href="route('registration')">
                 <ResponsiveNavLink as="button"> {{ $t("register") }} </ResponsiveNavLink>
@@ -149,7 +166,7 @@ const showingNavigationDropdown = ref(false);
   <main>
     <!-- section hero -->
     <section>
-      <div class="bg-gray-100 p-0 lg:p-4 pt-2 min-h-full lg:min-h-screen space-y-6 sm:space-y-0 sm:gap-4">
+      <div class="bg-gray-100 p-0 min-h-full space-y-6 sm:space-y-0 sm:gap-4">
         <div>
           <!-- Page Content -->
           <main>
@@ -159,6 +176,57 @@ const showingNavigationDropdown = ref(false);
       </div>
     </section>
   </main>
+
+  <footer>
+    <div class="bg-[#F09426] text-lg text-white">
+      <div class="flex flex-col justify-center items-center gap-4">
+        <a href="/"><img :src="'/logos/' + organization.logo" class="block w-auto" /></a>
+        <div>
+          <a href="/" class="text-white">{{ organization.name_zh }}</a>
+        </div>
+        <div class="flex justify-between gap-12 font-bold">
+          <a
+            href="/"
+            target="_blank"
+            class="text-bold text-white hover:text-yellow-300 text-md"
+            >會員名單</a
+          >
+          <a
+            href="/"
+            target="_blank"
+            class="text-bold text-white hover:text-yellow-300 text-md"
+            >活動</a
+          >
+          <a
+            href="https://www.lionsclubs.org/"
+            target="_blank"
+            class="text-bold text-white hover:text-yellow-300 text-md"
+            >總會</a
+          >
+          <a
+            href="https://www.lionsclubs.org.hk/"
+            target="_blank"
+            class="text-bold text-white hover:text-yellow-300 text-md"
+            >區會</a
+          >
+          <a
+            v-if="organization.parent_domain"
+            :href="organization.parent_domain"
+            target="_blank"
+            class="text-bold text-white hover:text-yellow-300 text-md"
+            >母會</a
+          >
+          <a
+            href="https://www.leo303.org"
+            target="_blank"
+            class="text-bold text-white hover:text-yellow-300 text-md"
+            >會員</a
+          >
+        </div>
+        <div class="font-normal text-base">© 2024 HUBIS. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
 </template>
 
 <style>
