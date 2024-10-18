@@ -28,12 +28,10 @@ const showingNavigationDropdown = ref(false);
       <div class="flex justify-between items-center py-6 px-10 container mx-auto">
         <div class="flex">
           <div class="shrink-0 flex items-center">
-            <a href="/"
-              ><img src="/images/site_logo.png" class="block h-14 w-auto"
-            /></a>
+            <a href="/"><img src="/images/site_logo.png" class="block h-14 w-auto" /></a>
           </div>
           <h1 class="ml-2 pt-4 text-2xl font-bold">
-            <a href="/" class="text-white">Sync Connect</a>
+            <a href="/" class="text-white">國際獅子總會中國港澳三O三區</a>
           </h1>
         </div>
 
@@ -73,15 +71,12 @@ const showingNavigationDropdown = ref(false);
             <ul class="list-none sm:flex space-x-4 hidden items-center text-white">
               <li>
                 <a
-                  href="http://www.faom.org.mo/portal/"
-                  target="_blank"
-                  class="text-bold text-white hover:text-yellow-300 text-md"
-                  >工聯</a
+                  href="https://lionsinternational.my.site.com/s/login/?language=en_US&ec=302&startURL=%2Fs%2F"
+                  >Lion Portal</a
                 >
               </li>
               <li>
-                <a href="https://www.mo.gov.mo" target="_blank"
-                  class="text-bold text-white hover:text-yellow-300 text-md">一戶通</a>
+                <a href="https://lionsclubsd303.myshopify.com/">商店</a>
               </li>
               <template v-if="$page.props.user.id">
                 <li>
@@ -98,12 +93,18 @@ const showingNavigationDropdown = ref(false);
               </template>
               <template v-else>
                 <li>
-                  <inertia-link :href="route('login')" class="text-bold text-white hover:text-yellow-300 text-md">{{
-                    $t("login") }}</inertia-link>
+                  <inertia-link
+                    :href="route('login')"
+                    class="text-bold text-white hover:text-yellow-300 text-md"
+                    >{{ $t("login") }}</inertia-link
+                  >
                 </li>
                 <li>
-                  <inertia-link :href="route('registration')"
-                    class="text-bold text-white hover:text-yellow-300 text-md">{{ $t("register") }}</inertia-link>
+                  <inertia-link
+                    :href="route('registration')"
+                    class="text-bold text-white hover:text-yellow-300 text-md"
+                    >{{ $t("register") }}</inertia-link
+                  >
                 </li>
               </template>
             </ul>
@@ -125,7 +126,7 @@ const showingNavigationDropdown = ref(false);
       >
         <div class="pt-2 pb-3 space-y-1">
           <ResponsiveNavLink :href="route('/')" :active="route().current('dashboard')">
-            {{ $t('dashboard') }}
+            {{ $t("dashboard") }}
           </ResponsiveNavLink>
         </div>
 
@@ -146,7 +147,7 @@ const showingNavigationDropdown = ref(false);
             </template>
             <template v-else>
               <a :href="route('login')">
-                <ResponsiveNavLink as="button"> {{ $t('login') }}</ResponsiveNavLink>
+                <ResponsiveNavLink as="button"> {{ $t("login") }}</ResponsiveNavLink>
               </a>
               <a :href="route('registration')">
                 <ResponsiveNavLink as="button"> {{ $t("register") }} </ResponsiveNavLink>
@@ -203,7 +204,7 @@ const showingNavigationDropdown = ref(false);
             <h1
               class="text-center text-xl my-4 bg-white py-2 rounded-md border-b-2 cursor-pointer text-gray-600"
             >
-              {{ $t('service') }}
+              {{ $t("service") }}
             </h1>
             <div class="bg-white rounded-md list-none text-center">
               <li class="py-3 border-b-2">
@@ -214,14 +215,16 @@ const showingNavigationDropdown = ref(false);
                   href="https://www.gcs.gov.mo"
                   target="_blank"
                   class="list-none hover:text-indigo-600"
-                  >新聞局</a>
+                  >新聞局</a
+                >
               </li>
               <li class="py-3 border-b-2">
                 <a
                   href="https://www.io.gov.mo/cn/home/"
                   class="list-none hover:text-indigo-600"
                   target="_blank"
-                  >印務局</a>
+                  >印務局</a
+                >
               </li>
             </div>
           </div>

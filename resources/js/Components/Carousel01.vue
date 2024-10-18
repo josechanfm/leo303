@@ -57,7 +57,10 @@ export default {
     return {
       currentIndex: 0,
       slides: [
-        { image: "https://via.placeholder.com/800x400", title: "Slide 1" },
+        {
+          image: "/images/articles/0_community.png",
+          title: "Slide 1",
+        },
         { image: "https://via.placeholder.com/800x400", title: "Slide 2" },
         { image: "https://via.placeholder.com/800x400", title: "Slide 3" },
         { image: "https://via.placeholder.com/800x400", title: "Slide 4" },

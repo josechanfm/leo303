@@ -7,6 +7,21 @@ defineProps({
   organization: Object,
   articles: Array,
 });
+
+const news = [
+  {
+    title: "asddasdassda",
+    content: "asddsadasasdsda",
+  },
+];
+const show_new = 0;
+const currentDomain = window.location.hostname;
+
+// 去除子域名部分
+const parts = currentDomain.split(".");
+if (parts.length > 2) {
+  const domainWithoutSubdomain = parts.slice(-2).join(".");
+}
 </script>
 
 <template>
@@ -21,7 +36,7 @@ defineProps({
       </div>
       <div class="flex flex-col bg-gray-300 pb-12">
         <div class="md:container md:mx-auto flex flex-col py-4 mx-2 gap-3">
-          <div class="underline text-3xl py-4">會員資料</div>
+          <div class="underline text-3xl py-4">會員資料 {{ domainWithoutSubdomain }}</div>
           <div class="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-x-24 gap-y-12">
             <div
               class="relative flex flex-col rounded-md bg-white p-2 items-center shadow-md"
@@ -453,10 +468,24 @@ defineProps({
           </div>
         </div>
       </div>
-      <div class="container md:mx-auto flex flex-col md:flex-row py-4 mx-2 gap-3">
-        <div class="flex flex-col md:w-1/2">
+      <div
+        class="md:container md:mx-auto flex flex-col md:flex-row mb-12 my-4 mx-2 gap-3"
+      >
+        <div class="flex flex-col grow">
           <div class="underline text-3xl py-4">最新消息</div>
-          <ArticleList :articles="articles" />
+          <template v-for="(n, idx) in news" :key="idx">
+            <div v-if="show_new == idx" class="flex w-full grow">
+              <div><button class="h-full text-wrap w-8">l a s t n e w</button></div>
+              <div class="w-2/5 flex justify-center">
+                <img src="/images/kongmo.png" class="w-3/4 h-80 object-cover" />
+              </div>
+              <div class="flex flex-col">
+                <div class="text-xl font-bold">{{ n.title }}</div>
+                <div class="">{{ n.content }}</div>
+              </div>
+              <div class=""><a-button>next news</a-button></div>
+            </div>
+          </template>
         </div>
       </div>
       <div class="bg-sky-600 text-white py-2">

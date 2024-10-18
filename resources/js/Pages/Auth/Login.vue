@@ -12,13 +12,11 @@ defineProps({
   canResetPassword: Boolean,
 });
 
-
-
 const form = useForm({
   email: "",
   password: "",
   remember: false,
-  service:route().params.s
+  service: route().params.s,
 });
 
 const submit = () => {
@@ -40,58 +38,57 @@ const submit = () => {
     <template #logo>
       <AuthenticationCardLogo />
     </template>
-    <form @submit.prevent="submit">
+    <form @submit.prevent="submit" class="space-y-6">
       <div>
-        <TextInput v-model="form.service" hidden/>
+        <TextInput v-model="form.service" hidden />
         <InputLabel for="email" :value="$t('email')" />
         <TextInput
           id="email"
           v-model="form.email"
           type="email"
-          class="mt-1 block w-full"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           required
           autofocus
-          style="line-height: 30px;"
         />
         <InputError class="mt-2" :message="form.errors.email" />
       </div>
 
-      <div class="mt-4">
+      <div>
         <InputLabel for="password" :value="$t('password')" />
         <TextInput
           id="password"
           v-model="form.password"
           type="password"
-          class="mt-1 block w-full"
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           required
           autocomplete="current-password"
-          style="line-height: 30px;"
         />
         <InputError class="mt-2" :message="form.errors.password" />
       </div>
 
-      <div class="block mt-4">
+      <div class="flex items-center justify-between">
         <label class="flex items-center">
           <Checkbox v-model:checked="form.remember" name="remember" />
           <span class="ml-2 text-sm text-gray-600">{{ $t("remember_me") }}</span>
         </label>
-      </div>
-      
-      <div class="text-right">
-          <inertia-link :href="route('registration')">{{$t('register')}}</inertia-link>
-        </div>
-
-      <div class="flex items-center justify-end mt-4">
         <Link
           v-if="canResetPassword"
           :href="route('password.request')"
-          class="underline text-sm text-gray-600 hover:text-gray-900"
+          class="text-sm text-blue-600 hover:text-blue-900"
         >
           {{ $t("forgot_your_password") }}
         </Link>
+      </div>
 
+      <div class="flex items-center justify-end mt-4">
+        <Link
+          :href="route('registration')"
+          class="underline text-sm text-gray-600 hover:text-gray-900 mr-4"
+        >
+          {{ $t("register") }}
+        </Link>
         <PrimaryButton
-          class="ml-4"
+          class="ml-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           :class="{ 'opacity-25': form.processing }"
           :disabled="form.processing"
         >

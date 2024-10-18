@@ -34,6 +34,7 @@ const showingNavigationDropdown = ref(false);
               ><img :src="'/logos/' + organization.logo" class="block h-14 w-auto"
             /></a>
           </div>
+
           <h1 class="ml-2 pt-4 text-2xl font-bold">
             <a href="/" class="text-white">{{ organization.name_zh }}</a>
           </h1>

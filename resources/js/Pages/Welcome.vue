@@ -1,8 +1,8 @@
 <script setup>
-import DefaultLayout from '@/Layouts/DefaultLayout.vue';
+import DefaultLayout from "@/Layouts/DefaultLayout.vue";
 import ArticleList from "@/Components/ArticleList.vue";
-import { Head, Link } from '@inertiajs/inertia-vue3';
-import { UserOutlined } from '@ant-design/icons-vue';
+import { Head, Link } from "@inertiajs/inertia-vue3";
+import { UserOutlined } from "@ant-design/icons-vue";
 
 defineProps({
   canLogin: Boolean,
@@ -18,37 +18,56 @@ defineProps({
 
 <template>
   <DefaultLayout title="Dashboard">
-    <div class="lg:h-96 bg-gradient-to-tr bg-[#0081C8] rounded-md flex items-center">
+    <div
+      class="lg:h-96 bg-gradient-to-tr from-blue-800 to-blue-600 rounded-lg shadow-lg flex items-center"
+    >
       <div class="ml-5 lg:ml-20 lg:w-4/5 py-5">
-        <h2 class="text-white text-4xl" v-if="welcomeMessage">{{ welcomeMessage.title }}</h2>
-        <h2 class="text-white text-4xl" v-else>{{ $t('welcome_message') }}</h2>
-        <p class="lg:text-lg text-indigo-100 mr-4 capitalize font-thick tracking-wider leading-7 text-justify">
+        <h2 class="text-white text-4xl font-extrabold" v-if="welcomeMessage">
+          {{ welcomeMessage.title }}
+        </h2>
+        <h2 class="text-white text-4xl font-extrabold" v-else>
+          {{ $t("introduction") }}
+        </h2>
+        <p
+          class="lg:text-lg text-indigo-100 mr-4 font-light tracking-wide leading-7 text-justify mt-4"
+        >
           <template v-if="welcomeMessage">
-            {{ welcomeMessage.intro  }}
+            {{ welcomeMessage.intro }}
             <template v-if="welcomeMessage.url">
-                <a-button :href="welcomeMessage.url">{{ $t('readmore') }}</a-button>
+              <a-button
+                :href="welcomeMessage.url"
+                class="mt-4 bg-white text-blue-600 hover:bg-blue-100"
+                >{{ $t("readmore") }}</a-button
+              >
             </template>
             <template v-else-if="welcomeMessage.content">
-              <a-button :href="route('article.item',{t:welcomeMessage.uuid})">{{ $t('readmore') }}</a-button>
+              <a-button
+                :href="route('article.item', { t: welcomeMessage.uuid })"
+                class="mt-4 bg-white text-blue-600 hover:bg-blue-100"
+                >{{ $t("readmore") }}</a-button
+              >
             </template>
           </template>
           <template v-else>
-            「公務人員聯合總會網首頁」是一個提供公務人員相關資訊和服務的網站。該網站結合了屬會和友會的功能，為公務人員提供一個資信平台，方便他們獲取所需的資訊和進行交流。
-            此網站除了提供基本資訊外，還提供了電子會員卡和會員會籍管理系統等功能。通過這些功能，公務人員可以方便地管理自己的會籍信息，並獲得相關的會員福利。
-            此外，「公務人員聯合總會網首頁」也可能提供其他相關服務，例如公務人員培訓課程、就業資訊、法規法案解讀等。透過這些服務，公務人員可以更好地了解自己所屬的組織和行業的最新動態，並提升自身的專業能力。
+            <p>
+              香港首個獅子會始創於1955年，其後多個獅子會相繼成立後，國際獅子總會於1960年，批准成立為『國際獅子總會中國港澳三O三區』。
+            </p>
+            <p>
+              港澳獅子總會成立目的是鼓勵人們竭誠為社會服務，不論個人酬報或利益，服務人群，同情貧苦和濟弱扶危。在過往60多年以來，經過獅子會會員不斷的努力﹐獅子運動在港澳兩地是蓬勃發展並獲得廣大人士認同。
+            </p>
+            <p>
+              青年獅子區會於1979年6月17日正式成立，青獅 "LEO" 英文原義是：Leadership,
+              Experience & Opportunity
+              也就是「發揮領導才能，透過社會服務吸取經驗及爭取機會以達成國際理解」的意義。青年獅子會是經由本區個別獅子會贊助成立的。
+            </p>
           </template>
         </p>
-        <!-- <a href="#"
-          class="uppercase inline-block mt-8 text-sm bg-white py-2 px-4 rounded font-semibold hover:bg-indigo-100"> Learn More
-        </a> -->
       </div>
     </div>
 
-    <div class="px-4 py-2 mt-2 bg-white rounded-md">
+    <div class="px-4 py-2 mt-4 bg-white rounded-lg shadow-md">
       <h2 class="font-bold text-2xl text-gray-800">最新消息</h2>
     </div>
-      <ArticleList :articles="articles"/>
-    
-
+    <ArticleList :articles="articles" />
   </DefaultLayout>
 </template>
