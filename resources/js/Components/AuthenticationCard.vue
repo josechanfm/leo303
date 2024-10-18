@@ -1,7 +1,4 @@
 <template>
-  <div class="py-24 rounded">
-    <img src="images/login_bg.jpg" class="rounded" />
-  </div>
   <div
     class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100"
   >
